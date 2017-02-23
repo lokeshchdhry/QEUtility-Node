@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "description": "FR Utility for Appc",
   "main": "appc_fr.js",
+  "bin" : {
+    "appcfr" : "./appc_fr.js"
+  },
   "dependencies": {
     "commander": "^2.9.0",
     "node-persist": "^2.0.8",

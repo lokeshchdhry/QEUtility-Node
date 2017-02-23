@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 var program = require('commander');
 var cloneRepo_SDK = require('./clone_sdk');
 var build_sdk = require('./build_sdk');
@@ -13,7 +15,7 @@ var cyan = chalk.cyan;
 var bold = chalk.bold;
 
 program
-    .version('0.0.1');
+    .version('1.0.0');
 
 program
     .command('clone')
