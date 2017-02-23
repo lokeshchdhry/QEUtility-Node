@@ -1,0 +1,106 @@
+0 info it worked if it ends with ok
+1 verbose cli [ '/usr/local/bin/node', '/usr/local/bin/npm', 'install', '-g' ]
+2 info using npm@2.15.9
+3 info using node@v4.6.0
+4 verbose install initial load of /usr/local/lib/package.json
+5 verbose readDependencies loading dependencies from /usr/local/lib/package.json
+6 silly cache add args [ '.', null ]
+7 verbose cache add spec .
+8 silly cache add parsed spec Result {
+8 silly cache add   raw: '.',
+8 silly cache add   scope: null,
+8 silly cache add   name: null,
+8 silly cache add   rawSpec: '.',
+8 silly cache add   spec: '/Users/lchoudhary/Desktop/repositories/appc_fr',
+8 silly cache add   type: 'directory' }
+9 verbose addLocalDirectory /Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz not in flight; packing
+10 verbose correctMkdir /Users/lchoudhary/.npm correctMkdir not in flight; initializing
+11 verbose tar pack [ '/Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz',
+11 verbose tar pack   '/Users/lchoudhary/Desktop/repositories/appc_fr' ]
+12 verbose tarball /Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz
+13 verbose folder /Users/lchoudhary/Desktop/repositories/appc_fr
+14 info prepublish appc_fr@1.0.0
+15 verbose addLocalTarball adding from inside cache /Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz
+16 verbose correctMkdir /Users/lchoudhary/.npm correctMkdir not in flight; initializing
+17 silly cache afterAdd appc_fr@1.0.0
+18 verbose afterAdd /Users/lchoudhary/.npm/appc_fr/1.0.0/package/package.json not in flight; writing
+19 verbose correctMkdir /Users/lchoudhary/.npm correctMkdir not in flight; initializing
+20 verbose afterAdd /Users/lchoudhary/.npm/appc_fr/1.0.0/package/package.json written
+21 silly install resolved [ { name: 'appc_fr',
+21 silly install resolved     version: '1.0.0',
+21 silly install resolved     description: 'FR Utility for Appc',
+21 silly install resolved     main: 'appc_fr.js',
+21 silly install resolved     dependencies:
+21 silly install resolved      { commander: '^2.9.0',
+21 silly install resolved        'node-persist': '^2.0.8',
+21 silly install resolved        inquirer: '^3.0.1',
+21 silly install resolved        chalk: '^1.1.3',
+21 silly install resolved        'cli-spinner': '^0.2.6' },
+21 silly install resolved     devDependencies: {},
+21 silly install resolved     scripts: { test: 'echo "Error: no test specified" && exit 1' },
+21 silly install resolved     repository:
+21 silly install resolved      { type: 'git',
+21 silly install resolved        url: 'git+https://github.com/lokeshchdhry/appc_fr.git' },
+21 silly install resolved     keywords: [ 'appc' ],
+21 silly install resolved     author: { name: 'Lokesh Choudhary' },
+21 silly install resolved     license: 'MIT',
+21 silly install resolved     bugs: { url: 'https://github.com/lokeshchdhry/appc_fr/issues' },
+21 silly install resolved     homepage: 'https://github.com/lokeshchdhry/appc_fr#readme',
+21 silly install resolved     gitHead: '2e190e25c303313f1589f8aead2bb72e4aa0e55a',
+21 silly install resolved     readme: 'ERROR: No README data found!',
+21 silly install resolved     _id: 'appc_fr@1.0.0',
+21 silly install resolved     _shasum: '3261ed5f82a6f7f304d1117320322a15d6b99292',
+21 silly install resolved     _from: '../../Users/lchoudhary/Desktop/repositories/appc_fr',
+21 silly install resolved     _resolved: 'file:../../Users/lchoudhary/Desktop/repositories/appc_fr' } ]
+22 info install appc_fr@1.0.0 into /usr/local/lib
+23 info installOne appc_fr@1.0.0
+24 verbose installOne of appc_fr to /usr/local/lib not in flight; installing
+25 verbose correctMkdir /Users/lchoudhary/.npm/_locks correctMkdir not in flight; initializing
+26 verbose lock using /Users/lchoudhary/.npm/_locks/appc-fr-11f4675c514b3d6f.lock for /usr/local/lib/node_modules/appc_fr
+27 silly install write writing appc_fr 1.0.0 to /usr/local/lib/node_modules/appc_fr
+28 verbose unbuild lib/node_modules/appc_fr
+29 silly gentlyRm /usr/local/lib/node_modules/appc_fr is being purged from base /usr/local
+30 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/appc_fr
+31 verbose tar unpack /Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz
+32 verbose tar unpacking to /usr/local/lib/node_modules/appc_fr
+33 silly gentlyRm /usr/local/lib/node_modules/appc_fr is being purged
+34 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/appc_fr
+35 silly gunzTarPerm modes [ '755', '644' ]
+36 error tar.unpack untar error /Users/lchoudhary/.npm/appc_fr/1.0.0/package.tgz
+37 verbose unlock done using /Users/lchoudhary/.npm/_locks/appc-fr-11f4675c514b3d6f.lock for /usr/local/lib/node_modules/appc_fr
+38 verbose fstream_path /usr/local/lib/node_modules/appc_fr
+39 verbose fstream_type Directory
+40 verbose fstream_class DirWriter
+41 verbose stack Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/appc_fr'
+41 verbose stack     at Error (native)
+42 verbose fstream_stack /usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:35:25
+42 verbose fstream_stack /usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:47:53
+42 verbose fstream_stack FSReqWrap.oncomplete (fs.js:82:15)
+43 verbose cwd /Users/lchoudhary/Desktop/repositories/appc_fr
+44 error Darwin 16.3.0
+45 error argv "/usr/local/bin/node" "/usr/local/bin/npm" "install" "-g"
+46 error node v4.6.0
+47 error npm  v2.15.9
+48 error path /usr/local/lib/node_modules/appc_fr
+49 error code EACCES
+50 error errno -13
+51 error syscall mkdir
+52 error Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/appc_fr'
+52 error     at Error (native)
+52 error  { [Error: EACCES: permission denied, mkdir '/usr/local/lib/node_modules/appc_fr']
+52 error   errno: -13,
+52 error   code: 'EACCES',
+52 error   syscall: 'mkdir',
+52 error   path: '/usr/local/lib/node_modules/appc_fr',
+52 error   fstream_type: 'Directory',
+52 error   fstream_path: '/usr/local/lib/node_modules/appc_fr',
+52 error   fstream_class: 'DirWriter',
+52 error   fstream_stack:
+52 error    [ '/usr/local/lib/node_modules/npm/node_modules/fstream/lib/dir-writer.js:35:25',
+52 error      '/usr/local/lib/node_modules/npm/node_modules/mkdirp/index.js:47:53',
+52 error      'FSReqWrap.oncomplete (fs.js:82:15)' ] }
+53 error Please try running this command again as root/Administrator.
+54 verbose exit [ -13, true ]
+55 verbose unbuild lib/node_modules/appc_fr
+56 silly gentlyRm /usr/local/lib/node_modules/appc_fr is being purged from base /usr/local
+57 verbose gentlyRm don't care about contents; nuking /usr/local/lib/node_modules/appc_fr
