@@ -15,7 +15,8 @@ var cyan = chalk.cyan;
 var bold = chalk.bold;
 
 program
-    .version('1.0.0');
+    .version('1.0.0')
+    .usage('[command] [options]');
 
 program
     .command('clone')
@@ -35,7 +36,7 @@ program
 
 program
     .command('build')
-    .description('Command to build, package & install the SDK.')
+    .description('Command to build, package & install the SDK, Appc NPM & CLI.')
     .option('-c, --component', 'Build the component ' + cyan('[sdk, npm, cli]'))
     .action(function(option) {
         if (option === 'sdk') {
