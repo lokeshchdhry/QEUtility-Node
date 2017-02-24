@@ -31,6 +31,8 @@ Usage: appcfr clone [options]
     -h, --help       output usage information
     -c, --component  Clone the component [sdk, npm, cli]
 ```
+Clone will also modify the `coinfig` file with the necessary changes.
+
 **2. Build command:**
 ```
 Usage: build [options]
@@ -63,5 +65,5 @@ Usage: appfr setup [options]
 
     -h, --help  output usage information
 ```
-Setup command will set your `ANDROID_SDK` & `ANDROID_NDK` paths in your bash profile for you. 
+Setup command will check if `ANDROID_SDK` & `ANDROID_NDK` paths are set in your your bash profile, if not it will help set it for you. 
 It will also ask & store all your repo links & repo dir paths.
