@@ -74,7 +74,7 @@ program
 
 program
     .command('setup')
-    .description('Setup prerequsites.')
+    .description('Setup prerequsites.'+ cyan(' This should be run at your first run.'))
     .action(function() {
         setup();
     });

@@ -33,7 +33,7 @@ module.exports = function() {
                     process.chdir('/Users/' + user);
                     //Logic to edit bash profile to add ANDROID_SDK & ANDROID_NDK
                     var data1 = fs.readFileSync('.bash_profile').toString().split("\n");
-                    data1.splice(30, 0, 'export ANDROID_SDK=' + answers.android_sdkPath);
+                    data1.splice(40, 0, 'export ANDROID_SDK=' + answers.android_sdkPath);
                     var text = data1.join("\n");
 
                     fs.writeFile('.bash_profile', text, function(err) {
@@ -60,7 +60,7 @@ module.exports = function() {
                     process.chdir('/Users/' + user);
                     //Logic to edit bash profile to add ANDROID_SDK & ANDROID_NDK
                     var data1 = fs.readFileSync('.bash_profile').toString().split("\n");
-                    data1.splice(31, 0, 'export ANDROID_NDK=' + answers.android_ndkPath);
+                    data1.splice(41, 0, 'export ANDROID_NDK=' + answers.android_ndkPath);
                     var text = data1.join("\n");
 
                     fs.writeFile('.bash_profile', text, function(err) {
