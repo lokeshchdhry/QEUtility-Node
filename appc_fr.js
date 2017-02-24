@@ -24,12 +24,12 @@ program
     .action(function(option) {
         if (option === 'sdk') {
             cloneRepo_SDK();
-        }
-        if (option === 'npm') {
+        } else if (option === 'npm') {
             console.log('Coming Soon ....');
-        }
-        if (option === 'cli') {
+        } else if (option === 'cli') {
             console.log('Coming Soon ....');
+        } else {
+            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
         }
     });
 
@@ -40,12 +40,12 @@ program
     .action(function(option) {
         if (option === 'sdk') {
             build_sdk();
-        }
-        if (option === 'npm') {
+        } else if (option === 'npm') {
             console.log('Coming Soon ....');
-        }
-        if (option === 'cli') {
+        } else if (option === 'cli') {
             console.log('Coming Soon ....');
+        } else {
+            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
         }
     });
 
@@ -56,12 +56,12 @@ program
     .action(function(option) {
         if (option === 'sdk') {
             cleanup_sdk();
-        }
-        if (option === 'npm') {
+        } else if (option === 'npm') {
             console.log('Coming Soon ....');
-        }
-        if (option === 'cli') {
+        } else if (option === 'cli') {
             console.log('Coming Soon ....');
+        } else {
+            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
         }
     });
 
