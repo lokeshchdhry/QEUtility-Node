@@ -31,7 +31,7 @@ Usage: appcfr clone [options]
     -h, --help       output usage information
     -c, --component  Clone the component [sdk, npm, cli]
 ```
-Clone will also modify the `coinfig` file with the necessary changes.
+Clone will also modify the `config` file with the necessary changes.
 
 **2. Build command:**
 ```
