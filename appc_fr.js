@@ -2,6 +2,7 @@
 
 var program = require('commander');
 var cloneRepo_SDK = require('./clone_sdk');
+var cloneRepo_NPM = require('./clone_npm');
 var build_sdk = require('./build_sdk');
 var cleanup_sdk = require('./cleanup_sdk');
 var clearMem = require('./clear_mem');
@@ -26,7 +27,7 @@ program
         if (option === 'sdk') {
             cloneRepo_SDK();
         } else if (option === 'npm') {
-            console.log('Coming Soon ....');
+            cloneRepo_NPM();
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
