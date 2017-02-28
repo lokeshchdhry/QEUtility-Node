@@ -2,11 +2,11 @@ var exec = require('child_process').exec;
 var inquirer = require('inquirer');
 var storage = require('node-persist');
 var chalk = require('chalk');
+var Spinner = require('cli-spinner').Spinner;
 
 //Setting theme for colors
 var error = chalk.bold.red;
 var underline = chalk.underline;
-var Spinner = require('cli-spinner').Spinner;
 var cyan = chalk.cyan;
 var bold = chalk.bold;
 
