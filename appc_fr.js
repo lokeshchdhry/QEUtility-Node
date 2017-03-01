@@ -30,14 +30,14 @@ program
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
+            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
         }
     });
 
 program
     .command('build')
-    .description('Command to build, package & install the SDK, Appc NPM & CLI.')
-    .option('-c, --component', 'Build the component ' + cyan('[sdk, npm, cli]'))
+    .description('Command to build, package & install the SDK, CLI NPM & CLI.')
+    .option('-c, --component', 'Build the component ' + cyan('[sdk, clinpm, cli]'))
     .action(function(option) {
         if (option === 'sdk') {
             build_sdk();
@@ -46,23 +46,23 @@ program
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
+            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
         }
     });
 
 program
     .command('cleanup')
     .description('Command to cleanup before you build for a new PR.')
-    .option('-c, --component', 'Build the component ' + cyan('[sdk, npm, cli]'))
+    .option('-c, --component', 'Build the component ' + cyan('[sdk, clinpm, cli]'))
     .action(function(option) {
         if (option === 'sdk') {
             cleanup_sdk();
-        } else if (option === 'npm') {
+        } else if (option === 'clinpm') {
             console.log('Coming Soon ....');
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, npm, cli]\n'));
+            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
         }
     });
 
