@@ -10,7 +10,7 @@ FR Utility for Appc
 3. Run `sudo npm install -g`.
 
 ```
-Usage: appc_fr [command] [options]
+Usage: appcfr [command] [options]
 
 
   Commands:
@@ -42,7 +42,7 @@ Clone will also modify the `config` file with the necessary changes.
 
 **2. Build command:**
 ```
-Usage: build [options]
+Usage: appcfr build [options]
 
   Command to build, package & install the SDK, Appc NPM & CLI.
 
