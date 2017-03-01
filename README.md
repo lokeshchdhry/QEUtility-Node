@@ -2,6 +2,13 @@
 FR Utility for Appc
 
 **This is just for SDK as of now, will be adding Appc NPM & CLI stuff later**
+
+**Installation:**
+
+1. Clone this repo from the master branch.
+2. Go inside the folder using terminal (i.e cd into /appc_fr).
+3. Run `sudo npm install -g`.
+
 ```
 Usage: appc_fr [command] [options]
 
