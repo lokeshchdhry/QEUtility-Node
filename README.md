@@ -66,7 +66,7 @@ Usage: appcfr cleanup [options]
 ```
 Usage: appfr setup [options]
 
-  Setup prerequsites. This should be run at your first run.
+  Setup prerequisites. This should be run at your first run.
 
   Options:
 
