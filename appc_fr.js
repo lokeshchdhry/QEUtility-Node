@@ -21,11 +21,11 @@ program
 program
     .command('clone')
     .description('Clones repository from github.')
-    .option('-c, --component', 'Clone the component ' + cyan('[sdk, npm, cli]'))
+    .option('-c, --component', 'Clone the component ' + cyan('[sdk, clinpm, cli]'))
     .action(function(option) {
-        if (option === 'sdk'||'SDK') {
+        if (option === 'sdk') {
             cloneRepo_SDK();
-        } else if (option === 'npm'||'NPM') {
+        } else if (option === 'clinpm') {
             console.log('Coming Soon ....');
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
@@ -39,9 +39,9 @@ program
     .description('Command to build, package & install the SDK, Appc NPM & CLI.')
     .option('-c, --component', 'Build the component ' + cyan('[sdk, npm, cli]'))
     .action(function(option) {
-        if (option === 'sdk'||'SDK') {
+        if (option === 'sdk') {
             build_sdk();
-        } else if (option === 'npm'||'NPM') {
+        } else if (option === 'clinpm') {
             console.log('Coming Soon ....');
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
