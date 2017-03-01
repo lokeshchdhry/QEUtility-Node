@@ -75,6 +75,7 @@ var clone = function(repo_link, repo_dir) {
     exec('git clone ' + repo_link, function(err) {
         if (err) {
           console.log(error(err));
+          //Stop the process
           process.exit();
         }
         else {
