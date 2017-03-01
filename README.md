@@ -5,9 +5,10 @@ FR Utility for Appc
 
 **Installation:**
 
-1. Clone this repo from the master branch.
-2. Go inside the folder using terminal (i.e cd into /appc_fr).
-3. Run `sudo npm install -g`.
+1. Download the latest release from release tab.
+2. Unzip the release.
+3. Go inside the folder using terminal (i.e cd into /appc_fr).
+4. Run `sudo npm install -g`.
 
 ```
 Usage: appcfr [command] [options]
@@ -72,5 +73,5 @@ Usage: appfr setup [options]
 
     -h, --help  output usage information
 ```
-Setup command will check if `ANDROID_SDK` & `ANDROID_NDK` paths are set in your your bash profile, if not it will help set it for you. 
+Setup command will check if `ANDROID_SDK` & `ANDROID_NDK` paths are set in your your bash profile, if not it will help set it for you.
 It will also ask & store all your repo links & repo dir paths.
