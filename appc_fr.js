@@ -2,8 +2,11 @@
 
 var program = require('commander');
 var cloneRepo_SDK = require('./clone_sdk');
+var cloneRepo_NPM =  require('./clone_clinpm');
 var build_sdk = require('./build_sdk');
+var build_clinpm = require('./build_clinpm');
 var cleanup_sdk = require('./cleanup_sdk');
+var cleanup_clinpm = require('./cleanup_clinpm');
 var clearMem = require('./clear_mem');
 var setup = require('./setup');
 var chalk = require('chalk');
@@ -26,7 +29,7 @@ program
         if (option === 'sdk') {
             cloneRepo_SDK();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
+            cloneRepo_NPM();
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
@@ -42,7 +45,7 @@ program
         if (option === 'sdk') {
             build_sdk();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
+            build_clinpm();
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
@@ -58,7 +61,7 @@ program
         if (option === 'sdk') {
             cleanup_sdk();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
+            cleanup_clinpm();
         } else if (option === 'cli') {
             console.log('Coming Soon ....');
         } else {
