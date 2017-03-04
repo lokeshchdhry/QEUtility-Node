@@ -10,6 +10,7 @@ FR Utility for Appc
 3. Go inside the folder using terminal (i.e cd into /appc_fr).
 4. Run `sudo npm install -g`.
 
+**NOTE:** You have to run the setup command atleast the first time you use this node module.
 ```
 Usage: appcfr [command] [options]
 
