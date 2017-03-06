@@ -3,12 +3,8 @@ var inquirer = require('inquirer');
 var storage = require('node-persist');
 var chalk = require('chalk');
 var Spinner = require('cli-spinner').Spinner;
+var util = require('./util');
 
-//Setting theme for colors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var cyan = chalk.cyan;
-var bold = chalk.bold;
 
 module.exports = function() {
     //Initialize storage sync (node persist)
@@ -26,7 +22,7 @@ module.exports = function() {
         maxBuffer: 1024 * 1000
     }, function(err) {
         if (err) {
-            console.log(error(err));
+            console.log(util.error(err));
         } else {
             //Stop spinner
             spinner.stop(true);
@@ -42,7 +38,7 @@ module.exports = function() {
                 maxBuffer: 1024 * 1000
             }, function(err) {
                 if (err) {
-                    console.log(error(err));
+                    console.log(util.error(err));
                 } else {
                     //Stop spinner
                     spinner.stop(true);
@@ -64,55 +60,55 @@ module.exports = function() {
                             maxBuffer: 1024 * 500
                         }, function(err) {
                             if (err) {
-                                console.log(error(err));
+                                console.log(util.error(err));
                             } else {
                                 //CD into the build folder in the repo.
                                 process.chdir(storage.getItemSync('dir_sdk') + '/titanium_mobile/build');
                                 exec('npm install', function(err) {
-                                    if (err) console.log(error(err));
-                                    console.log(underline(bold('\n\u25B6 BUILDING THE SDK:')));
+                                    if (err) console.log(util.error(err));
+                                    console.log(util.underline(bold('\n\u25B6 BUILDING THE SDK:')));
                                     //Build the SDK
                                     exec('node scons.js build', {
                                         maxBuffer: 1024 * 500
                                     }, function(err) {
-                                        if (err) console.log(error(err));
-                                        console.log(underline(bold('\n\u25B6 PACKAGING THE SDK:')));
+                                        if (err) console.log(util.error(err));
+                                        console.log(util.underline(bold('\n\u25B6 PACKAGING THE SDK:')));
                                         //Package the SDK
                                         exec('node scons.js package', {
                                             maxBuffer: 1024 * 500
                                         }, function(err) {
-                                            if (err) console.log(error(err));
-                                            console.log(underline(bold('\n\u25B6 INSTALLING THE SDK:')));
+                                            if (err) console.log(util.error(err));
+                                            console.log(util.underline(bold('\n\u25B6 INSTALLING THE SDK:')));
                                             //Install the SDK
                                             exec('node scons.js install', {
                                                 maxBuffer: 1024 * 500
                                             }, function(err) {
-                                                if (err) console.log(error(err));
+                                                if (err) console.log(util.error(err));
                                                 console.log('\n\u2714 Done, please find the installed SDK in your titanium folder');
                                                 console.log('');
                                             }).stdout.on('data', function(data) {
-                                                console.log(cyan(data));
+                                                console.log(util.cyan(data));
                                             });
                                         }).stdout.on('data', function(data) {
-                                            console.log(cyan(data));
+                                            console.log(util.cyan(data));
                                         });
                                     }).stdout.on('data', function(data) {
-                                        console.log(cyan(data));
+                                        console.log(util.cyan(data));
                                     });
                                 }).stdout.on('data', function(data) {
-                                    console.log(cyan(data));
+                                    console.log(util.cyan(data));
                                 });
                             }
                         }).stdout.on('data', function(data) {
-                            console.log(cyan(data));
+                            console.log(util.cyan(data));
                         });
                     });
                 }
             }).stdout.on('data', function(data) {
-                console.log(cyan(data));
+                console.log(util.cyan(data));
             });
         }
     }).stdout.on('data', function(data) {
-        console.log(cyan('\n' + data));
+        console.log(util.cyan('\n' + data));
     });
 };

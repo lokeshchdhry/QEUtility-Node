@@ -1,12 +1,7 @@
 var inquirer = require('inquirer');
 var storage = require('node-persist');
 var chalk = require('chalk');
-
-//Setting theme for errors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var bold = chalk.bold;
-var cyan = chalk.cyan;
+var util = require('./util');
 
 module.exports = function() {
     //Initialize storage sync (node persist)
@@ -19,8 +14,8 @@ module.exports = function() {
     inquirer.prompt(questions).then(function(answers) {
         if (answers.clear) {
             storage.clear(function(err) {
-                if (err) console.log(error(err));
-                console.log(cyan('\n\u25B6 Done clearing memory.'));
+                if (err) console.log(util.error(err));
+                console.log(util.cyan('\n\u25B6 Done clearing memory.'));
             });
         }
     });

@@ -3,21 +3,14 @@ var Spinner = require('cli-spinner').Spinner;
 var fs = require('fs');
 var storage = require('node-persist');
 var inquirer = require('inquirer');
-var chalk = require('chalk');
-// var androidEnv = require('./android_path');
-
-//Setting theme for colors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var cyan = chalk.cyan;
-var bold = chalk.bold;
+var util = require('./util');
 
 module.exports = function() {
     //Initialize storage sync (node persist)
     storage.initSync();
     //Check if repo link & repo dir is stored? If not ask for it else prceed to clone.
     if (storage.getItemSync('repo_link_sdk') === undefined) {
-        console.log(bold('\n\u25B6 Appears that you have not set your default titanium mobile repo link & directory to clone to.'));
+        console.log(util.bold('\n\u25B6 Appears that you have not set your default titanium mobile repo link & directory to clone to.'));
         //questions object array
         var questions = [{
                 name: 'repo_link',
@@ -55,8 +48,8 @@ module.exports = function() {
         //Getting the values & setting it to repoLink & repoDir
         var repoLink = storage.getItemSync('repo_link_sdk');
         var repoDir = storage.getItemSync('dir_sdk');
-        console.log(cyan('\n\u25B6 Clone link: ' + repoLink));
-        console.log(cyan('\u25B6 Clone dir: ' + repoDir));
+        console.log(util.cyan('\n\u25B6 Clone link: ' + repoLink));
+        console.log(util.cyan('\u25B6 Clone dir: ' + repoDir));
         //Calling clone
         clone(repoLink, repoDir);
     }
@@ -66,24 +59,24 @@ module.exports = function() {
 var clone = function(repo_link, repo_dir) {
     process.chdir(repo_dir);
 
-    spinner = new Spinner(' Cloning Titanium Mobile repo .... Please Wait.');
+    console.log('');
+    console.log('Cloning Titanium Mobile repo .... Please Wait.');
+    spinner = new Spinner();
     spinner.setSpinnerString(0);
     spinner.setSpinnerDelay(60);
     spinner.start();
 
-    console.log('');
     exec('git clone ' + repo_link, function(err) {
         if (err) {
-          console.log(error(err));
-          //Stop the process
-          process.exit();
-        }
-        else {
-            console.log(cyan('\n\n\u2714 Cloning done successfully.'));
+            console.log(util.error(err));
+            //Stop the process
+            process.exit();
+        } else {
             spinner.stop(true);
+            console.log(util.cyan('\n\n\u2714 Cloning done successfully.'));
             process.chdir(repo_dir + '/titanium_mobile/.git');
 
-            console.log(cyan("\n\u25B6 Adding 'fetch = +refs/pull/*/head:refs/remotes/origin/pr/*' to the config file'"));
+            console.log(util.cyan("\n\u25B6 Adding 'fetch = +refs/pull/*/head:refs/remotes/origin/pr/*' to the config file'"));
 
             //Logic to add "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*" to the config file
             var data1 = fs.readFileSync('config').toString().split("\n");
@@ -91,13 +84,13 @@ var clone = function(repo_link, repo_dir) {
             var text = data1.join("\n");
 
             fs.writeFile('config', text, function(err) {
-                if (err) return console.log(error(err));
+                if (err) return console.log(util.error(err));
                 else {
-                    console.log(cyan('\n\u2714 Done modifying the the config file.\n'));
+                    console.log(util.cyan('\n\u2714 Done modifying the the config file.\n'));
                 }
             });
         }
     }).stdout.on('data', function(data) {
-        console.log(cyan(data));
+        console.log(util.cyan(data));
     });
 };

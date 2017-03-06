@@ -3,12 +3,7 @@ var inquirer = require('inquirer');
 var storage = require('node-persist');
 var chalk = require('chalk');
 var Spinner = require('cli-spinner').Spinner;
-
-//Setting theme for colors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var cyan = chalk.cyan;
-var bold = chalk.bold;
+var util = require('./util');
 
 module.exports = function() {
     //Initialize storage sync (node persist)
@@ -26,7 +21,7 @@ module.exports = function() {
         maxBuffer: 1024 * 1000
     }, function(err) {
         if (err) {
-            console.log(error(err));
+            console.log(util.error(err));
         } else {
             //Stop spinner
             spinner.stop(true);
@@ -42,7 +37,7 @@ module.exports = function() {
                 maxBuffer: 1024 * 1000
             }, function(err) {
                 if (err) {
-                    console.log(error(err));
+                    console.log(util.error(err));
                 } else {
                     //Stop spinner
                     spinner.stop(true);
@@ -64,38 +59,38 @@ module.exports = function() {
                             maxBuffer: 1024 * 500
                         }, function(err) {
                             if (err) {
-                                console.log(error(err));
+                                console.log(util.error(err));
                             } else {
                                 exec('sudo npm install --production', function(err) {
                                     if (err) {
-                                        console.log(err);
+                                        console.log(util.error(err));
                                     } else {
                                         console.log('');
                                         exec('sudo npm link', function(err) {
                                             if (err) {
-                                                console.log(err);
+                                                console.log(util.error(err));
                                             } else {
                                                 console.log('');
                                                 console.log('\u2714 Done building & installing appc NPM.');
                                             }
                                         }).stdout.on('data', function(data) {
-                                            console.log(cyan(data));
+                                            console.log(util.cyan(data));
                                         });
                                     }
                                 }).stdout.on('data', function(data) {
-                                    console.log(cyan(data));
+                                    console.log(util.cyan(data));
                                 });
                             }
                         }).stdout.on('data', function(data) {
-                            console.log(cyan(data));
+                            console.log(util.cyan(data));
                         });
                     });
                 }
             }).stdout.on('data', function(data) {
-                console.log(cyan(data));
+                console.log(util.cyan(data));
             });
         }
     }).stdout.on('data', function(data) {
-        console.log(cyan('\n' + data));
+        console.log(util.cyan('\n' + data));
     });
 };
