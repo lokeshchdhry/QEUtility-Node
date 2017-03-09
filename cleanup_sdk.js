@@ -39,7 +39,7 @@ module.exports = function() {
                             }
 
                             //Doing git fetch origin
-                            console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN.')));
+                            console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
                             exec('git fetch origin', function(err) {
                                 if (err) {
                                     console.log(util.error(err));
