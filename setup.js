@@ -2,12 +2,7 @@ var fs = require('fs');
 var chalk = require('chalk');
 var inquirer = require('inquirer');
 var storage = require('node-persist');
-
-//Setting theme for colors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var cyan = chalk.cyan;
-var bold = chalk.bold;
+var util = require('./util');
 
 module.exports = function() {
     //Get the username
@@ -19,9 +14,9 @@ module.exports = function() {
             var android_sdk = process.env.ANDROID_SDK;
             var android_ndk = process.env.ANDROID_NDK;
 
-            console.log(underline('\nChecking if ANDROID_SDK env variable is set.'));
+            console.log(util.underline('\nChecking if ANDROID_SDK env variable is set.'));
             if (android_sdk === undefined) {
-                console.log(cyan('\n\u2717 ANDROID_SDK env variable is not set. I will help to set it up.'));
+                console.log(util.cyan('\n\u2717 ANDROID_SDK env variable is not set. I will help to set it up.'));
 
                 var questions = [{
                     name: 'android_sdkPath',
@@ -37,18 +32,18 @@ module.exports = function() {
                     var text = data1.join("\n");
 
                     fs.writeFile('.bash_profile', text, function(err) {
-                        if (err) return console.log(error(err));
+                        if (err) return console.log(util.error(err));
                         else {
-                            console.log(cyan('\n\u2714 Done adding ANDROID_SDK to the bash_profile.'));
+                            console.log(util.cyan('\n\u2714 Done adding ANDROID_SDK to the bash_profile.'));
                         }
                     });
                 });
             } else {
-                console.log(cyan('\u2714 ANDROID_SDK is set in bash_profile\n'));
+                console.log(util.cyan('\u2714 ANDROID_SDK is set in bash_profile\n'));
             }
-            console.log(underline('\nChecking if ANDROID_NDK env variable is set.'));
+            console.log(util.underline('\nChecking if ANDROID_NDK env variable is set.'));
             if (android_ndk === undefined) {
-                console.log(cyan('\n\u2717 ANDROID_SNK env variable is not set. I will help to set it up.'));
+                console.log(util.cyan('\n\u2717 ANDROID_SNK env variable is not set. I will help to set it up.'));
 
                 var questions1 = [{
                     name: 'android_ndkPath',
@@ -64,17 +59,17 @@ module.exports = function() {
                     var text = data1.join("\n");
 
                     fs.writeFile('.bash_profile', text, function(err) {
-                        if (err) return console.log(error(err));
+                        if (err) return console.log(util.error(err));
                         else {
-                            console.log(cyan('\n\u2714 Done adding ANDROID_NDK to the bash_profile.'));
+                            console.log(util.cyan('\n\u2714 Done adding ANDROID_NDK to the bash_profile.'));
                         }
                     });
                 });
             } else {
-                console.log(cyan('\u2714 ANDROID_NDK is set in bash_profile'));
+                console.log(util.cyan('\u2714 ANDROID_NDK is set in bash_profile'));
             }
 
-            console.log(underline('\n\u25B6 Setting repo links & repo paths:'));
+            console.log(util.underline('\n\u25B6 Setting repo links & repo paths:'));
             //Initialize storage sync (node persist)
             storage.initSync();
 
@@ -149,20 +144,20 @@ module.exports = function() {
                 storage.setItemSync('repo_link_cli_core', answers.repo_link_cli_core);
                 //Printing the details to console
                 console.log('');
-                console.log(underline('\u25B6 Stored information:'));
-                console.log('TIMOB repo link :    ' + cyan(answers.repo_link_sdk));
-                console.log('TIMOB SDK clone dir: ' + cyan(answers.dir_sdk));
-                console.log('Appc NPM repo link : ' + cyan(answers.repo_link_npm));
-                console.log('Appc NPM clone dir : ' + cyan(answers.dir_npm));
-                console.log('CLI core repo link : ' + cyan(answers.repo_link_cli_core));
-                console.log('CLI core dir :       ' + cyan('This is set when cloning the CLI core repo.'));
+                console.log(util.underline('\u25B6 Stored information:'));
+                console.log('TIMOB repo link :    ' + util.cyan(answers.repo_link_sdk));
+                console.log('TIMOB SDK clone dir: ' + util.cyan(answers.dir_sdk));
+                console.log('Appc NPM repo link : ' + util.cyan(answers.repo_link_npm));
+                console.log('Appc NPM clone dir : ' + util.cyan(answers.dir_npm));
+                console.log('CLI core repo link : ' + util.cyan(answers.repo_link_cli_core));
+                console.log('CLI core dir :       ' + util.cyan('This is set when cloning the CLI core repo.'));
                 console.log('');
                 console.log('\u2714 Setup Complete.');
                 console.log('');
             });
 
         } else {
-            console.log(error('\n\u2717.bash_profile does not exist. Please create one.'));
+            console.log(util.error('\n\u2717.bash_profile does not exist. Please create one.'));
         }
     });
 };

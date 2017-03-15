@@ -2,17 +2,15 @@
 
 var program = require('commander');
 var cloneRepo_SDK = require('./clone_sdk');
+var cloneRepo_NPM = require('./clone_clinpm');
 var build_sdk = require('./build_sdk');
+var build_clinpm = require('./build_clinpm');
 var cleanup_sdk = require('./cleanup_sdk');
+var cleanup_clinpm = require('./cleanup_clinpm');
 var clearMem = require('./clear_mem');
 var setup = require('./setup');
-var chalk = require('chalk');
+var util = require('./util');
 
-//Setting theme for colors
-var error = chalk.bold.red;
-var underline = chalk.underline;
-var cyan = chalk.cyan;
-var bold = chalk.bold;
 
 program
     .version('1.0.0')
@@ -21,48 +19,48 @@ program
 program
     .command('clone')
     .description('Clones repository from github.')
-    .option('-c, --component', 'Clone the component ' + cyan('[sdk, clinpm, cli]'))
+    .option('-c, --component', 'Clone the component ' + util.cyan('[sdk, clinpm, clicore]'))
     .action(function(option) {
         if (option === 'sdk') {
             cloneRepo_SDK();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
-        } else if (option === 'cli') {
+            cloneRepo_NPM();
+        } else if (option === 'clicore') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
+            console.log(util.cyan('\n\u2717 Please input the right component [sdk, clinpm, clicore]\n'));
         }
     });
 
 program
     .command('build')
-    .description('Command to build, package & install the SDK, CLI NPM & CLI.')
-    .option('-c, --component', 'Build the component ' + cyan('[sdk, clinpm, cli]'))
+    .description('Command to build, package & install the SDK, CLI NPM & CLI CORE.')
+    .option('-c, --component', 'Build the component ' + util.cyan('[sdk, clinpm, clicore]'))
     .action(function(option) {
         if (option === 'sdk') {
             build_sdk();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
-        } else if (option === 'cli') {
+            build_clinpm();
+        } else if (option === 'clicore') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
+            console.log(util.cyan('\n\u2717 Please input the right component [sdk, clinpm, clicore]\n'));
         }
     });
 
 program
     .command('cleanup')
     .description('Command to cleanup before you build for a new PR.')
-    .option('-c, --component', 'Build the component ' + cyan('[sdk, clinpm, cli]'))
+    .option('-c, --component', 'Build the component ' + util.cyan('[sdk, clinpm, clicore]'))
     .action(function(option) {
         if (option === 'sdk') {
             cleanup_sdk();
         } else if (option === 'clinpm') {
-            console.log('Coming Soon ....');
-        } else if (option === 'cli') {
+            cleanup_clinpm();
+        } else if (option === 'clicore') {
             console.log('Coming Soon ....');
         } else {
-            console.log(cyan('\n\u2717 Please input the right component [sdk, clinpm, cli]\n'));
+            console.log(util.cyan('\n\u2717 Please input the right component [sdk, clinpm, clicore]\n'));
         }
     });
 
@@ -75,7 +73,7 @@ program
 
 program
     .command('setup')
-    .description('Setup prerequisites.'+ cyan(' This should be run at your first run.'))
+    .description('Setup prerequisites.' + util.cyan(' This should be run at your first run.'))
     .action(function() {
         setup();
     });

@@ -9,7 +9,7 @@ module.exports = function() {
     //Initialize node persist.
     storage.initSync();
     //CD in to TIMOB repo dir.
-    process.chdir(storage.getItemSync('dir_sdk') + '/titanium_mobile');
+    process.chdir(storage.getItemSync('dir_npm') + '/appc-install');
 
     //Get the current PR number.
     exec("git branch| grep '* pr/'|cut -c2-", function(err, data) {
@@ -39,12 +39,28 @@ module.exports = function() {
                             }
 
                             //Doing git fetch origin
-                            console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
+                            console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN.')));
                             exec('git fetch origin', function(err) {
                                 if (err) {
                                     console.log(util.error(err));
+                                } else {
+                                    console.log(util.cyan('DONE'));
+                                    console.log('');
+
+                                    //Going back to GA CLI NPM
+                                    console.log(util.underline(util.bold('\u25B6 GOING BACK TO GA CLI NPM.')));
+                                    exec('sudo npm uninstall -g appcelerator && sudo npm install -g appcelerator', function(err) {
+                                        if (err) {
+                                            console.log(err);
+                                        } else {
+                                            console.log('');
+                                            console.log(util.cyan('DONE'));
+                                        }
+                                    }).stdout.on('data', function(data) {
+                                        console.log(util.cyan(data));
+                                    });
                                 }
-                                console.log(util.cyan('DONE'));
+
                             }).stdout.on('data', function(data) {
                                 console.log(util.cyan(data));
                             });
@@ -59,8 +75,7 @@ module.exports = function() {
                 console.log(util.cyan('DONE'));
             });
         } else {
-            console.log(util.bold('\u2717 No branch exists. Please proceed to build for a PR'));
-            console.log('');
+            console.log(util.bold('\n\u2717 No branch exists. Please proceed to build for a PR'));
         }
     });
 };
