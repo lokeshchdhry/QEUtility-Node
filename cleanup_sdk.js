@@ -59,7 +59,8 @@ module.exports = function() {
                 console.log(util.cyan('DONE'));
             });
         } else {
-            console.log(util.bold('\n\u2717 No branch exists. Please proceed to build for a PR'));
+            console.log(util.bold('\u2717 No branch exists. Please proceed to build for a PR'));
+            console.log('');
         }
     });
 };
