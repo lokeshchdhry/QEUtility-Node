@@ -9,11 +9,12 @@ var question_PR = require('../misc/question_PR');
 var checkout_PR =  require('../misc/checkout_PR');
 var npm_install_prod = require('./npm_install_prod');
 var npm_link = require('../clinpm/npm_link');
+var dir_path = require('path');
 
 
 module.exports = function() {
   //Get the current PR number.
-  process.chdir(util.npm_dir+'/appc-install');
+  process.chdir(dir_path.join(util.npm_dir, '/appc-install'));
   var pr_no;
   pr.getPR_No(function(PR) {
     pr_no = PR;
@@ -43,7 +44,7 @@ module.exports = function() {
 };
 
   var build = function(prNumber) {
-    var path = util.npm_dir+'/appc-install';
+    var path = dir_path.join(util.npm_dir, '/appc-install');
     process.chdir(path);
     if (prNumber === undefined) {
 

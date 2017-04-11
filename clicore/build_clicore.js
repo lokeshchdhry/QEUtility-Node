@@ -8,6 +8,7 @@ var checkout_PR = require('../misc/checkout_PR');
 var Async = require('async');
 var pr = require('../misc/get_PR');
 var repoCheck = require('../misc/repo_check');
+var dir_path = require('path');
 
 module.exports = function(){
   var name = 'clicore';
@@ -15,11 +16,12 @@ module.exports = function(){
     if(flag){
       //Get appc cli core install path from storage
       var install_path = util.clicore_dir;
-      var pkg_path = install_path+'/package';
+      // var pkg_path = install_path+'/package';
+      var pkg_path = dir_path.join(install_path, '/package');
       var ver = '1.0.0';
 
       //Get the current PR number.
-      process.chdir(pkg_path+'/appc-cli');
+      process.chdir(dir_path.join(pkg_path, '/appc-cli'));
       var pr_no;
       pr.getPR_No(function(PR) {
         pr_no = PR;
@@ -93,7 +95,7 @@ module.exports = function(){
 var build = function(path, prNumber){
   if (prNumber === undefined) {
     var task = [];
-    task.push(function(callback){change_dir(path+'/appc-cli', callback);});
+    task.push(function(callback){change_dir(dir_path.join(path, '/appc-cli'), callback);});
     task.push(function(callback){fetch_PR(callback);});
     task.push(function(callback){question_PR(callback);});
 
@@ -108,17 +110,12 @@ var build = function(path, prNumber){
     });
   }
   else{
-    console.log('*****'+'reached here');
-    console.log('*****'+path);
-    console.log('*****'+prNumber.slice(4));
     build_pr(path, prNumber.slice(4));
   }
 
   var build_pr = function(path, prNo){
-    console.log('#######'+path);
-    console.log('#######'+prNo);
     var task1 = [];
-    task1.push(function(callback){change_dir(path+'/appc-cli', callback);});
+    task1.push(function(callback){change_dir(dir_path.join(path, '/appc-cli'), callback);});
     task1.push(function(callback){checkout_PR(prNo, 'clicore', callback);});
     task1.push(function(callback){install_core(callback);});
     task1.push(function(callback){appc_use('1.0.0', callback);});
@@ -138,7 +135,6 @@ var build = function(path, prNumber){
 function change_dir(path, callback){
   try{
     process.chdir(path);
-    console.log('*******'+ process.cwd());
     callback(null, null);
   }
   catch(err){

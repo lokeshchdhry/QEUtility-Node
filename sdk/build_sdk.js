@@ -12,6 +12,7 @@ var build_sdk_func = require('../sdk/build_sdk_func');
 var package_sdk = require('../sdk/package_sdk');
 var install_sdk = require('../sdk/install_sdk');
 var repoCheck = require('../misc/repo_check');
+var dir_path = require('path');
 
 
 module.exports = function() {
@@ -19,7 +20,7 @@ module.exports = function() {
   repoCheck.repo_check(name, function(flag){
     if(flag){
       //Get the current PR number.
-      process.chdir(util.sdk_dir + '/titanium_mobile');
+      process.chdir(dir_path.join(util.sdk_dir, '/titanium_mobile'));
       var pr_no;
       pr.getPR_No(function(PR) {
         pr_no = PR;
@@ -56,7 +57,7 @@ module.exports = function() {
 };
 
 var build = function(prNumber) {
-  var path = util.sdk_dir + '/titanium_mobile';
+  var path = dir_path.join(util.sdk_dir, '/titanium_mobile');
   process.chdir(path);
   if (prNumber === undefined) {
 

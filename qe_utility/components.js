@@ -2,95 +2,48 @@ var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var util = require('../misc/util');
-var os = require('os');
 var client = require('adbkit').createClient();
 var Async = require('async');
 
 module.exports = function(){
-  var studio_ver;
+  // var studio_ver;
 
   var task = [];
   task.push(function(callback){get_studio_ver(callback);});
-  // task.push(function(callback){get_sdk_ver(callback);});
+  task.push(function(callback){get_sdk_ver(callback);});
   task.push(function(callback){get_os_ver(callback);});
   task.push(function(callback){get_xcode_ver(callback);});
-  task.push(function(callback){get_appc_ver(callback);});
+  task.push(function(callback){get_appc_npm_ver(callback);});
+  task.push(function(callback){get_appc_clicore_ver(callback);});
   task.push(function(callback){get_ti_cli_ver(callback);});
   task.push(function(callback){get_alloy_ver(callback);});
   task.push(function(callback){get_node_ver(callback);});
   task.push(function(callback){get_java_ver(callback);});
   task.push(function(callback){get_env(callback);});
-  // task.push(function(callback){get_connected_devices(callback);});
+  task.push(function(callback){get_connected_devices(callback);});
 
-Async.series(task, function(err, results){
-  if(err){
-    console.log(util.error(err));
-    //exit process in case of error
-    process.exit();
-  }
-  console.log('***'+results.length);
-  console.log('*******'+results);
-});
+  Async.series(task, function(err, results){
+    if(err){
+      console.log(util.error(err));
+      //exit process in case of error
+      process.exit();
+    }
 
-
-  // get_studio_ver(function(ver){
-  //   studio_ver = ver;
-  //   console.log('Studio Version :'+studio_ver);
-  // });
-  //
-  // get_sdk_ver(function(txt){
-  //   console.log('SDK Version :'+txt);
-  // });
-  //
-  // get_os_ver(function(ver){
-  //   console.log('Mac OS Version :'+ver);
-  // });
-  //
-  // get_xcode_ver(function(ver){
-  //   console.log('Xcode Version :'+ver);
-  // });
-  //
-  // var appc_ver;
-  // get_appc_ver(function(ver){
-  //   appc_ver = ver;
-  //   console.log('Appc CLI AND Appc NPM :'+appc_ver);
-  // });
-  //
-  // get_ti_cli_ver(function(ver){
-  //   console.log('Ti CLI :'+ver);
-  // });
-  //
-  // get_alloy_ver(function(ver){
-  //   console.log('Alloy :'+ver);
-  // });
-  //
-  // get_node_ver(function(ver){
-  //   console.log('Node :'+ver);
-  // });
-  //
-  // get_java_ver(function(err, ver){
-  //   console.log('Java Ver :'+ver);
-  // });
-  //
-  // get_env(function(ver){
-  //   console.log('Environment :'+ver);
-  // });
-  //
-  // get_connected_devices(function(device){
-  //   console.log('Device/s :\n'+device);
-  // });
-
-//   a="appc -v -o json"
-// b="appc ti -v"
-// c="appc alloy -v"
-// d="appc ti sdk --no-color"
-// f="sw_vers -productVersion"
-// g="/usr/bin/xcodebuild -version"
-// h="node -v"
-// i="appc whoami"
-// j="javac -version"
-
-
+    console.log('\nENVIRONMENT:-');
+    console.log('----------------------------');
+    console.log('Studio Ver : '+util.cyan(results[0]));
+    console.log('SDK Ver :    '+util.cyan(results[1]+'\n'));
+    console.log('OS Ver :     '+util.cyan(results[2]));
+    console.log('Xcode Ver :  '+util.cyan(results[3]));
+    console.log('Appc NPM :   '+util.cyan(results[4]+'\n'));
+    console.log('Appc CLI :   '+util.cyan(results[5]+'\n'));
+    console.log('Ti CLI Ver : '+util.cyan(results[6]));
+    console.log('Alloy Ver :  '+util.cyan(results[7]));
+    console.log('Node Ver :   '+util.cyan(results[8]+'\n'));
+    console.log('Java Ver :   '+util.cyan(results[9]+'\n'));
+    console.log('Env :        '+util.cyan(results[10]+'\n'));
+    console.log('Devices :    '+util.cyan(results[11])+'\n');
+  });
 };
 
 function get_studio_ver(callback){
@@ -101,40 +54,42 @@ function get_studio_ver(callback){
       process.exit();
     }
     var ver = result.substring(16,35);
-    callback(null,ver);
+    callback(null, ver);
   });
 }
 
 function get_sdk_ver(callback){
-  var txt = exec('appc ti sdk --no-color', function(err, result){
+  exec('appc ti config -o json', function(err, result){
     if(err){
       console.log(util.error(err));
       //exit process in case of error
       process.exit();
     }
-    // var txt = result.split(' ')[16];
-    var txt = result.split(' ')[45];
-    // var txt = result.split('SDKs:\n   ');
-    // var txt1 = result.split(' [selected]');
-    // var index1 = result.indexOf('SDKs:\n  ');
-    // var index2 = result.indexOf(' [selected]');
-    // console.log(index1);
-    // console.log(index2);
-
-    // var final_txt = txt.slice(index1+9, index2);
-    // var final_txt1 = final_txt.trim();
-    callback(txt);
+    //Converting the json text to javascript object using JSON.parse & getting the "sdk.selected" value
+    var ver = JSON.parse(result)["sdk.selected"];
+    callback(null, ver);
   });
 }
 
-function get_appc_ver(callback){
+function get_appc_npm_ver(callback){
   exec('appc -v -o json', function(err, result){
     if(err){
       console.log(util.error(err));
       //exit process in case of error
       process.exit();
     }
-    callback(null, result);
+    callback(null, JSON.parse(result).NPM);
+  });
+}
+
+function get_appc_clicore_ver(callback){
+  exec('appc -v -o json', function(err, result){
+    if(err){
+      console.log(util.error(err));
+      //exit process in case of error
+      process.exit();
+    }
+    callback(null, JSON.parse(result).CLI);
   });
 }
 
@@ -157,7 +112,8 @@ function get_xcode_ver(callback){
       //exit process in case of error
       process.exit();
     }
-    var xcode_ver = result;
+    var split = result.split('Build');
+    var xcode_ver = split[0];
     callback(null, xcode_ver);
   });
 }
@@ -192,19 +148,19 @@ function get_node_ver(callback){
 }
 
 function get_java_ver(callback) {
-    var spawn = require('child_process').spawn('java', ['-version']);
-    spawn.on('error', function(err){
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
-    });
-    spawn.stderr.on('data', function(data) {
-        data = data.toString().split('\n')[0];
-        var javaVersion = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
-        if (javaVersion !== false) {
-            callback(null, javaVersion);
-        }
-    });
+  var spawn = require('child_process').spawn('java', ['-version']);
+  spawn.on('error', function(err){
+    console.log(util.error(err));
+    //exit process in case of error
+    process.exit();
+  });
+  spawn.stderr.on('data', function(data) {
+    data = data.toString().split('\n')[0];
+    var javaVersion = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
+    if (javaVersion !== false) {
+      callback(null, javaVersion);
+    }
+  });
 }
 
 function get_env(callback){
@@ -220,37 +176,30 @@ function get_env(callback){
 }
 
 function get_connected_devices(callback){
-  client.listDevices(function(err, result){
+  exec('appc ti info -t android -o json', function(err, result){
     if(err){
       console.log(util.error(err));
       //exit process in case of error
       process.exit();
     }
-    // callback(result);
-  }).then(function(devices){
-    var device;
-    devices.forEach(function(device){
-      // console.log('*****'+JSON.stringify(id));
-      client.getProperties(device.id, function(err, properties){
-        if(err){
-          console.log(util.error(err));
-          //exit process in case of error
-          process.exit();
-        }
-        var device_details = properties['ro.product.model']+' running '+properties['ro.build.version.release']+' API level '+properties['ro.build.version.sdk'];
-        callback(null, device_details);
-      });
-    });
-  });
-}
-
-function get_node_ver(callback){
-  exec('node -v', function(err, result){
-      if(err){
-        console.log(util.error(err));
-        //exit process in case of error
-        process.exit();
+    //reading nuber of devices connected
+    var count = JSON.parse(result).android.devices.length;
+    if(count === 0){
+      callback(null, 'No device attached');
     }
-    callback(null, result);
+    else{
+      //creating a device object
+      var device = {};
+      var devices = '';
+      for(var i=0; i<count; i++){
+        //putting device details in object
+        device['brand'+i] = JSON.parse(result).android.devices[i].brand;
+        device['model'+i] = JSON.parse(result).android.devices[i].model;
+        device['os_ver'+i] = JSON.parse(result).android.devices[i].release;
+
+        devices += device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i];
+      }
+      callback(null, devices);
+    }
   });
 }

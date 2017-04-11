@@ -33,7 +33,7 @@ module.exports = {
     //Start spinner
     spinner_start: function() {
         spinner = new Spinner();
-        spinner.setSpinnerString(0);
+        spinner.setSpinnerString(2);
         spinner.setSpinnerDelay(60);
         spinner.start();
     },

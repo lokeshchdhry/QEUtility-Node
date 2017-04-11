@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-
 var program = require('commander');
 var cloneRepo_SDK = require('./sdk/clone_sdk');
 var cloneRepo_NPM = require('./clinpm/clone_clinpm');
@@ -9,6 +8,7 @@ var build_clinpm = require('./clinpm/build_clinpm');
 var build_clicore = require('./clicore/build_clicore');
 var cleanup_sdk = require('./sdk/cleanup_sdk');
 var cleanup_clinpm = require('./clinpm/cleanup_clinpm');
+var cleanup_clicore = require('./clicore/cleanup_clicore');
 var clearMem = require('./misc/clear_mem');
 var setup = require('./setup/setup');
 var stored_paths = require('./setup/stored_paths');
@@ -248,12 +248,12 @@ inquirer.prompt({
     value: 'exit'
   }]
 }).then(function (answers) {
-  switch(JSON.stringify(answers.main_options)){
-    case '"qe_utility"':
+  switch(answers.main_options){
+    case 'qe_utility':
     inquirer.prompt({
       type: 'list',
       name: 'qe_util_opt',
-      message: 'What do you like to do in QE Utility ?',
+      message: 'What would you like to do in QE Utility ?',
       choices: [{
               name: 'CHECK INSTALLED COMPONENTS',
               value:'compo',
@@ -286,15 +286,15 @@ inquirer.prompt({
               value: 'exit'
             }]
     }).then(function(answers){
-      exec_qe_utility(JSON.stringify(answers.qe_util_opt));
+      exec_qe_utility(answers.qe_util_opt);
     });
     break;
 
-    case '"sdk_fr"':
+    case 'sdk_fr':
     inquirer.prompt({
       type: 'list',
       name: 'sdk_fr_opt',
-      message: 'What do you like to do ?',
+      message: 'What would you like to do ?',
       choices: [{
               name: 'CLONE TIMOB SDK REPO',
               value:'clone_sdk',
@@ -311,15 +311,15 @@ inquirer.prompt({
               value: 'exit'
             }]
     }).then(function(answers){
-      exec_sdk_fr(JSON.stringify(answers.sdk_fr_opt));
+      exec_sdk_fr(answers.sdk_fr_opt);
     });
     break;
 
-    case '"clinpm_fr"':
+    case 'clinpm_fr':
     inquirer.prompt({
       type: 'list',
       name: 'clinpm_fr_opt',
-      message: 'What do you like to do ?',
+      message: 'What would you like to do ?',
       choices: [{
               name: 'CLONE APPC CLI NPM REPO',
               value:'clone_clinpm',
@@ -336,15 +336,15 @@ inquirer.prompt({
               value: 'exit'
             }]
     }).then(function(answers){
-      exec_clinpm_fr(JSON.stringify(answers.clinpm_fr_opt));
+      exec_clinpm_fr(answers.clinpm_fr_opt);
     });
     break;
 
-    case '"clicore_fr"':
+    case 'clicore_fr':
     inquirer.prompt({
       type: 'list',
       name: 'clicore_fr_opt',
-      message: 'What do you like to do ?',
+      message: 'What would you like to do ?',
       choices: [{
               name: 'CLONE APPC CLI CORE REPO',
               value:'clone_clicore',
@@ -361,53 +361,65 @@ inquirer.prompt({
               value: 'exit'
             }]
     }).then(function(answers){
-      exec_clicore_fr(JSON.stringify(answers.clicore_fr_opt));
+      exec_clicore_fr(answers.clicore_fr_opt);
     });
     break;
 
-    case '"setup"':
-      run_setup();
+    case 'setup':
+    inquirer.prompt({
+      type: 'list',
+      name: 'setup_opt',
+      message: 'What would you like to do ?',
+      choices: [{
+              name: 'RUN SETUP',
+              value:'run_setup',
+            },
+            {
+              name: 'CHECK STORED PATHS',
+              value:'stored_paths',
+            }]
+    }).then(function(answers){
+      setup_opt(answers.setup_opt);
+    });
     break;
 
-    case '"exit"':
+    case 'exit':
       exit_func();
     break;
   }
-
 });
 
 function exec_qe_utility(task){
-  console.log('******'+task);
   switch(task){
-    case '"compo"':
+    case 'compo':
       components();
       break;
 
-    case '"install_core"':
+    case 'install_core':
       install_core();
       break;
 
-    case '"install_appc_npm"':
+    case 'install_appc_npm':
       install_appc_npm();
       break;
 
-    case '"install_sdk"':
+    case 'install_sdk':
       install_sdk();
       break;
 
-    case '"select_sdk"':
+    case 'select_sdk':
       select_sdk();
       break;
 
-    case '"to_prod"':
+    case 'to_prod':
       to_prod();
       break;
 
-    case '"to_preprod"':
+    case 'to_preprod':
       to_preprod();
       break;
 
-    case '"exit"':
+    case 'exit':
       exit_func();
       break;
 
@@ -417,17 +429,16 @@ function exec_qe_utility(task){
 }
 
 function exec_sdk_fr(task){
-  console.log('******'+task);
   switch(task){
-    case '"clone_sdk"':
+    case 'clone_sdk':
       cloneRepo_SDK();
       break;
 
-    case '"build_sdk"':
+    case 'build_sdk':
       build_sdk();
       break;
 
-    case '"clean_sdk"':
+    case 'clean_sdk':
       cleanup_sdk();
       break;
 
@@ -437,17 +448,16 @@ function exec_sdk_fr(task){
 }
 
 function exec_clinpm_fr(task){
-  console.log('******'+task);
   switch(task){
-    case '"clone_clinpm"':
+    case 'clone_clinpm':
       cloneRepo_NPM();
       break;
 
-    case '"build_clinpm"':
+    case 'build_clinpm':
       build_clinpm();
       break;
 
-    case '"clean_clinpm"':
+    case 'clean_clinpm':
       cleanup_clinpm();
       break;
 
@@ -457,18 +467,17 @@ function exec_clinpm_fr(task){
 }
 
 function exec_clicore_fr(task){
-  console.log('******'+task);
   switch(task){
-    case '"clone_clicore"':
-      cloneRepo_NPM();
+    case 'clone_clicore':
+      cloneRepo_CLICore();
       break;
 
-    case '"build_clicore"':
-      build_clinpm();
+    case 'build_clicore':
+      build_clicore();
       break;
 
-    case '"clean_clicore"':
-      cleanup_clinpm();
+    case 'clean_clicore':
+      cleanup_clicore();
       break;
 
     default:
@@ -476,8 +485,19 @@ function exec_clicore_fr(task){
   }
 }
 
-function run_setup(){
-  setup();
+function setup_opt(task){
+  switch(task){
+    case 'run_setup':
+      setup();
+      break;
+
+    case 'stored_paths':
+      stored_paths();
+      break;
+
+    default:
+      console.log('Invalid Setup option');
+  }
 }
 
 function exit_func(){

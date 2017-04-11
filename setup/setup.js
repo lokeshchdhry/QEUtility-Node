@@ -2,17 +2,18 @@ var fs = require('fs');
 var chalk = require('chalk');
 var inquirer = require('inquirer');
 var util = require('../misc/util');
+var path = require('path');
 
 module.exports = function() {
     //Get the username
     var user = util.user;
 
     //Hardcoding the cli core clone path/dir
-    var clicore_install_path = '/Users/' + user + '/.appcelerator/install/1.0.0';
+    var clicore_install_path = path.join('/Users/', user, '/.appcelerator/install/1.0.0');
     util.setSyncValue('dir_cli_core', clicore_install_path);
 
     //Checking if bash_profile exists
-    fs.exists('/Users/' + user + '/.bash_profile', function(exists) {
+    fs.exists(path.join('/Users/', user, '/.bash_profile'), function(exists) {
         if (exists) {
             var android_sdk = process.env.ANDROID_SDK;
             var android_ndk = process.env.ANDROID_NDK;

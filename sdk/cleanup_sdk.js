@@ -5,12 +5,13 @@ var chalk = require('chalk');
 var util = require('../misc/util');
 var pr = require('../misc/get_PR');
 var Async = require('async');
+var dir_path = require('path');
 
 module.exports = function() {
     console.log('');
     //Initialize node persist.
     storage.initSync();
-    var path = util.sdk_dir+'/titanium_mobile';
+    var path = dir_path.join(util.sdk_dir, '/titanium_mobile');
     //CD in to TIMOB repo dir.
     process.chdir(path);
 

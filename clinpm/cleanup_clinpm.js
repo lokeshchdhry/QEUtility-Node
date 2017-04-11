@@ -3,13 +3,14 @@ var storage = require('node-persist');
 var inquirer = require('inquirer');
 var chalk = require('chalk');
 var util = require('../misc/util');
+var path = require('path');
 
 module.exports = function() {
     console.log('');
     //Initialize node persist.
     storage.initSync();
     //CD in to TIMOB repo dir.
-    process.chdir(storage.getItemSync('dir_npm') + '/appc-install');
+    process.chdir(path.join(storage.getItemSync('dir_npm'), '/appc-install'));
 
     //Get the current PR number.
     exec("git branch| grep '* pr/'|cut -c2-", function(err, data) {

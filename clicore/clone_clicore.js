@@ -6,19 +6,20 @@ var fetch_PR = require('../misc/fetch_PR');
 var question_PR = require('../misc/question_PR');
 var checkout_PR = require('../misc/checkout_PR');
 var Async = require('async');
+var dir_path = require('path');
 
 module.exports = function(){
   //Get appc cli core install path from storage
   var install_path = util.clicore_dir;
-  var pkg_path = install_path+'/package';
+  var pkg_path = dir_path.join(install_path, '/package');
   var ver = '1.0.0';
 
   //Checking if package folder exists, if not create it
   fs.exists(pkg_path, function(exists){
     if(!exists){
       fs.mkdirSync(install_path);
-      fs.mkdirSync(install_path+'/package');
-      var pkgPath = install_path+'/package';
+      fs.mkdirSync(dir_path.join(install_path, '/package'));
+      var pkgPath = dir_path.join(install_path, '/package');
       //change diir to package dir
       process.chdir(pkg_path);
     }
@@ -80,7 +81,7 @@ function clone_clicore(repo_link, repo_dir) {
       //Stop spinner
       util.spinner_stop(true);
       console.log(util.cyan('\n\n\u2714 Cloning done successfully.'));
-      process.chdir(repo_dir + '/appc-cli/.git');
+      process.chdir(dir_path.join(repo_dir, '/appc-cli/.git'));
       //Call modify_config from utils.js
       util.modify_config(function(done){
         if(done){
