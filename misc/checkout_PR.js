@@ -5,7 +5,7 @@ var path = require('path');
 module.exports = function checkout_PR(prNo, component ,callback) {
   exec('git checkout pr/' + prNo, {
     maxBuffer: 1024 * 500
-  }, function(err) {
+  }, function(err, data) {
     if (err) {
       console.log(util.error(err));
       //exit process in case of error
@@ -16,8 +16,7 @@ module.exports = function checkout_PR(prNo, component ,callback) {
       var buildpath = path.join(util.sdk_dir, '/titanium_mobile', '/build');
       process.chdir(buildpath);
     }
-    callback(null, null);
-  }).stdout.on('data', function(data) {
     console.log(util.cyan(data));
+    callback(null, null);
   });
 };

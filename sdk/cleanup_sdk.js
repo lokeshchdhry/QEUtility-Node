@@ -21,15 +21,9 @@ module.exports = function() {
         question(pr_no, function(flag){
           if(flag){
             var tasks = [];
-            tasks.push(function(callback) {
-                  checkout_master(callback);
-              });
-            tasks.push(function(callback) {
-                  delete_branch(pr_no, callback);
-              });
-            tasks.push(function(callback) {
-                  fetch_origin(callback);
-              });
+            tasks.push(function(callback) {checkout_master(callback);});
+            tasks.push(function(callback) {delete_branch(pr_no, callback);});
+            tasks.push(function(callback) {fetch_origin(callback);});
 
             Async.series(tasks, function(err, data){
               if(err){
@@ -55,42 +49,49 @@ module.exports = function() {
 
 function checkout_master(callback){
   console.log(util.underline(util.bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
-  exec('git checkout master', function(err) {
+  util.spinner_start();
+  exec('git checkout master', function(err, data) {
       if (err) {
           console.log(util.error(err));
           //exit process in case of error
           process.exit();
       }
-      callback(null,null);
-    }).stdout.on('data', function(data) {
-        console.log(util.cyan(data));
+      util.spinner_stop(true);
+      console.log(util.cyan(data));
+      callback(null, null);
     });
 }
 
 function delete_branch(pr_no, callback){
   //Deleting the branch of the PR
   console.log(util.underline(util.bold('\n\u25B6 DELETING THE PR BRANCH.')));
-  exec('git branch -D' + pr_no, function(err) {
+  util.spinner_start();
+  exec('git branch -D' + pr_no, function(err, data) {
       if (err) {
           console.log(util.error(err));
+          //exit process in case of error
+          process.exit();
       }
+      util.spinner_stop(true);
+      console.log(util.cyan(data));
       callback(null, null);
-    }).stdout.on('data', function(data) {
-        console.log(util.cyan(data));
     });
 }
 
 function fetch_origin(callback){
   //Doing git fetch origin
   console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
-  exec('git fetch origin', function(err) {
+  util.spinner_start();
+  exec('git fetch origin', function(err, data) {
       if (err) {
           console.log(util.error(err));
+          //exit process in case of error
+          process.exit();
       }
+      util.spinner_stop(true);
+      console.log(util.cyan(data));
       console.log(util.cyan('DONE'));
       callback(null, null);
-  }).stdout.on('data', function(data) {
-      console.log(util.cyan(data));
   });
 }
 

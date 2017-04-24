@@ -1,10 +1,10 @@
 {
   "name": "appc_fr",
   "version": "1.0.0",
-  "description": "FR Utility for Appc",
-  "main": "appc_fr.js",
+  "description": "QE Utility for Appc",
+  "main": "qeutility.js",
   "bin" : {
-    "appcfr" : "./appc_fr.js"
+    "qeutility" : "./qeutility.js"
   },
   "dependencies": {
     "commander": "^2.9.0",

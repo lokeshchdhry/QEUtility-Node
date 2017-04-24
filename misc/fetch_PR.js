@@ -10,7 +10,7 @@ module.exports = function fetch_PR(callback) {
 
   exec('git fetch origin', {
     maxBuffer: 1024 * 1000
-  }, function(err) {
+  }, function(err, data) {
     if (err) {
       console.log(util.error(err));
       //exit process in case of error
@@ -18,9 +18,9 @@ module.exports = function fetch_PR(callback) {
     }
     //Stop spinner
     util.spinner_stop(true);
+    console.log(util.cyan(data));
+    console.log(util.cyan('DONE'));
     console.log('');
     callback(null, null);
-  }).stdout.on('data', function(data) {
-    console.log(util.cyan(data));
   });
 };

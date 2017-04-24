@@ -10,7 +10,7 @@ module.exports = function git_pull(callback) {
 
   exec('git pull', {
     maxBuffer: 1024 * 1000
-  }, function(err) {
+  }, function(err, data) {
     if (err) {
       console.log(util.error(err));
       //exit process in case of error
@@ -18,8 +18,7 @@ module.exports = function git_pull(callback) {
     }
     //Stop spinner
     util.spinner_stop(true);
-    callback(null, null);
-  }).stdout.on('data', function(data) {
     console.log(util.cyan(data));
+    callback(null, null);
   });
 };

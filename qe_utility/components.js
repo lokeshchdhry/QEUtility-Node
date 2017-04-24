@@ -2,11 +2,9 @@ var exec = require('child_process').exec;
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var util = require('../misc/util');
-var client = require('adbkit').createClient();
 var Async = require('async');
 
 module.exports = function(){
-  // var studio_ver;
 
   var task = [];
   task.push(function(callback){get_studio_ver(callback);});
@@ -29,9 +27,7 @@ module.exports = function(){
       process.exit();
     }
 
-    console.log('\nENVIRONMENT:-');
-    console.log('----------------------------');
-    console.log('Studio Ver : '+util.cyan(results[0]));
+    console.log('\nStudio Ver : '+util.cyan(results[0]));
     console.log('SDK Ver :    '+util.cyan(results[1]+'\n'));
     console.log('OS Ver :     '+util.cyan(results[2]));
     console.log('Xcode Ver :  '+util.cyan(results[3]));
@@ -170,7 +166,8 @@ function get_env(callback){
       //exit process in case of error
       process.exit();
     }
-    var env = result.split(' ')[15];
+    // var env = result.split(' ')[15];
+    var env = result.split('organization')[1].trim(' ');
     callback(null, env);
   });
 }
@@ -197,7 +194,7 @@ function get_connected_devices(callback){
         device['model'+i] = JSON.parse(result).android.devices[i].model;
         device['os_ver'+i] = JSON.parse(result).android.devices[i].release;
 
-        devices += device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i];
+        devices += device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n';
       }
       callback(null, devices);
     }

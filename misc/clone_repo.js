@@ -9,7 +9,7 @@ module.exports = function(repo_link, repo_dir, repo_name) {
     //Starting spinner
     util.spinner_start();
 
-    exec('git clone ' + repo_link, function(err) {
+    exec('git clone ' + repo_link, function(err, data) {
         if (err) {
             console.log(util.error(err));
             //Stop the process
@@ -17,6 +17,7 @@ module.exports = function(repo_link, repo_dir, repo_name) {
         } else {
             //Stop spinner
             util.spinner_stop(true);
+            console.log(util.cyan(data));
             console.log(util.cyan('\n\n\u2714 Cloning done successfully.'));
             process.chdir(repo_dir + '/'+ repo_name +'/.git');
             //Call modify_config from below with callback function
@@ -31,8 +32,6 @@ module.exports = function(repo_link, repo_dir, repo_name) {
               }
             });
         }
-    }).stdout.on('data', function(data) {
-        console.log(util.cyan(data));
     });
 };
 

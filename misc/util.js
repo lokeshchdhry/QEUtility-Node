@@ -31,10 +31,10 @@ module.exports = {
     },
 
     //Start spinner
-    spinner_start: function() {
-        spinner = new Spinner();
-        spinner.setSpinnerString(2);
-        spinner.setSpinnerDelay(60);
+    spinner_start: function(text) {
+        spinner = new Spinner(text);
+        spinner.setSpinnerString(18);
+        spinner.setSpinnerDelay(40);
         spinner.start();
     },
 
