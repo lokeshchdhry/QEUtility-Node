@@ -13,7 +13,7 @@ module.exports = function checkout_PR(prNo, component ,callback) {
     }
     if(component === 'sdk'){
       //CD into the build folder in the repo.
-      var buildpath = path.join(util.sdk_dir, '/titanium_mobile', '/build');
+      var buildpath = path.join(util.sdk_dir, 'titanium_mobile');
       process.chdir(buildpath);
     }
     console.log(util.cyan(data));
