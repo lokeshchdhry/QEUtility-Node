@@ -24,6 +24,10 @@ module.exports = {
     repolink_clinpm: storage.getItemSync('repo_link_npm'),
     repolink_clicore: storage.getItemSync('repo_link_cli_core'),
     clicore_dir: storage.getItemSync('dir_cli_core'),
+    username : storage.getItemSync('username'),
+    password : storage.getItemSync('password'),
+    prod_org_id : storage.getItemSync('prod_org_id'),
+    preprod_org_id : storage.getItemSync('preprod_org_id'),
 
     //Function to set sync for links & dir paths
     setSyncValue : function(name, value){
@@ -58,5 +62,5 @@ module.exports = {
               callback(done);
             }
         });
-    },
+    }
 };

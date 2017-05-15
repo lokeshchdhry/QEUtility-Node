@@ -61,14 +61,14 @@ module.exports = function() {
         }
         //results is an array & we need array element 3 so results[2]
         var PR_NO = results[2].pr_no;
-        build_pr(PR_NO);
+        buildPR(PR_NO);
       });
     } else {
-      build_pr(prNumber.slice(4));
+      buildPR(prNumber.slice(4));
     }
   };
 
-  var build_pr = function(prNo) {
+  var buildPR = function(prNo) {
     var tasks1 = [];
     //pushing individual tasks to array
     tasks1.push(function(callback) { checkout_PR(prNo, 'clinpm' ,callback); });

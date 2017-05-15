@@ -5,13 +5,13 @@ var chalk = require('chalk');
 var util = require('../misc/util');
 var pr = require('../misc/get_PR');
 var Async = require('async');
-var dir_path = require('path');
+var dirPath = require('path');
 
 module.exports = function() {
     console.log('');
     //Initialize node persist.
     storage.initSync();
-    var path = dir_path.join(util.sdk_dir, '/titanium_mobile');
+    var path = dirPath.join(util.sdk_dir, '/titanium_mobile');
     //CD in to TIMOB repo dir.
     process.chdir(path);
 
@@ -21,9 +21,9 @@ module.exports = function() {
         question(pr_no, function(flag){
           if(flag){
             var tasks = [];
-            tasks.push(function(callback) {checkout_master(callback);});
-            tasks.push(function(callback) {delete_branch(pr_no, callback);});
-            tasks.push(function(callback) {fetch_origin(callback);});
+            tasks.push(function(callback) {checkoutMaster(callback);});
+            tasks.push(function(callback) {deleteBranch(pr_no, callback);});
+            tasks.push(function(callback) {fetch_Origin(callback);});
 
             Async.series(tasks, function(err, data){
               if(err){
@@ -47,7 +47,7 @@ module.exports = function() {
 
 };
 
-function checkout_master(callback){
+function checkoutMaster(callback){
   console.log(util.underline(util.bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
   util.spinner_start();
   exec('git checkout master', function(err, data) {
@@ -62,7 +62,7 @@ function checkout_master(callback){
     });
 }
 
-function delete_branch(pr_no, callback){
+function deleteBranch(pr_no, callback){
   //Deleting the branch of the PR
   console.log(util.underline(util.bold('\n\u25B6 DELETING THE PR BRANCH.')));
   util.spinner_start();
@@ -78,7 +78,7 @@ function delete_branch(pr_no, callback){
     });
 }
 
-function fetch_origin(callback){
+function fetchOrigin(callback){
   //Doing git fetch origin
   console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
   util.spinner_start();

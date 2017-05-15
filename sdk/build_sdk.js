@@ -3,16 +3,16 @@ var inquirer = require('inquirer');
 var util = require('../misc/util');
 var Async = require('async');
 var pr = require('../misc/get_PR');
-var git_pull = require('../misc/git_pull');
+var gitPull = require('../misc/git_pull');
 var fetch_PR = require('../misc/fetch_PR');
-var question_PR = require('../misc/question_PR');
-var checkout_PR = require('../misc/checkout_PR');
-var npm_install = require('../sdk/npm_install');
-var build_sdk_func = require('../sdk/build_sdk_func');
-var package_sdk = require('../sdk/package_sdk');
-var install_sdk = require('../sdk/install_sdk');
+var questionPR = require('../misc/question_PR');
+var checkoutPR = require('../misc/checkout_PR');
+var npmInstall = require('../sdk/npm_install');
+var buildSDKFunc = require('../sdk/build_sdk_func');
+var packageSDK = require('../sdk/package_sdk');
+var installSDK = require('../sdk/install_sdk');
 var repoCheck = require('../misc/repo_check');
-var dir_path = require('path');
+var dirPath = require('path');
 
 
 module.exports = function() {
@@ -20,7 +20,7 @@ module.exports = function() {
   repoCheck.repo_check(name, function(flag){
     if(flag){
       //Get the current PR number.
-      process.chdir(dir_path.join(util.sdk_dir, '/titanium_mobile'));
+      process.chdir(dirPath.join(util.sdk_dir, '/titanium_mobile'));
       var pr_no;
       pr.getPR_No(function(PR) {
         pr_no = PR;
@@ -57,14 +57,14 @@ module.exports = function() {
 };
 
 var build = function(prNumber) {
-  var path = dir_path.join(util.sdk_dir, '/titanium_mobile');
+  var path = dirPath.join(util.sdk_dir, '/titanium_mobile');
   process.chdir(path);
   if (prNumber === undefined) {
 
     var task = [];
-    task.push(function(callback) { git_pull(callback); });
+    task.push(function(callback) { gitPull(callback); });
     task.push(function(callback) { fetch_PR(callback); });
-    task.push(function(callback) { question_PR(callback); });
+    task.push(function(callback) { questionPR(callback); });
     //Using async series to execute in series
     Async.series(task, function(err, results) {
       if (err) {
@@ -84,11 +84,11 @@ var build = function(prNumber) {
 var build_pr = function(prNo) {
   var tasks1 = [];
   //pushing individual tasks to array
-  tasks1.push(function(callback) { checkout_PR(prNo, 'sdk', callback); });
-  tasks1.push(function(callback) { npm_install(callback); });
-  tasks1.push(function(callback) { build_sdk_func(callback); });
-  tasks1.push(function(callback) { package_sdk(callback); });
-  tasks1.push(function(callback) { install_sdk(callback); });
+  tasks1.push(function(callback) { checkoutPR(prNo, 'sdk', callback); });
+  tasks1.push(function(callback) { npmInstall(callback); });
+  tasks1.push(function(callback) { buildSDKFunc(callback); });
+  tasks1.push(function(callback) { packageSDK(callback); });
+  tasks1.push(function(callback) { installSDK(callback); });
   //Using async series to execute in series
   Async.series(tasks1, function(err, results) {
     if (err) {

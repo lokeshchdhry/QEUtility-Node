@@ -9,5 +9,8 @@ module.exports = function(){
   console.log('Appc NPM clone dir : ' + util.cyan(util.npm_dir));
   console.log('CLI core repo link : ' + util.cyan(util.repolink_clicore));
   console.log('CLI core dir :       ' + util.cyan(util.clicore_dir));
+  console.log('CLI username :       ' + util.cyan(util.username));
+  console.log('Prod Org id :        ' + util.cyan(util.prod_org_id));
+  console.log('Preprod Org id :     ' + util.cyan(util.preprod_org_id));
   console.log('');
 };
