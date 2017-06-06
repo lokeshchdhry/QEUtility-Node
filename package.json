@@ -1,5 +1,5 @@
 {
-  "name": "appc_fr",
+  "name": "QEUtility-Node",
   "version": "1.0.0",
   "description": "QE Utility for Appc",
   "main": "qeutility.js",
@@ -23,15 +23,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lokeshchdhry/appc_fr.git"
+    "url": "git+https://github.com/lokeshchdhry/QEUtility-Node.git"
   },
-  "keywords": [
-    "appc"
-  ],
+  "keywords": [],
   "author": "Lokesh Choudhary",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/lokeshchdhry/appc_fr/issues"
+    "url": "https://github.com/lokeshchdhry/QEUtility-Node/issues"
   },
-  "homepage": "https://github.com/lokeshchdhry/appc_fr#readme"
+  "homepage": "https://github.com/lokeshchdhry/QEUtility-Node#readme"
 }
