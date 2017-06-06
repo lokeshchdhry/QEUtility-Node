@@ -1,19 +1,10 @@
-var exec = require('child_process').exec;
+var execute = require('../misc/util').execute;
+var cyan = require('../misc/util').cyan;
+var error = require('../misc/util').error;
+var errorNExit = require('../misc/util').errorNExit;
 var inquirer = require('inquirer');
-var util = require('../misc/util');
 
 module.exports = function(){
-  getAppcNPMVer(function(err, ver){
-    if(err){
-      util.error(err);
-      //exit process in case of error
-      process.exit();
-    }
-    downloadAppcNPM(ver.appc_npm_ver);
-  });
-};
-
-function getAppcNPMVer(callback) {
   var questions = [{
     name: 'appc_npm_ver',
     type: 'input',
@@ -27,19 +18,15 @@ function getAppcNPMVer(callback) {
     }
   }];
   inquirer.prompt(questions).then(function(answers) {
-    callback(null, answers);
+    var version = answers.appc_npm_ver;
+    console.log('\n\u25B6 Downloading & installing Appc NPM version : '+cyan(version));
+    var cmd = 'sudo npm install -g appcelerator@'+version;
+    execute(cmd, function(err, data){
+      if(err){
+        errorNExit(err);
+      }
+      console.log(cyan(data.trim()));
+      console.log('Done\n');
+    });
   });
-}
-
-function downloadAppcNPM(version){
-  console.log('\n\u25B6 Downloading & installing Appc NPM version : '+util.cyan(version));
-  exec('sudo npm install -g appcelerator@'+version, function(err, data){
-    if(err){
-      util.error(err);
-      //exit process in case of error
-      process.exit();
-    }
-    console.log(util.cyan(data));
-    console.log('Done');
-  });
-}
+};

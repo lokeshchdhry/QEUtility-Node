@@ -1,22 +1,24 @@
 var inquirer = require('inquirer');
-var exec = require('child_process').exec;
-var util = require('../misc/util');
 _ = require('underscore');
 var fs = require('fs');
 var path = require('path');
 var Async = require('async');
+var cyan = require('../misc/util').cyan;
+var errorNExit = require('../misc/util').errorNExit;
+var execute = require('../misc/util').execute;
+var underline = require('../misc/util').underline;
+var spinner_stop = require('../misc/util').spinner_stop;
+var spinner_start = require('../misc/util').spinner_start;
 
 module.exports = function(){
   task = [];
   task.push(function(callback){getSDKVer(callback);});
-  task.push(function(version, callback){filterAndDownload(version, callback);});
+  task.push(function(version, callback){filter(version, callback);});
   task.push(function(flag, version, callback){download(flag, version, callback);});
 
   Async.waterfall(task, function(err, results){
     if(err){
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
+      errorNExit(err);
     }
   });
 };
@@ -39,12 +41,12 @@ function getSDKVer(callback) {
   });
 }
 
-function filterAndDownload(version, callback){
+function filter(version, callback){
   //regex patterns to check
   var patt_1 = /_/g;
   var patt_2 = /^[A-z]/g;
+  //checking if branch is entered or master
   if(patt_1.test(version)||patt_2.test(version)){
-
     callback(null, 'branch', version);
   }
   else{
@@ -59,57 +61,52 @@ function download(flag, version){
   var patt2 = /Available Branches:/g;
   var patt3 = /successfully installed/g;
   if(flag === 'branch'){
-    console.log('\n\u25B6 Downloading the latest SDK from branch : '+util.cyan(version));
-    util.spinner_start();
-    exec('appc ti sdk install -b '+version+' --default', function(err, data) {
+    console.log('\n\u25B6 Downloading & extracting the latest SDK from branch : '+cyan(version));
+    spinner_start();
+    execute('appc ti sdk install -b '+version+' --default', function(err, data) {
       if (err) {
-        console.log(util.error(err));
-        //exit process in case of error
-        process.exit();
+        errorNExit(err);
       }
-
       if(patt1.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2714 You already have the latest SDK from the '+util.underline(version)+' branch.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2714 You already have the latest SDK from the '+underline(version)+' branch.\n'));
       }
       else if(patt2.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2717 Provided branch '+util.underline(version)+' does not exit. Please enter the correct branch.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2717 Provided branch '+underline(version)+' does not exit. Please enter the correct branch.\n'));
       }
       else if(patt3.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2714 Done, please find the latest SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2714 Done, please find the latest SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
-        util.spinner_stop(true);
+        spinner_stop(true);
         console.log('Something went wrong. Please re run the command.');
       }
     });
   }
   else{
-    console.log('\n\u25B6 Downloading the SDK : '+util.cyan(version));
-    util.spinner_start();
-    exec('appc ti sdk install '+version+' --default', function(err, data) {
+    console.log('\n\u25B6 Downloading & extracting the SDK : '+cyan(version));
+    spinner_start();
+    execute('appc ti sdk install '+version+' --default', function(err, data) {
       if (err) {
-        console.log(util.error(err));
-        //exit process in case of error
-        process.exit();
+        errorNExit(err);
       }
 
       if(patt1.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2714 You already have the SDK '+util.cyan(version)+'.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2714 You already have the SDK '+cyan(version)+'.\n'));
       }
       else if(patt2.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2717 Provided SDK '+util.underline(version)+' does not exit.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2717 Provided SDK '+underline(version)+' does not exit.\n'));
       }
       else if(patt3.test(data)){
-        util.spinner_stop(true);
-        console.log(util.cyan('\n\u2714 Done, please find the SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
+        spinner_stop(true);
+        console.log(cyan('\n\u2714 Done, please find the SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
-        util.spinner_stop(true);
+        spinner_stop(true);
         console.log('Something went wrong. Please re run the command.');
       }
     });

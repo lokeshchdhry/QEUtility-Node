@@ -13,6 +13,8 @@
     "commander": "^2.9.0",
     "inquirer": "^3.0.1",
     "node-persist": "^2.0.8",
+    "node-progress": "^0.1.0",
+    "progress": "^2.0.0",
     "underscore": "^1.8.3"
   },
   "devDependencies": {},

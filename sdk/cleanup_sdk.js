@@ -1,21 +1,27 @@
-var exec = require('child_process').exec;
-var storage = require('node-persist');
-var inquirer = require('inquirer');
-var chalk = require('chalk');
-var util = require('../misc/util');
-var pr = require('../misc/get_PR');
-var Async = require('async');
-var dirPath = require('path');
+var storage = require('node-persist'),
+inquirer = require('inquirer'),
+chalk = require('chalk'),
+Async = require('async'),
+dirPath = require('path'),
+getPR_No = require('../misc/util').getPR_No,
+errorNExit = require('../misc/util').errorNExit,
+sdk_dir = require('../misc/util').sdk_dir,
+cyan = require('../misc/util').cyan,
+bold = require('../misc/util').bold,
+underline = require('../misc/util').underline,
+spinner_start = require('../misc/util').spinner_start,
+spinner_stop = require('../misc/util').spinner_stop,
+execute = require('../misc/util').execute;
 
 module.exports = function() {
     console.log('');
     //Initialize node persist.
     storage.initSync();
-    var path = dirPath.join(util.sdk_dir, '/titanium_mobile');
+    var path = dirPath.join(sdk_dir, '/titanium_mobile');
     //CD in to TIMOB repo dir.
     process.chdir(path);
 
-    pr.getPR_No(function(PR){
+    getPR_No(function(PR){
       if(PR !== ''){
         var pr_no = PR;
         question(pr_no, function(flag){
@@ -23,13 +29,11 @@ module.exports = function() {
             var tasks = [];
             tasks.push(function(callback) {checkoutMaster(callback);});
             tasks.push(function(callback) {deleteBranch(pr_no, callback);});
-            tasks.push(function(callback) {fetch_Origin(callback);});
+            tasks.push(function(callback) {fetchOrigin(callback);});
 
             Async.series(tasks, function(err, data){
               if(err){
-                console.log(util.error(err));
-                //exit process in case of error
-                process.exit();
+                errorNExit(err);
               }
             });
           }
@@ -40,7 +44,7 @@ module.exports = function() {
         });
       }
       else{
-        console.log(util.bold('\u2717 No branch exists. Please proceed to build for a PR'));
+        console.log(bold('\u2717 No branch exists. Please proceed to build for a PR'));
         console.log('');
       }
     });
@@ -48,49 +52,43 @@ module.exports = function() {
 };
 
 function checkoutMaster(callback){
-  console.log(util.underline(util.bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
-  util.spinner_start();
-  exec('git checkout master', function(err, data) {
+  console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
+  spinner_start();
+  execute('git checkout master', function(err, data) {
       if (err) {
-          console.log(util.error(err));
-          //exit process in case of error
-          process.exit();
+          errorNExit(err);
       }
-      util.spinner_stop(true);
-      console.log(util.cyan(data));
+      spinner_stop(true);
+      console.log(cyan(data));
       callback(null, null);
     });
 }
 
 function deleteBranch(pr_no, callback){
   //Deleting the branch of the PR
-  console.log(util.underline(util.bold('\n\u25B6 DELETING THE PR BRANCH.')));
-  util.spinner_start();
-  exec('git branch -D' + pr_no, function(err, data) {
+  console.log(underline(bold('\n\u25B6 DELETING THE PR BRANCH.')));
+  spinner_start();
+  execute('git branch -D' + pr_no, function(err, data) {
       if (err) {
-          console.log(util.error(err));
-          //exit process in case of error
-          process.exit();
+          errorNExit(err);
       }
-      util.spinner_stop(true);
-      console.log(util.cyan(data));
+      spinner_stop(true);
+      console.log(cyan(data));
       callback(null, null);
     });
 }
 
 function fetchOrigin(callback){
   //Doing git fetch origin
-  console.log(util.underline(util.bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
-  util.spinner_start();
-  exec('git fetch origin', function(err, data) {
+  console.log(underline(bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
+  spinner_start();
+  execute('git fetch origin', function(err, data) {
       if (err) {
-          console.log(util.error(err));
-          //exit process in case of error
-          process.exit();
+          errorNExit(err);
       }
-      util.spinner_stop(true);
-      console.log(util.cyan(data));
-      console.log(util.cyan('DONE'));
+      spinner_stop(true);
+      console.log(cyan(data));
+      console.log(cyan('DONE'));
       callback(null, null);
   });
 }
@@ -99,7 +97,7 @@ function question(pr_no, callback){
   var questions = [{
       name: 'pr_number',
       type: 'confirm',
-      message: 'Are you sure you want to delete branch for' + util.cyan(pr_no)
+      message: 'Are you sure you want to delete branch for' + cyan(pr_no)
   }];
   inquirer.prompt(questions).then(function(answers) {
     if(answers.pr_number){

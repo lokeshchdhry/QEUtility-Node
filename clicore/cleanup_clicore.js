@@ -3,7 +3,7 @@ var storage = require('node-persist');
 var inquirer = require('inquirer');
 var chalk = require('chalk');
 var util = require('../misc/util');
-var pr = require('../misc/get_PR');
+var getPR_No = require('../misc/util').getPR_No;
 var Async = require('async');
 var dir_path = require('path');
 

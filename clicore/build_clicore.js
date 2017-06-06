@@ -2,17 +2,17 @@ var util = require('../misc/util');
 var fs = require('fs');
 var inquirer = require('inquirer');
 var exec = require('child_process').exec;
-var fetch_PR = require('../misc/fetch_PR');
-var question_PR = require('../misc/question_PR');
-var checkout_PR = require('../misc/checkout_PR');
+var fetch_PR = require('../misc/util').fetch_PR;
+var questionPR = require('../misc/util').questionPR;
+var checkoutPR = require('../misc/util').checkoutPR;
 var Async = require('async');
-var pr = require('../misc/get_PR');
-var repoCheck = require('../misc/repo_check');
+var getPR_No = require('../misc/util').getPR_No;
 var dir_path = require('path');
+var repo_check = require('../misc/util').repo_check;
 
 module.exports = function(){
   var name = 'clicore';
-  repoCheck.repo_check(name, function(flag){
+  repo_check(name, function(flag){
     if(flag){
       //Get appc cli core install path from storage
       var install_path = util.clicore_dir;
@@ -23,7 +23,7 @@ module.exports = function(){
       //Get the current PR number.
       process.chdir(dir_path.join(pkg_path, '/appc-cli'));
       var pr_no;
-      pr.getPR_No(function(PR) {
+      getPR_No(function(PR) {
         pr_no = PR;
         if (pr_no !== '') {
           console.log('');

@@ -233,6 +233,10 @@ function exec_sdk_fr(task){
       cleanup_sdk();
       break;
 
+    case 'exit':
+      exit_func();
+      break;
+
     default:
       console.log('Invalid sdk option');
   }

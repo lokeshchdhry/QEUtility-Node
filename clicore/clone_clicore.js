@@ -2,9 +2,9 @@ var util = require('../misc/util');
 var fs = require('fs');
 var inquirer = require('inquirer');
 var exec = require('child_process').exec;
-var fetch_PR = require('../misc/fetch_PR');
-var question_PR = require('../misc/question_PR');
-var checkout_PR = require('../misc/checkout_PR');
+var fetch_PR = require('../misc/util').fetch_PR;
+var questionPR = require('../misc/util').questionPR;
+var checkoutPR = require('../misc/util').checkoutPR;
 var Async = require('async');
 var dir_path = require('path');
 

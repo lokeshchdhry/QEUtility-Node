@@ -1,7 +1,10 @@
-var exec = require('child_process').exec;
 var inquirer = require('inquirer');
-var util = require('../misc/util');
 var Async = require('async');
+var cyan = require('../misc/util').cyan;
+var errorNExit = require('../misc/util').errorNExit;
+var execute = require('../misc/util').execute;
+var spinner_start = require('../misc/util').spinner_start;
+var spinner_stop = require('../misc/util').spinner_stop;
 
 module.exports = function(){
 
@@ -25,25 +28,20 @@ module.exports = function(){
     },
 
     function downloadCore(version, callback){
-      console.log('\n\u25B6 Downloading & installing CLI Core version : '+util.cyan(version));
-      util.spinner_start();
-      exec('appc use '+version, function(err, data){
+      console.log('\n\u25B6 Downloading & installing CLI Core version : '+cyan(version));
+      spinner_start();
+      execute('appc use '+version, function(err, data){
         if(err){
-          util.error(err);
-          //exit process in case of error
-          callback(err);
-          process.exit();
+          errorNExit(err);
         }
-        util.spinner_stop(true);
-        console.log(util.cyan(data));
+        spinner_stop(true);
+        console.log(cyan(data));
         callback(null);
       });
     }
   ],function(err, results){
     if(err){
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
+      errorNExit(err);
     }
   });
 };

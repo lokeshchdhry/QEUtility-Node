@@ -1,5 +1,8 @@
-var exec = require('child_process').exec;
-var util = require('../misc/util');
+var exec = require('child_process').exec,
+bold = require('../misc/util').bold,
+underline = require('../misc/util').underline,
+cyan = require('../misc/util').cyan,
+errorNExit = require('../misc/util').errorNExit;
 
 
 module.exports = function package_sdk(callback) {
@@ -8,13 +11,11 @@ module.exports = function package_sdk(callback) {
     maxBuffer: 1024 * 500
   }, function(err) {
     if (err) {
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
+      errorNExit(err);
     }
-    console.log(util.underline(util.bold('\n\u25B6 INSTALLING THE SDK:')));
+    console.log(underline(bold('\n\u25B6 INSTALLING THE SDK:')));
     callback(null, null);
   }).stdout.on('data', function(data) {
-    console.log(util.cyan(data));
+    console.log(cyan(data));
   });
 };

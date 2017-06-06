@@ -1,14 +1,15 @@
-var exec = require('child_process').exec;
-var inquirer = require('inquirer');
-var util = require('../misc/util');
 var Async = require('async');
 var inquirer = require('inquirer');
+var execute = require('../misc/util').execute;
+var cyan = require('../misc/util').cyan;
+var errorNExit = require('../misc/util').errorNExit;
+var username = require('../misc/util').username;
+var password = require('../misc/util').password;
+var underline = require('../misc/util').underline;
+var prodOrgId = require('../misc/util').prod_org_id;
+var preProdOrgId = require('../misc/util').preprod_org_id;
 
 module.exports = function(){
-  //Getting username & password from storage
-  var username = util.username;
-  var password = util.password;
-
   inquirer.prompt({
     type: 'list',
     name: 'env_opt',
@@ -22,7 +23,6 @@ module.exports = function(){
       value: 'preproduction'
     }]
   }).then(function (answers) {
-    console.log(answers.env_opt);
     var task = [];
     task.push(function(callback){logout(callback);});
     task.push(function(callback){setDefaultEnv(callback, answers.env_opt);});
@@ -30,58 +30,52 @@ module.exports = function(){
 
     Async.series(task, function(err, results){
       if(err){
-        console.log(util.error(err));
-        //exit process in case of error
-        process.exit();
+        errorNExit(err);
       }
     });
   });
 };
 
 function logout(callback){
-  console.log(util.underline('\n\u25B6 Logging you out:'));
-  exec('appc logout', function(err, data){
-    if(err){
-      //exit process in case of error
-      process.exit();
+  console.log(underline('\n\u25B6 Logging you out:'));
+  execute('appc logout', function(err, data){
+    if (err) {
+      errorNExit(err);
     }
-    console.log(util.cyan(data));
+    console.log(cyan(data));
     callback(null, null);
   });
 }
 
 function setDefaultEnv(callback, environment){
-  console.log(util.underline('\u25B6 Setting defaultEnvironment to '+environment));
-  exec('appc config set defaultEnvironment '+environment, function(err, data){
-    if(err){
-      //exit process in case of error
-      process.exit();
+  console.log(underline('\u25B6 Setting defaultEnvironment to '+environment));
+  execute('appc config set defaultEnvironment '+environment, function(err, data){
+    if (err) {
+      errorNExit(err);
     }
-    console.log(util.cyan(data));
+    console.log(cyan(data));
     callback(null, null);
   });
 }
 
 function login(callback, username, password, env){
   if(env === 'production'){
-    console.log(util.underline('\n\u25B6 Logging you in:'));
-    exec('appc login --username '+username+' --password '+password+' --org-id '+util.prod_org_id, function(err, data){
-      if(err){
-        //exit process in case of error
-        process.exit();
+    console.log(underline('\n\u25B6 Logging you in:'));
+    execute('appc login --username '+username+' --password '+password+' --org-id '+prodOrgId, function(err, data){
+      if (err) {
+        errorNExit(err);
       }
-      console.log(util.cyan(data));
+      console.log(cyan(data));
       callback(null, null);
     });
   }
   else{
-    console.log(util.underline('\n\u25B6 Logging you in:'));
-    exec('appc login --username '+username+' --password '+password+' --org-id '+util.preprod_org_id, function(err, data){
-      if(err){
-        //exit process in case of error
-        process.exit();
+    console.log(underline('\n\u25B6 Logging you in:'));
+    execute('appc login --username '+username+' --password '+password+' --org-id '+preProdOrgId, function(err, data){
+      if (err) {
+        errorNExit(err);
       }
-      console.log(util.cyan(data));
+      console.log(cyan(data));
       callback(null, null);
     });
   }

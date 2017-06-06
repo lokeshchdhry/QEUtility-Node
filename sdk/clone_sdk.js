@@ -1,16 +1,17 @@
-var exec = require('child_process').exec;
-var fs = require('fs');
-var storage = require('node-persist');
-var inquirer = require('inquirer');
-var util = require('../misc/util');
-var clone = require('../misc/clone_repo');
+var storage = require('node-persist'),
+inquirer = require('inquirer'),
+clone = require('../misc/clone_repo'),
+repolink_sdk = require('../misc/util').repolink_sdk,
+bold = require('../misc/util').bold,
+sdk_dir = require('../misc/util').sdk_dir,
+cyan = require('../misc/util').cyan;
 
 module.exports = function() {
     //Initialize storage sync (node persist)
     storage.initSync();
     //Check if repo link & repo dir is stored? If not ask for it else prceed to clone.
-    if (util.repolink_sdk === undefined) {
-        console.log(util.bold('\n\u25B6 Appears that you have not set your default titanium mobile repo link & directory to clone to.'));
+    if (repolink_sdk === undefined) {
+        console.log(bold('\n\u25B6 Appears that you have not set your default titanium mobile repo link & directory to clone to.'));
         //questions object array
         var questions = [{
                 name: 'repo_link',
@@ -46,11 +47,9 @@ module.exports = function() {
         });
     } else {
         //Getting the values & setting it to repoLink & repoDir
-        var repoLink = util.repolink_sdk;
-        var repoDir = util.sdk_dir;
-        console.log(util.cyan('\n\u25B6 Clone link: ' + repoLink));
-        console.log(util.cyan('\u25B6 Clone dir: ' + repoDir));
+        console.log(cyan('\n\u25B6 Clone link: ' + repolink_sdk));
+        console.log(cyan('\u25B6 Clone dir: ' + sdk_dir));
         //Calling clone
-        clone(repoLink, repoDir, 'titanium_mobile');
+        clone(repolink_sdk, sdk_dir, 'titanium_mobile');
     }
 };

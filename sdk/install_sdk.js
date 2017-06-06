@@ -1,5 +1,6 @@
-var exec = require('child_process').exec;
-var util = require('../misc/util');
+var exec = require('child_process').exec,
+cyan = require('../misc/util').cyan,
+errorNExit = require('../misc/util').errorNExit;
 
 
 module.exports = function install_sdk(callback) {
@@ -8,14 +9,12 @@ module.exports = function install_sdk(callback) {
     maxBuffer: 1024 * 500
   }, function(err) {
     if (err) {
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
+      errorNExit(err);
     }
     console.log('\n\u2714 Done, please find the installed SDK in your titanium folder');
     console.log('');
     callback(null, null);
   }).stdout.on('data', function(data) {
-    console.log(util.cyan(data));
+    console.log(cyan(data));
   });
 };

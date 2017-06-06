@@ -1,6 +1,7 @@
-var exec = require('child_process').exec;
 var inquirer = require('inquirer');
-var util = require('../misc/util');
+var cyan = require('../misc/util').cyan;
+var errorNExit = require('../misc/util').errorNExit;
+var execute = require('../misc/util').execute;
 
 module.exports = function(){
   selectSDK();
@@ -20,13 +21,8 @@ function selectSDK(){
     }
   }];
   inquirer.prompt(questions).then(function(answers) {
-    exec('appc ti sdk select '+answers.sdk_ver, function(err, data){
-      if(err){
-        util.error(err);
-        //exit process in case of error
-        process.exit();
-      }
-      console.log(util.cyan('\n'+data));
+    execute('appc ti sdk select '+answers.sdk_ver, function(err, data){
+      console.log(cyan('\n'+data));
     });
   });
 }
