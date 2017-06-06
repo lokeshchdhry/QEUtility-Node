@@ -1,5 +1,5 @@
-# appc_fr
-FR Utility for Appc
+# QEUtility-Node
+QE Utility for Appc
 
 **This is just for SDK & CLI NPM as of now, will be adding CLI core stuff later**
 
