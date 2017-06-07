@@ -1,5 +1,4 @@
 #!/usr/bin/env node
-var program = require('commander');
 var cloneRepo_SDK = require('./sdk/clone_sdk');
 var cloneRepo_NPM = require('./clinpm/clone_clinpm');
 var cloneRepo_CLICore = require('./clicore/clone_clicore');

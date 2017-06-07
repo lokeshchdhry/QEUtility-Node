@@ -9,6 +9,7 @@ var execute = require('../misc/util').execute;
 var underline = require('../misc/util').underline;
 var spinner_stop = require('../misc/util').spinner_stop;
 var spinner_start = require('../misc/util').spinner_start;
+var ProgressBar = require('ascii-progress');
 
 module.exports = function(){
   task = [];
@@ -55,28 +56,45 @@ function filter(version, callback){
 }
 
 function download(flag, version){
-  var option;
+  //Initialize progressBar
+  var bar = new ProgressBar({
+    schema: '[:bar.cyan] :elapseds.cyan :percent.cyan',
+    filled: '=',
+    blank: '-',
+    total : 1000
+  });
   //regex patterns to check
   var patt1 = /You\'re up-to-date/g;
   var patt2 = /Available Branches:/g;
   var patt3 = /successfully installed/g;
   if(flag === 'branch'){
     console.log('\n\u25B6 Downloading & extracting the latest SDK from branch : '+cyan(version));
-    spinner_start();
+    console.log('');
+    //Start the progressBar ticking
+    var a = setInterval(function () {
+      bar.tick();
+    }, 360);
     execute('appc ti sdk install -b '+version+' --default', function(err, data) {
       if (err) {
         errorNExit(err);
       }
       if(patt1.test(data)){
-        spinner_stop(true);
-        console.log(cyan('\n\u2714 You already have the latest SDK from the '+underline(version)+' branch.\n'));
+        //Clear the progressBar
+        clearInterval(a);
+        bar.clear();
+        console.log(cyan('\u2714 You already have the latest SDK from the '+underline(version)+' branch.\n'));
       }
       else if(patt2.test(data)){
-        spinner_stop(true);
-        console.log(cyan('\n\u2717 Provided branch '+underline(version)+' does not exit. Please enter the correct branch.\n'));
+        //Clear the progressBar
+        clearInterval(a);
+        bar.clear();
+        console.log(cyan('\u2717 Provided branch '+underline(version)+' does not exit. Please enter the correct branch.\n'));
       }
       else if(patt3.test(data)){
-        spinner_stop(true);
+        //Complete the progressBar
+        bar.update(1);
+        bar.completed = true;
+        clearInterval(a);
         console.log(cyan('\n\u2714 Done, please find the latest SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
