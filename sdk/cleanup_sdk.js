@@ -23,12 +23,11 @@ module.exports = function() {
 
     getPR_No(function(PR){
       if(PR !== ''){
-        var pr_no = PR;
-        question(pr_no, function(flag){
+        question(PR, function(flag){
           if(flag){
             var tasks = [];
             tasks.push(function(callback) {checkoutMaster(callback);});
-            tasks.push(function(callback) {deleteBranch(pr_no, callback);});
+            tasks.push(function(callback) {deleteBranch(PR, callback);});
             tasks.push(function(callback) {fetchOrigin(callback);});
 
             Async.series(tasks, function(err, data){
@@ -51,7 +50,7 @@ module.exports = function() {
 
 };
 
-function checkoutMaster(callback){
+var checkoutMaster = function(callback){
   console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
   spinner_start();
   execute('git checkout master', function(err, data) {
@@ -62,9 +61,9 @@ function checkoutMaster(callback){
       console.log(cyan(data));
       callback(null, null);
     });
-}
+};
 
-function deleteBranch(pr_no, callback){
+var deleteBranch = function(pr_no, callback){
   //Deleting the branch of the PR
   console.log(underline(bold('\n\u25B6 DELETING THE PR BRANCH.')));
   spinner_start();
@@ -76,9 +75,9 @@ function deleteBranch(pr_no, callback){
       console.log(cyan(data));
       callback(null, null);
     });
-}
+};
 
-function fetchOrigin(callback){
+var fetchOrigin = function(callback){
   //Doing git fetch origin
   console.log(underline(bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
   spinner_start();
@@ -91,9 +90,9 @@ function fetchOrigin(callback){
       console.log(cyan('DONE'));
       callback(null, null);
   });
-}
+};
 
-function question(pr_no, callback){
+var question = function(pr_no, callback){
   var questions = [{
       name: 'pr_number',
       type: 'confirm',
@@ -107,4 +106,4 @@ function question(pr_no, callback){
       callback(false);
     }
   });
-}
+};

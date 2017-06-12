@@ -1,34 +1,34 @@
-var exec = require('child_process').exec;
-var util = require('../misc/util');
-var fs = require('fs');
+var execute = require('../misc/util').execute,
+  cyan = require('../misc/util').cyan,
+  spinner_start = require('../misc/util').spinner_start,
+  spinner_stop = require('../misc/util').spinner_stop,
+  error = require('../misc/util').error,
+  errorNExit = require('../misc/util').errorNExit;
+  fs = require('fs');
 
 module.exports = function(repo_link, repo_dir, repo_name) {
     process.chdir(repo_dir);
     console.log('');
     console.log('\u25B6 Cloning '+repo_name +' Please Wait ......');
     //Starting spinner
-    util.spinner_start();
+    spinner_start();
 
     exec('git clone ' + repo_link, function(err, data) {
         if (err) {
-            console.log(util.error(err));
-            //Stop the process
-            process.exit();
+            errorNExit(err);
         } else {
             //Stop spinner
-            util.spinner_stop(true);
-            console.log(util.cyan(data));
-            console.log(util.cyan('\n\n\u2714 Cloning done successfully.'));
+            spinner_stop(true);
+            console.log(cyan(data));
+            console.log(cyan('\n\n\u2714 Cloning done successfully.'));
             process.chdir(repo_dir + '/'+ repo_name +'/.git');
             //Call modify_config from below with callback function
             modifyConfig(function(err, done){
               if(done){
-                console.log(util.cyan('\n\u2714 Done modifying the the config file.\n'));
+                console.log(cyan('\n\u2714 Done modifying the the config file.\n'));
               }
               else{
-                console.log(util.error(err));
-                //exit process in case of error
-                process.exit();
+                errorNExit(err);
               }
             });
         }
@@ -36,7 +36,7 @@ module.exports = function(repo_link, repo_dir, repo_name) {
 };
 
 function modifyConfig(callback){
-  console.log(util.cyan("\n\u25B6 Adding 'fetch = +refs/pull/*/head:refs/remotes/origin/pr/*' to the config file'"));
+  console.log(cyan("\n\u25B6 Adding 'fetch = +refs/pull/*/head:refs/remotes/origin/pr/*' to the config file'"));
   //Logic to add "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*" to the config file
   var data1 = fs.readFileSync('config').toString().split("\n");
   data1.splice(10, 0, "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*");

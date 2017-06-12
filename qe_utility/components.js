@@ -59,7 +59,7 @@ module.exports = function(){
   });
 };
 
-function getStudioVer(callback){
+var getStudioVer = function(callback){
   var txtPath = path.join('/Applications','Appcelerator Studio','version.txt');
   //Check if version.txt file exists
   if(fs.existsSync(txtPath)){
@@ -70,9 +70,9 @@ function getStudioVer(callback){
   else{
     callback(null, 'Appc Studio not installed.');
   }
-}
+};
 
-function getSDKVer(callback){
+var getSDKVer = function(callback){
   execute('appc ti config -o json', function(err, data){
     //Converting the json text to javascript object using JSON.parse & getting the "sdk.selected" value
     if (err) {
@@ -81,27 +81,27 @@ function getSDKVer(callback){
     var ver = JSON.parse(data)["sdk.selected"];
     callback(null, ver);
   });
-}
+};
 
-function getAppcNPMVer(callback){
+var getAppcNPMVer = function(callback){
   execute('appc -v -o json', function(err, result){
     if (err) {
       errorNExit(err);
     }
     callback(null, JSON.parse(result).NPM);
   });
-}
+};
 
-function getAppcCliCoreVer(callback){
+var getAppcCliCoreVer = function(callback){
   execute('appc -v -o json', function(err, result){
     if (err) {
       errorNExit(err);
     }
     callback(null, JSON.parse(result).CLI);
   });
-}
+};
 
-function getOSVer(callback){
+var getOSVer = function(callback){
   execute('sw_vers -productVersion', function(err, result){
     if (err) {
       errorNExit(err);
@@ -109,9 +109,9 @@ function getOSVer(callback){
     var os_ver = result;
     callback(null, os_ver);
   });
-}
+};
 
-function getXcodeVer(callback){
+var getXcodeVer = function(callback){
   if(fs.existsSync(path.join('/usr', 'bin', 'xcodebuild'))){
     execute('/usr/bin/xcodebuild -version', function(err, result){
       if (err) {
@@ -125,9 +125,9 @@ function getXcodeVer(callback){
   else{
     callback(null, 'Xcode not installed');
   }
-}
+};
 
-function getTiCliVer(callback){
+var getTiCliVer = function(callback){
   execute('appc ti -v', function(err, result){
     if (err) {
       errorNExit(err);
@@ -135,9 +135,9 @@ function getTiCliVer(callback){
     var ti_ver = result;
     callback(null, ti_ver);
   });
-}
+};
 
-function getAlloyVer(callback){
+var getAlloyVer = function(callback){
   execute('appc alloy -v', function(err, result){
     if (err) {
       errorNExit(err);
@@ -145,14 +145,14 @@ function getAlloyVer(callback){
     var alloy_ver = result;
     callback(null, alloy_ver);
   });
-}
+};
 
-function getNodeVer(callback){
+var getNodeVer = function(callback){
   var node_ver = process.versions.node;
   callback(null, node_ver);
-}
+};
 
-function getJavaVer(callback) {
+var getJavaVer = function(callback) {
   var spawn = require('child_process').spawn('java', ['-version']);
   spawn.on('error', function(err){
     errorNExit(err);
@@ -164,9 +164,9 @@ function getJavaVer(callback) {
       callback(null, javaVersion);
     }
   });
-}
+};
 
-function getENV(callback){
+var getENV = function(callback){
   execute('appc whoami', function(err, result){
     if (err) {
       errorNExit(err);
@@ -174,9 +174,9 @@ function getENV(callback){
     var env = result.split('organization')[1].trim(' ');
     callback(null, env);
   });
-}
+};
 
-function getConnectedDevices(callback){
+var getConnectedDevices  = function(callback){
   execute('appc ti info -t android -o json', function(err, result){
     if (err) {
       errorNExit(err);
@@ -201,9 +201,9 @@ function getConnectedDevices(callback){
       callback(null, devices);
     }
   });
-}
+};
 
-function getAndroidSDKTools(callback){
+var getAndroidSDKTools = function(callback){
   var android_sdkPath = process.env.ANDROID_SDK;
   var sdktools_path = path.join(android_sdkPath,'tools');
   //Checking if source.properties file exists
@@ -219,9 +219,9 @@ function getAndroidSDKTools(callback){
   else{
     callback(null, 'No Android SDK Tools Installed.');
   }
-}
+};
 
-function getPlatformTools(callback){
+var getPlatformTools = function(callback){
   var android_sdkPath = process.env.ANDROID_SDK;
   var sdktools_path = path.join(android_sdkPath,'platform-tools');
   //Checking if source.properties file exists
@@ -233,9 +233,9 @@ function getPlatformTools(callback){
   else{
     callback(null, 'No Platform Tools Installed.');
   }
-}
+};
 
-function getBuildTools(callback){
+var getBuildTools = function(callback){
   var folders;
   var filter_arr = [];
   var current_ver;
@@ -257,9 +257,9 @@ function getBuildTools(callback){
     else{
       callback(null, 'No Build Tools Installed.');
     }
-}
+};
 
-function getAndroidModules(callback){
+var getAndroidModules = function(callback){
     var modules={}, folders, filterArr=[];
     var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'facebook');
     var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'hyperloop');
@@ -348,9 +348,9 @@ function getAndroidModules(callback){
 
     var androidModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Cloudpush: '+modules.cloudpush+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
     callback(null, androidModules);
-}
+};
 
-function getIOSModules(callback){
+var getIOSModules = function(callback){
     var modules={}, folders, filterArr=[];
     var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'facebook');
     var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'hyperloop');
@@ -439,9 +439,9 @@ function getIOSModules(callback){
 
     var iosModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Coremotion:'+modules.coremotion+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
     callback(null, iosModules);
-}
+};
 
-function getCommonjsModules(callback){
+var getCommonjsModules = function(callback){
   var modules={}, folders, filterArr=[];
   var cloudModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'commonjs', 'ti.cloud');
 
@@ -462,4 +462,4 @@ function getCommonjsModules(callback){
 
   var commonjsModules = 'Cloud:     '+modules.cloud;
   callback(null, commonjsModules);
-}
+};

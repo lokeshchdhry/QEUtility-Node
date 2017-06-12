@@ -24,7 +24,7 @@ module.exports = function(){
   });
 };
 
-function getSDKVer(callback) {
+var getSDKVer = function(callback) {
   var questions = [{
     name: 'sdk_ver',
     type: 'input',
@@ -40,9 +40,9 @@ function getSDKVer(callback) {
   inquirer.prompt(questions).then(function(answers) {
     callback(null, answers.sdk_ver);
   });
-}
+};
 
-function filter(version, callback){
+var filter = function(version, callback){
   //regex patterns to check
   var patt_1 = /_/g;
   var patt_2 = /^[A-z]/g;
@@ -53,12 +53,12 @@ function filter(version, callback){
   else{
     callback(null, 'sdk', version);
   }
-}
+};
 
-function download(flag, version){
+var download = function(flag, version){
   //Initialize progressBar
   var bar = new ProgressBar({
-    schema: '[:bar.cyan] :elapseds.cyan :percent.cyan',
+    schema: '[:bar.cyan] :percent.cyan',
     filled: '=',
     blank: '-',
     total : 1000
@@ -73,7 +73,7 @@ function download(flag, version){
     //Start the progressBar ticking
     var a = setInterval(function () {
       bar.tick();
-    }, 360);
+    }, 300);
     execute('appc ti sdk install -b '+version+' --default', function(err, data) {
       if (err) {
         errorNExit(err);
@@ -129,9 +129,9 @@ function download(flag, version){
       }
     });
   }
-}
+};
 
-function getLatestSDKVer(){
+var getLatestSDKVer = function(){
   var dir = path.join('/Users', 'lchoudhary', 'Library', 'Application Support', 'Titanium', 'mobilesdk', 'osx');
   var folders = fs.readdirSync(dir);
   var filter_arr = [];
@@ -147,4 +147,4 @@ function getLatestSDKVer(){
     // replace with mtime for modification time
     return fs.statSync(fullpath).ctime;
   });
-}
+};

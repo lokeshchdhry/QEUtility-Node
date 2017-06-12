@@ -21,8 +21,17 @@ module.exports = function(){
     {
       name: 'PRE-PRODUCTION',
       value: 'preproduction'
+    },
+    {
+      name: 'EXIT',
+      value: 'exit'
     }]
   }).then(function (answers) {
+    //Exit if EXIT
+    if(answers.env_opt === 'exit'){
+      //Quit the process
+      process.exit();
+    }
     var task = [];
     task.push(function(callback){logout(callback);});
     task.push(function(callback){setDefaultEnv(callback, answers.env_opt);});
@@ -36,7 +45,7 @@ module.exports = function(){
   });
 };
 
-function logout(callback){
+var logout = function(callback){
   console.log(underline('\n\u25B6 Logging you out:'));
   execute('appc logout', function(err, data){
     if (err) {
@@ -45,9 +54,9 @@ function logout(callback){
     console.log(cyan(data));
     callback(null, null);
   });
-}
+};
 
-function setDefaultEnv(callback, environment){
+var setDefaultEnv = function(callback, environment){
   console.log(underline('\u25B6 Setting defaultEnvironment to '+environment));
   execute('appc config set defaultEnvironment '+environment, function(err, data){
     if (err) {
@@ -56,9 +65,9 @@ function setDefaultEnv(callback, environment){
     console.log(cyan(data));
     callback(null, null);
   });
-}
+};
 
-function login(callback, username, password, env){
+var login = function(callback, username, password, env){
   if(env === 'production'){
     console.log(underline('\n\u25B6 Logging you in:'));
     execute('appc login --username '+username+' --password '+password+' --org-id '+prodOrgId, function(err, data){
@@ -79,4 +88,4 @@ function login(callback, username, password, env){
       callback(null, null);
     });
   }
-}
+};
