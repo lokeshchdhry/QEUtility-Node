@@ -13,7 +13,7 @@ module.exports = function(repo_link, repo_dir, repo_name) {
     //Starting spinner
     spinner_start();
 
-    exec('git clone ' + repo_link, function(err, data) {
+    execute('git clone ' + repo_link, function(err, data) {
         if (err) {
             errorNExit(err);
         } else {
@@ -44,11 +44,11 @@ function modifyConfig(callback){
 
   fs.writeFile('config', text, function(err) {
       if (err){
-        callback(err, null);
+        return callback(err, null);
       }
       else {
         var done = true;
-        callback(null, done);
+        return callback(null, done);
       }
   });
 }

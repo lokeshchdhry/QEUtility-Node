@@ -10,7 +10,7 @@ module.exports = {
         //exit process in case of error
         process.exit();
       }
-      callback(null, null);
+      return callback(null, null);
     }).stdout.on('data', function(data) {
       console.log(util.cyan(data));
     });
@@ -28,7 +28,7 @@ module.exports = {
       }
       console.log('');
       console.log('\u2714 Done building & installing appc NPM.');
-      callback(null, null);
+      return callback(null, null);
     }).stdout.on('data', function(data) {
       console.log(util.cyan(data));
     });

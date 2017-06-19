@@ -5,6 +5,7 @@ var exec = require('child_process').exec;
 var storage = require('node-persist');
 var inquirer = require('inquirer');
 var path = require('path');
+var isOnline = require('is-online');
 
 //Initialize storage sync (node persist)
 storage.initSync();
@@ -30,6 +31,7 @@ module.exports = {
     password : storage.getItemSync('password'),
     prod_org_id : storage.getItemSync('prod_org_id'),
     preprod_org_id : storage.getItemSync('preprod_org_id'),
+    runcount : storage.getItemSync('runcount'),
 
     //Function to set sync for links & dir paths
     setSyncValue : function(name, value){

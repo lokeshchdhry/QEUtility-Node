@@ -52,7 +52,7 @@ var logout = function(callback){
       errorNExit(err);
     }
     console.log(cyan(data));
-    callback(null, null);
+    return callback(null, null);
   });
 };
 
@@ -63,7 +63,7 @@ var setDefaultEnv = function(callback, environment){
       errorNExit(err);
     }
     console.log(cyan(data));
-    callback(null, null);
+    return callback(null, null);
   });
 };
 
@@ -75,7 +75,7 @@ var login = function(callback, username, password, env){
         errorNExit(err);
       }
       console.log(cyan(data));
-      callback(null, null);
+      return callback(null, null);
     });
   }
   else{
@@ -85,7 +85,7 @@ var login = function(callback, username, password, env){
         errorNExit(err);
       }
       console.log(cyan(data));
-      callback(null, null);
+      return callback(null, null);
     });
   }
 };

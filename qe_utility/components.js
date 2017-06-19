@@ -58,17 +58,17 @@ module.exports = function(){
     console.log('\nCommjs Modules: '+cyan(results[17])+'\n');
   });
 };
-
+//Function Definations start here:
 var getStudioVer = function(callback){
   var txtPath = path.join('/Applications','Appcelerator Studio','version.txt');
   //Check if version.txt file exists
   if(fs.existsSync(txtPath)){
     var text = fs.readFileSync(txtPath, 'utf8').split('\n');
     var ver = _.chain(text).map(function(text){return text.split(' ');}).flatten().value();
-    callback(null, ver[2]);
+    return callback(null, ver[2]);
   }
   else{
-    callback(null, 'Appc Studio not installed.');
+    return callback(null, 'Appc Studio not installed.');
   }
 };
 
@@ -79,7 +79,7 @@ var getSDKVer = function(callback){
       errorNExit(err);
     }
     var ver = JSON.parse(data)["sdk.selected"];
-    callback(null, ver);
+    return callback(null, ver);
   });
 };
 
@@ -88,7 +88,7 @@ var getAppcNPMVer = function(callback){
     if (err) {
       errorNExit(err);
     }
-    callback(null, JSON.parse(result).NPM);
+    return callback(null, JSON.parse(result).NPM);
   });
 };
 
@@ -97,7 +97,7 @@ var getAppcCliCoreVer = function(callback){
     if (err) {
       errorNExit(err);
     }
-    callback(null, JSON.parse(result).CLI);
+    return callback(null, JSON.parse(result).CLI);
   });
 };
 
@@ -107,7 +107,7 @@ var getOSVer = function(callback){
       errorNExit(err);
     }
     var os_ver = result;
-    callback(null, os_ver);
+    return callback(null, os_ver);
   });
 };
 
@@ -119,11 +119,11 @@ var getXcodeVer = function(callback){
       }
       var split = result.split('Build');
       var xcode_ver = split[0];
-      callback(null, xcode_ver);
+      return callback(null, xcode_ver);
     });
   }
   else{
-    callback(null, 'Xcode not installed');
+    return callback(null, 'Xcode not installed');
   }
 };
 
@@ -133,7 +133,7 @@ var getTiCliVer = function(callback){
       errorNExit(err);
     }
     var ti_ver = result;
-    callback(null, ti_ver);
+    return callback(null, ti_ver);
   });
 };
 
@@ -143,13 +143,13 @@ var getAlloyVer = function(callback){
       errorNExit(err);
     }
     var alloy_ver = result;
-    callback(null, alloy_ver);
+    return callback(null, alloy_ver);
   });
 };
 
 var getNodeVer = function(callback){
   var node_ver = process.versions.node;
-  callback(null, node_ver);
+  return callback(null, node_ver);
 };
 
 var getJavaVer = function(callback) {
@@ -161,7 +161,7 @@ var getJavaVer = function(callback) {
     data = data.toString().split('\n')[0];
     var javaVersion = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
     if (javaVersion !== false) {
-      callback(null, javaVersion);
+      return callback(null, javaVersion);
     }
   });
 };
@@ -172,7 +172,7 @@ var getENV = function(callback){
       errorNExit(err);
     }
     var env = result.split('organization')[1].trim(' ');
-    callback(null, env);
+    return callback(null, env);
   });
 };
 
@@ -184,7 +184,7 @@ var getConnectedDevices  = function(callback){
     //reading nuber of devices connected
     var count = JSON.parse(result).android.devices.length;
     if(count === 0){
-      callback(null, 'No device attached');
+      return callback(null, 'No device attached');
     }
     else{
       //creating a device object
@@ -198,7 +198,7 @@ var getConnectedDevices  = function(callback){
 
         devices += '\u21E8 '+device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n'+'                ';
       }
-      callback(null, devices);
+      return callback(null, devices);
     }
   });
 };
@@ -213,11 +213,11 @@ var getAndroidSDKTools = function(callback){
         errorNExit(err);
       }
       current_ver = result.toString().split('Pkg.Revision=')[1].split('\n')[0];
-      callback(null, current_ver);
+      return callback(null, current_ver);
     });
   }
   else{
-    callback(null, 'No Android SDK Tools Installed.');
+    return callback(null, 'No Android SDK Tools Installed.');
   }
 };
 
@@ -228,10 +228,10 @@ var getPlatformTools = function(callback){
   if(fs.existsSync(path.join(sdktools_path,'source.properties'))){
     var result = fs.readFileSync(path.join(sdktools_path, 'source.properties'));
       current_ver = result.toString().split('Pkg.Revision=')[1].split('\n')[0];
-      callback(null, current_ver);
+      return callback(null, current_ver);
   }
   else{
-    callback(null, 'No Platform Tools Installed.');
+    return callback(null, 'No Platform Tools Installed.');
   }
 };
 
@@ -252,10 +252,10 @@ var getBuildTools = function(callback){
         }
       });
         var highest = filter_arr[filter_arr.length-1];
-        callback(null, highest);
+        return callback(null, highest);
     }
     else{
-      callback(null, 'No Build Tools Installed.');
+      return callback(null, 'No Build Tools Installed.');
     }
 };
 
@@ -347,7 +347,7 @@ var getAndroidModules = function(callback){
     }
 
     var androidModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Cloudpush: '+modules.cloudpush+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
-    callback(null, androidModules);
+    return callback(null, androidModules);
 };
 
 var getIOSModules = function(callback){
@@ -461,5 +461,5 @@ var getCommonjsModules = function(callback){
   }
 
   var commonjsModules = 'Cloud:     '+modules.cloud;
-  callback(null, commonjsModules);
+  return callback(null, commonjsModules);
 };

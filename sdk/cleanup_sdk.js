@@ -50,6 +50,7 @@ module.exports = function() {
 
 };
 
+//Function definitions start here:
 var checkoutMaster = function(callback){
   console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
   spinner_start();
@@ -59,7 +60,7 @@ var checkoutMaster = function(callback){
       }
       spinner_stop(true);
       console.log(cyan(data));
-      callback(null, null);
+      return callback(null, null);
     });
 };
 
@@ -73,7 +74,7 @@ var deleteBranch = function(pr_no, callback){
       }
       spinner_stop(true);
       console.log(cyan(data));
-      callback(null, null);
+      return callback(null, null);
     });
 };
 
@@ -88,7 +89,7 @@ var fetchOrigin = function(callback){
       spinner_stop(true);
       console.log(cyan(data));
       console.log(cyan('DONE'));
-      callback(null, null);
+      return callback(null, null);
   });
 };
 
@@ -100,10 +101,10 @@ var question = function(pr_no, callback){
   }];
   inquirer.prompt(questions).then(function(answers) {
     if(answers.pr_number){
-      callback(true);
+      return callback(true);
     }
     else{
-      callback(false);
+      return callback(false);
     }
   });
 };

@@ -16,7 +16,7 @@ module.exports = {
       var buildFldrPath = path.join(sdk_dir, 'titanium_mobile', 'build');
       process.chdir(buildFldrPath);
       console.log(underline(bold('\n\u25B6 BUILDING THE SDK:')));
-      callback(null, null);
+      return callback(null, null);
     }).stdout.on('data', function(data) {
       console.log(cyan(data));
     });
@@ -31,7 +31,7 @@ module.exports = {
         errorNExit(err);
       }
       console.log(underline(bold('\n\u25B6 PACKAGING THE SDK:')));
-      callback(null, null);
+      return callback(null, null);
     }).stdout.on('data', function(data) {
       console.log(cyan(data));
     });

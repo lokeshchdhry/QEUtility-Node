@@ -20,7 +20,7 @@ module.exports = function(){
       fs.mkdirSync(install_path);
       fs.mkdirSync(dir_path.join(install_path, '/package'));
       var pkgPath = dir_path.join(install_path, '/package');
-      //change diir to package dir
+      //change dir to package dir
       process.chdir(pkg_path);
     }
     else{
@@ -67,8 +67,7 @@ module.exports = function(){
 
 function clone_clicore(repo_link, repo_dir) {
   process.chdir(repo_dir);
-  console.log('');
-  console.log('\u25B6 Cloning appc-cli repo .... Please Wait.');
+  console.log('\n\u25B6 Cloning appc-cli repo .... Please Wait.');
   //Starting spinner
   util.spinner_start();
 
@@ -95,40 +94,40 @@ function clone_clicore(repo_link, repo_dir) {
   });
 }
 
-function change_dir(path, callback){
-  try{
-    process.chdir(path);
-    // callback(null, null);
-  }
-  catch(err){
-    console.log(util.error(err));
-    //exit process in case of error
-    process.exit();
-  }
-}
-
-function install_core(callback){
-  exec('sudo npm install --production', function(err) {
-    if (err) {
-      console.log(util.error(err));
-      //exit process in case of error
-      process.exit();
-    } else {
-      callback(null, null);
-    }
-  }).stdout.on('data', function(data) {
-    console.log(util.cyan(data));
-  });
-}
-
-function appc_use(ver, callback){
-  exec('appc use '+ver, function(err) {
-    if (err) {
-      console.log(util.error(err));
-    } else {
-      callback(null, null);
-    }
-  }).stdout.on('data', function(data) {
-    console.log(util.cyan(data));
-  });
-}
+// function change_dir(path, callback){
+//   try{
+//     process.chdir(path);
+//     // callback(null, null);
+//   }
+//   catch(err){
+//     console.log(util.error(err));
+//     //exit process in case of error
+//     process.exit();
+//   }
+// }
+//
+// function install_core(callback){
+//   exec('sudo npm install --production', function(err) {
+//     if (err) {
+//       console.log(util.error(err));
+//       //exit process in case of error
+//       process.exit();
+//     } else {
+//       callback(null, null);
+//     }
+//   }).stdout.on('data', function(data) {
+//     console.log(util.cyan(data));
+//   });
+// }
+//
+// function appc_use(ver, callback){
+//   exec('appc use '+ver, function(err) {
+//     if (err) {
+//       console.log(util.error(err));
+//     } else {
+//       callback(null, null);
+//     }
+//   }).stdout.on('data', function(data) {
+//     console.log(util.cyan(data));
+//   });
+// }

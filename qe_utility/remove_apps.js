@@ -19,7 +19,7 @@ module.exports = function(){
         var count = JSON.parse(result).android.devices.length;
         if(count === 0){
           //Sending callback as error
-          callback('\n\u2717 No device connected.\n', null);
+           return callback('\n\u2717 No device connected.\n', null);
         }
         else{
           var devices = [];
@@ -31,7 +31,7 @@ module.exports = function(){
             devices.push(device);
           }
           //Pass on the array of device objects
-          callback(null, devices);
+          return callback(null, devices);
         }
       });
     },
@@ -48,7 +48,7 @@ module.exports = function(){
         choices: nameArr
       }).then(function (answers) {
         //Pass On the device name & the array of device objects
-        callback(null, deviceArr, answers.devices);
+        return callback(null, deviceArr, answers.devices);
       });
     },
 
@@ -69,7 +69,7 @@ module.exports = function(){
               }
             });
             //Pass on the device id & packages
-            callback(null, deviceID, filteredPkgs);
+            return callback(null, deviceID, filteredPkgs);
           });
         }
       });
@@ -90,7 +90,7 @@ module.exports = function(){
               counter++;
               //Fire the callback if all packages are uninstalled
               if(counter === packages.length){
-                callback(null, bold('\n\u2714 Done uninstalling all APPC appc\n'));
+                return callback(null, bold('\n\u2714 Done uninstalling all APPC appc\n'));
               }
             }
           });

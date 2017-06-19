@@ -8,10 +8,15 @@ util = require('../misc/util'),
 questionInput = require('../misc/util').questionInput,
 cyan = require('../misc/util').cyan,
 error = require('../misc/util').error,
+bold = require('../misc/util').bold,
 errorNExit = require('../misc/util').errorNExit,
 user = require('../misc/util').user,
 setSyncValue = require('../misc/util').setSyncValue,
-underline = require('../misc/util').underline;
+underline = require('../misc/util').underline,
+execute = require('../misc/util').execute,
+spinner_stop = require('../misc/util').spinner_stop,
+spinner_start = require('../misc/util').spinner_start,
+installAppcCLI = require('../qe_utility/install_core');
 
 module.exports = function() {
   var android_sdk, android_ndk;
@@ -26,7 +31,7 @@ module.exports = function() {
       setSyncValue('dir_cli_core', clicore_install_path);
 
       var task = [];
-      // task.push(function(callback) {checkBashProfile(callback, user);});
+      task.push(function(callback) {checkAppcCLI(callback);});
       task.push(function(callback) {checkAndroidSDKEnvVar(callback, android_sdk);});
       task.push(function(callback) {checkAndroidNDKEnvVar(callback, android_ndk);});
       task.push(function(callback) {setupRepoLinksNPaths(callback);});
@@ -43,9 +48,29 @@ module.exports = function() {
     }
   });
 };
+//Function definitions start here:
+var checkAppcCLI = function(callback){
+  console.log(underline(bold('\n\u25B6 Checking if APPC CLI is installed:')));
+  execute('appc -v', function(err, data){
+    if(err){
+      console.log('\u2717 It seems APPC CLI is not installed & is needed by this tool. Please run '+cyan('\"sudo npm install -g appcelerator\"')+' from the terminal & re-run SETUP.\n');
+      //Killing the process as APPC CLI is not installed
+      process.exit();
+    }
+    else{
+      execute('appc -v', function(err, data){
+        if(err){
+          errorNExit(err);
+        }
+        console.log(cyan('\u2714 APPC CLI CORE version '+ data.trim('')+' is installed'));
+        return callback(null, null);
+      });
+    }
+  });
+};
 
 var checkAndroidSDKEnvVar = function(callback, andSDKEnvVar){
-  console.log(underline('\nChecking if ANDROID_SDK env variable is set.'));
+  console.log(underline(bold('\n\u25B6 Checking if ANDROID_SDK env variable is set.')));
   if (andSDKEnvVar === undefined) {
     console.log(cyan('\n\u2717 ANDROID_SDK env variable is not set. Let\'s set it up.'));
 
@@ -69,21 +94,21 @@ var checkAndroidSDKEnvVar = function(callback, andSDKEnvVar){
           process.exit();
         }
         else {
-          console.log(cyan('\n\u2714 Done adding ANDROID_SDK to the bash_profile.'));
-          callback(null, null);
+          console.log(bold(cyan('\n\u2714 Done adding ANDROID_SDK to the bash_profile.')));
+          return callback(null, null);
         }
       });
     });
   } else {
     console.log(cyan('\u2714 ANDROID_SDK is set in bash_profile\n'));
-    callback(null, null);
+    return callback(null, null);
   }
 };
 
 var checkAndroidNDKEnvVar = function(callback, andNDKEnvVar){
-  console.log(underline('\nChecking if ANDROID_NDK env variable is set.'));
+  console.log(underline(bold('\n\u25B6 Checking if ANDROID_NDK env variable is set.')));
   if (andNDKEnvVar === undefined) {
-    console.log(cyan('\n\u2717 ANDROID_SNK env variable is not set. Let\'s set it up.'));
+    console.log(bold(cyan('\n\u2717 ANDROID_SNK env variable is not set. Let\'s set it up.')));
 
     var questions = [{
       name: 'android_ndkPath',
@@ -103,19 +128,19 @@ var checkAndroidNDKEnvVar = function(callback, andNDKEnvVar){
           errorNExit(err);
         }
         else {
-          console.log(cyan('\n\u2714 Done adding ANDROID_NDK to the bash_profile.'));
-          callback(null, null);
+          console.log(cyan(bold('\n\u2714 Done adding ANDROID_NDK to the bash_profile.')));
+          return callback(null, null);
         }
       });
     });
   } else {
     console.log(cyan('\u2714 ANDROID_NDK is set in bash_profile'));
-    callback(null, null);
+    return callback(null, null);
   }
 };
 
 var setupRepoLinksNPaths = function(callback){
-  console.log(underline('\n\u25B6 Setting repo links & repo paths:'));
+  console.log(underline(bold('\n\u25B6 Setting repo links & repo paths:')));
   //questions object array
   var questions = [{
     name: 'repo_link_sdk',
@@ -240,7 +265,7 @@ inquirer.prompt(questions).then(function(answers) {
 
   //Getting the stored info & printing the details to console
   console.log('');
-  console.log(underline('\u25B6 Stored information: (Please Double Check)'));
+  console.log(underline(bold('\u25B6 Stored information: (Please Double Check)')));
   console.log('TIMOB repo link :    ' + cyan(util.repolink_sdk));
   console.log('TIMOB SDK clone dir: ' + cyan(util.sdk_dir));
   console.log('Appc NPM repo link : ' + cyan(util.repolink_clinpm));
@@ -258,6 +283,6 @@ inquirer.prompt(questions).then(function(answers) {
   //Set the count to 1 in the storage when setup is run. This count is used to track if setup is run atleast once.
   setSyncValue('runcount', 1);
 
-  callback(null, null);
+  return callback(null, null);
 });
 };

@@ -22,6 +22,9 @@ function selectSDK(){
   }];
   inquirer.prompt(questions).then(function(answers) {
     execute('appc ti sdk select '+answers.sdk_ver, function(err, data){
+      if(err){
+        errorNExit(err);
+      }
       console.log(cyan('\n'+data));
     });
   });

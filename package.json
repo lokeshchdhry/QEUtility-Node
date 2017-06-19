@@ -7,6 +7,7 @@
     "qeutility": "./qeutility.js"
   },
   "dependencies": {
+    "async": "^2.1.5",
     "adbkit": "^2.9.2",
     "ascii-progress": "^1.0.5",
     "chalk": "^1.1.3",

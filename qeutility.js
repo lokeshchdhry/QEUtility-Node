@@ -20,12 +20,11 @@ var select_sdk = require('./qe_utility/select_sdk');
 var changeEnv = require('./qe_utility/change_env');
 var removeApps = require('./qe_utility/remove_apps.js');
 var inquirer = require('inquirer');
-var storage = require('node-persist');
+var setup_runcount = require('./misc/util').runcount;
 
 //Getting the value of runCount from storage
-var checkSetupRun = storage.getItemSync('runcount');
 //Checking if SETUP has beed run before, if not run setup or else show the menu
-if( checkSetupRun === undefined){
+if( setup_runcount === undefined){
   console.log('');
   var questions = [{
       name: 'run_check',

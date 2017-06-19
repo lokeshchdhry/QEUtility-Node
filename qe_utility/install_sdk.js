@@ -38,7 +38,7 @@ var getSDKVer = function(callback) {
     }
   }];
   inquirer.prompt(questions).then(function(answers) {
-    callback(null, answers.sdk_ver);
+    return callback(null, answers.sdk_ver);
   });
 };
 
@@ -48,10 +48,10 @@ var filter = function(version, callback){
   var patt_2 = /^[A-z]/g;
   //checking if branch is entered or master
   if(patt_1.test(version)||patt_2.test(version)){
-    callback(null, 'branch', version);
+    return callback(null, 'branch', version);
   }
   else{
-    callback(null, 'sdk', version);
+    return callback(null, 'sdk', version);
   }
 };
 

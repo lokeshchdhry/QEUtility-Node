@@ -23,7 +23,7 @@ module.exports = function(){
         }
       }];
       inquirer.prompt(questions).then(function(answers) {
-        callback(null, answers.cli_ver);
+        return callback(null, answers.cli_ver);
       });
     },
 
@@ -36,7 +36,7 @@ module.exports = function(){
         }
         spinner_stop(true);
         console.log(cyan(data));
-        callback(null);
+        return callback(null);
       });
     }
   ],function(err, results){
