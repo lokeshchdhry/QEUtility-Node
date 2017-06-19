@@ -21,4 +21,4 @@
 
 .node-persist/storage/17e1270bd707558cdd78fd97bfd90064
 
-.node_modules/*
+/node_modules/*
