@@ -5,7 +5,6 @@ var exec = require('child_process').exec;
 var storage = require('node-persist');
 var inquirer = require('inquirer');
 var path = require('path');
-var isOnline = require('is-online');
 
 //Initialize storage sync (node persist)
 storage.initSync();
