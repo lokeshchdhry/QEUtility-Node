@@ -15,7 +15,6 @@ module.exports = {
     underline: chalk.underline,
     cyan: chalk.cyan,
     bold: chalk.bold,
-
     //Getting user info
     user: process.env.USER,
 

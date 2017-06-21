@@ -436,7 +436,6 @@ var getIOSModules = function(callback){
     else{
       modules.touchid = 'No TouchID modules';
     }
-
     var iosModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Coremotion:'+modules.coremotion+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
     callback(null, iosModules);
 };
