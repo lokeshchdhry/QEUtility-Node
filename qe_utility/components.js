@@ -1,7 +1,6 @@
 var spawn = require('child_process').spawn;
 var fs = require('fs');
 var Async = require('async');
-var _ = require('underscore');
 var path = require('path');
 var execute = require('../misc/util').execute;
 var cyan = require('../misc/util').cyan;
@@ -64,8 +63,8 @@ var getStudioVer = function(callback){
   //Check if version.txt file exists
   if(fs.existsSync(txtPath)){
     var text = fs.readFileSync(txtPath, 'utf8').split('\n');
-    var ver = _.chain(text).map(function(text){return text.split(' ');}).flatten().value();
-    return callback(null, ver[2]);
+    var ver = text[0].split(' ')[2];
+    return callback(null, ver);
   }
   else{
     return callback(null, 'Appc Studio not installed.');
@@ -238,7 +237,6 @@ var getPlatformTools = function(callback){
 var getBuildTools = function(callback){
   var folders;
   var filter_arr = [];
-  var current_ver;
   var android_sdkPath = process.env.ANDROID_SDK;
   var buildtools_path = path.join(android_sdkPath, 'build-tools');
   //Checking if build-tools folder exists
@@ -246,13 +244,13 @@ var getBuildTools = function(callback){
     //Reading the directory for child directories synchronously
     folders = fs.readdirSync(buildtools_path);
       //filtering out DS.store file from the array of folders
-      _.filter(folders, function(folder){
+      folders.filter(function(folder){
         if(folder !== '.DS_Store'){
           filter_arr.push(folder);
         }
       });
-        var highest = filter_arr[filter_arr.length-1];
-        return callback(null, highest);
+        var highestinstalled = filter_arr[filter_arr.length-1];
+        return callback(null, highestinstalled);
     }
     else{
       return callback(null, 'No Build Tools Installed.');
@@ -270,7 +268,7 @@ var getAndroidModules = function(callback){
     if(fs.existsSync(facebookModPath)){
       folders = fs.readdirSync(facebookModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -286,7 +284,7 @@ var getAndroidModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(hyperloopModPath);
       if(folders){
-        _.filter(folders, function(folder){
+      folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -302,7 +300,7 @@ var getAndroidModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(cloudpushModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -318,7 +316,7 @@ var getAndroidModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(mapModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -334,7 +332,7 @@ var getAndroidModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(touchidModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -361,7 +359,7 @@ var getIOSModules = function(callback){
     if(fs.existsSync(facebookModPath)){
       folders = fs.readdirSync(facebookModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -377,7 +375,7 @@ var getIOSModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(hyperloopModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -393,7 +391,7 @@ var getIOSModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(coremotionModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -409,7 +407,7 @@ var getIOSModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(mapModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -425,7 +423,7 @@ var getIOSModules = function(callback){
       filterArr=[];
       folders = fs.readdirSync(touchidModPath);
       if(folders){
-        _.filter(folders, function(folder){
+        folders.filter(function(folder){
           if(folder !== '.DS_Store'){
            filterArr.push(folder);
          }
@@ -447,7 +445,7 @@ var getCommonjsModules = function(callback){
   if(fs.existsSync(cloudModPath)){
     folders = fs.readdirSync(cloudModPath);
     if(folders){
-      _.filter(folders, function(folder){
+      folders.filter(function(folder){
         if(folder !== '.DS_Store'){
          filterArr.push(folder);
        }

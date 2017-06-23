@@ -1,13 +1,14 @@
-var Async = require('async');
-var inquirer = require('inquirer');
-var execute = require('../misc/util').execute;
-var cyan = require('../misc/util').cyan;
-var errorNExit = require('../misc/util').errorNExit;
-var username = require('../misc/util').username;
-var password = require('../misc/util').password;
-var underline = require('../misc/util').underline;
-var prodOrgId = require('../misc/util').prod_org_id;
-var preProdOrgId = require('../misc/util').preprod_org_id;
+var Async = require('async'),
+  inquirer = require('inquirer'),
+  execute = require('../misc/util').execute,
+  cyan = require('../misc/util').cyan,
+  errorNExit = require('../misc/util').errorNExit,
+  username = require('../misc/util').username,
+  password = require('../misc/util').password,
+  underline = require('../misc/util').underline,
+  bold = require('../misc/util').bold,
+  prodOrgId = require('../misc/util').prod_org_id,
+  preProdOrgId = require('../misc/util').preprod_org_id;
 
 module.exports = function(){
   inquirer.prompt({
@@ -46,7 +47,7 @@ module.exports = function(){
 };
 
 var logout = function(callback){
-  console.log(underline('\n\u25B6 Logging you out:'));
+  console.log(bold(underline('\n\u25B6 LOGGING YOU OUT:')));
   execute('appc logout', function(err, data){
     if (err) {
       errorNExit(err);
@@ -57,7 +58,7 @@ var logout = function(callback){
 };
 
 var setDefaultEnv = function(callback, environment){
-  console.log(underline('\u25B6 Setting defaultEnvironment to '+environment));
+  console.log(bold(underline('\u25B6 SETTING DEFAULT ENVIRONMENT TO '+environment.toUpperCase())));
   execute('appc config set defaultEnvironment '+environment, function(err, data){
     if (err) {
       errorNExit(err);
@@ -68,24 +69,14 @@ var setDefaultEnv = function(callback, environment){
 };
 
 var login = function(callback, username, password, env){
-  if(env === 'production'){
-    console.log(underline('\n\u25B6 Logging you in:'));
-    execute('appc login --username '+username+' --password '+password+' --org-id '+prodOrgId, function(err, data){
+  //Determining which org ID to use
+  var orgID = (env === 'production')? prodOrgId : preProdOrgId;
+    console.log(bold(underline('\n\u25B6 LOGGING YOU IN:')));
+    execute('appc login --username '+username+' --password '+password+' --org-id '+orgID, function(err, data){
       if (err) {
         errorNExit(err);
       }
       console.log(cyan(data));
       return callback(null, null);
     });
-  }
-  else{
-    console.log(underline('\n\u25B6 Logging you in:'));
-    execute('appc login --username '+username+' --password '+password+' --org-id '+preProdOrgId, function(err, data){
-      if (err) {
-        errorNExit(err);
-      }
-      console.log(cyan(data));
-      return callback(null, null);
-    });
-  }
 };

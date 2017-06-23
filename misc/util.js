@@ -11,7 +11,7 @@ storage.initSync();
 
 module.exports = {
     //Setting color settings
-    error: chalk.bold.red,
+    error: chalk.red,
     underline: chalk.underline,
     cyan: chalk.cyan,
     bold: chalk.bold,
@@ -61,14 +61,14 @@ module.exports = {
             if (err) return console.log(util.error(err));
             else {
               var done = true;
-              callback(done);
+               return callback(done);
             }
         });
     },
 
     execute: function(cmd, opts, callback){
       if(opts){
-        exec(cmd,opts,function(err, data){
+        exec(cmd, opts,function(err, data){
           if(err){
             return callback(err, null);
           }
@@ -76,7 +76,7 @@ module.exports = {
         });
       }
       else{
-        exec(cmd,function(err, data){
+        exec(cmd, function(err, data){
           if(err){
             return callback(err, null);
           }
@@ -123,8 +123,7 @@ module.exports = {
           //Exit process
           process.exit();
         }
-        var PR = data;
-        callback(PR);
+        return callback(data);
       });
     },
 
@@ -137,8 +136,7 @@ module.exports = {
 
     gitPull: function(callback) {
       var util = require('../misc/util');
-      console.log('');
-      console.log('\u25B6 Pulling any changes from github ...... Please wait');
+      console.log(util.underline(util.bold('\n\u25B6 PULLING ANY CHANGES FROM GITHUB:')));
       //Start the spinner
       util.spinner_start();
 
@@ -153,14 +151,13 @@ module.exports = {
         //Stop spinner
         util.spinner_stop(true);
         console.log(util.cyan(data));
-        callback(null, null);
+        return callback(null, null);
       });
     },
 
     fetch_PR: function(callback) {
       var util = require('../misc/util');
-      console.log('');
-      console.log('\u25B6 Fetching all pull requests ...... Please wait');
+      console.log(util.underline(util.bold('\n\u25B6 FETCHING ALL PULL REQUESTS:')));
       //Start the spinner
       util.spinner_start();
 
@@ -175,9 +172,8 @@ module.exports = {
         //Stop spinner
         util.spinner_stop(true);
         console.log(util.cyan(data));
-        console.log(util.cyan('DONE'));
-        console.log('');
-        callback(null, null);
+        console.log(util.cyan('DONE\n'));
+        return callback(null, null);
       });
     },
 
@@ -190,12 +186,12 @@ module.exports = {
           if (value.length) {
             return true;
           } else {
-            return 'Please enter PR number to build for.';
+            return this.message;
           }
         }
       }];
       inquirer.prompt(questions).then(function(answers) {
-        callback(null, answers);
+        return callback(null, answers);
       });
     },
 
@@ -211,11 +207,10 @@ module.exports = {
         }
         if(component === 'sdk'){
           //CD into the build folder in the repo.
-          var buildpath = path.join(util.sdk_dir, 'titanium_mobile');
-          process.chdir(buildpath);
+          process.chdir(path.join(util.sdk_dir, 'titanium_mobile'));
         }
         console.log(util.cyan(data));
-        callback(null, null);
+        return callback(null, null);
       });
     }
 };

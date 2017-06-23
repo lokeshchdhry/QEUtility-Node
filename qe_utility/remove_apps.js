@@ -1,7 +1,6 @@
 var adb = require('adbkit').createClient();
 var inquirer = require('inquirer');
 var Async = require('async');
-_ = require('underscore');
 var execute = require('../misc/util').execute;
 var cyan = require('../misc/util').cyan;
 var bold = require('../misc/util').bold;
@@ -63,7 +62,7 @@ module.exports = function(){
           //Get the packages using the device id
           adb.getPackages(deviceID, function(err, packages){
             //Filter the packages to only extract packages with com.app* , as appc apps are usually start with com.app*
-            var filteredPkgs = _.filter(packages, function(pkg){
+            var filteredPkgs = packages.filter(function(pkg){
               if(pkg.match(patt)){
                 return pkg;
               }
@@ -80,7 +79,7 @@ module.exports = function(){
       if(packages.length>0){
         //Counter to iterate over the packages array
         var counter = 0;
-        _.each(packages, function(pkg){
+        packages.forEach(function(pkg){
           adb.uninstall(deviceID, pkg, function(err){
             if(err){
               errorNExit(err);

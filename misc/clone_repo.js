@@ -8,8 +8,7 @@ var execute = require('../misc/util').execute,
 
 module.exports = function(repo_link, repo_dir, repo_name) {
     process.chdir(repo_dir);
-    console.log('');
-    console.log('\u25B6 Cloning '+repo_name +' Please Wait ......');
+    console.log('\n\u25B6 Cloning '+repo_name +' Please Wait ......');
     //Starting spinner
     spinner_start();
 
@@ -38,9 +37,9 @@ module.exports = function(repo_link, repo_dir, repo_name) {
 function modifyConfig(callback){
   console.log(cyan("\n\u25B6 Adding 'fetch = +refs/pull/*/head:refs/remotes/origin/pr/*' to the config file'"));
   //Logic to add "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*" to the config file
-  var data1 = fs.readFileSync('config').toString().split("\n");
-  data1.splice(10, 0, "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*");
-  var text = data1.join("\n");
+  var data = fs.readFileSync('config').toString().split("\n");
+  data.splice(10, 0, "fetch = +refs/pull/*/head:refs/remotes/origin/pr/*");
+  var text = data.join("\n");
 
   fs.writeFile('config', text, function(err) {
       if (err){

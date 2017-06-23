@@ -1,5 +1,19 @@
 var ProgressBar = require('ascii-progress');
 
+// var bar = new ProgressBar({
+//     schema: '[:bar.cyan] :percent.cyan',
+//     filled: '=',
+//     blank: '-',
+//     total : 2400
+// });
+//
+// var iv = setInterval(function () {
+//   bar.tick();
+//   if (bar.completed) {
+//     clearInterval(iv);
+//   }
+// }, 100);
+
 module.exports = {
   progressBar: function(flag){
     if(flag === 'stop'){

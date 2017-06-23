@@ -136,7 +136,7 @@ var getLatestSDKVer = function(){
   var folders = fs.readdirSync(dir);
   var filter_arr = [];
   //filtering out DS.store file from the array of folders
-  _.filter(folders, function(folder){
+  folders.filter(function(folder){
     if(folder !== '.DS_Store'){
       filter_arr.push(folder);
     }
