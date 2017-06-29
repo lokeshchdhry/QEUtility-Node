@@ -53,7 +53,7 @@ module.exports = function() {
       });
     }
     else{
-      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set, SETUP --> STORED PATHS & then clone the repo.\n'));
+      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set,'+bold(' SETUP --> STORED PATHS')+' & then clone the repo.\n'));
     }
   });
 };
@@ -63,13 +63,13 @@ var checkoutMaster = function(callback){
   console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER.')));
   spinner_start();
   execute('git checkout master', function(err, data) {
-      if (err) {
-          errorNExit(err);
-      }
-      spinner_stop(true);
-      console.log(cyan(data));
-      return callback(null, null);
-    });
+    if (err) {
+      errorNExit(err);
+    }
+    spinner_stop(true);
+    console.log(cyan(data));
+    return callback(null, null);
+  });
 };
 
 var deleteBranch = function(pr_no, callback){
@@ -77,13 +77,13 @@ var deleteBranch = function(pr_no, callback){
   console.log(underline(bold('\n\u25B6 DELETING THE PR BRANCH.')));
   spinner_start();
   execute('git branch -D' + pr_no, function(err, data) {
-      if (err) {
-          errorNExit(err);
-      }
-      spinner_stop(true);
-      console.log(cyan(data));
-      return callback(null, null);
-    });
+    if (err) {
+      errorNExit(err);
+    }
+    spinner_stop(true);
+    console.log(cyan(data));
+    return callback(null, null);
+  });
 };
 
 var fetchOrigin = function(callback){
@@ -91,21 +91,21 @@ var fetchOrigin = function(callback){
   console.log(underline(bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN.')));
   spinner_start();
   execute('git fetch origin', function(err, data) {
-      if (err) {
-          errorNExit(err);
-      }
-      spinner_stop(true);
-      console.log(cyan(data));
-      console.log(cyan('DONE'));
-      return callback(null, null);
+    if (err) {
+      errorNExit(err);
+    }
+    spinner_stop(true);
+    console.log(cyan(data));
+    console.log(cyan('DONE'));
+    return callback(null, null);
   });
 };
 
 var question = function(pr_no, callback){
   var questions = [{
-      name: 'pr_number',
-      type: 'confirm',
-      message: 'Are you sure you want to delete branch for' + cyan(pr_no)
+    name: 'pr_number',
+    type: 'confirm',
+    message: 'Are you sure you want to delete branch for' + cyan(pr_no)
   }];
   inquirer.prompt(questions).then(function(answers) {
     if(answers.pr_number){

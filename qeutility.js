@@ -76,31 +76,31 @@ else{
         message: 'What would you like to do in QE Utility ?',
         choices: [{
           name: 'CHECK INSTALLED COMPONENTS',
-          value:'compo',
+          value:'compo'
         },
         {
           name: 'INSTALL APPC CORE',
-          value:'install_core',
+          value:'install_core'
         },
         {
           name: 'INSTALL APPC NPM',
-          value:'install_appc_npm',
+          value:'install_appc_npm'
         },
         {
           name: 'INSTALL TITANIUM SDK',
-          value:'install_sdk',
+          value:'install_sdk'
         },
         {
           name: 'SELECT SPECIFIC TITANIUM SDK',
-          value:'select_sdk',
+          value:'select_sdk'
         },
         {
           name: 'CHANGE ENVIRONMENT',
-          value:'change_env',
+          value:'change_env'
         },
         {
           name: 'UNINSTALL APPS FROM DEVICE',
-          value:'remove_apps',
+          value:'remove_apps'
         },
         {
           name: 'EXIT',
@@ -118,15 +118,15 @@ else{
         message: 'What would you like to do ?',
         choices: [{
           name: 'CLONE TIMOB SDK REPO',
-          value:'clone_sdk',
+          value:'clone_sdk'
         },
         {
           name: 'BUILD SDK FOR PR',
-          value:'build_sdk',
+          value:'build_sdk'
         },
         {
           name: 'CLEANUP SDK',
-          value:'clean_sdk',
+          value:'clean_sdk'
         },{
           name: 'EXIT',
           value: 'exit'
@@ -143,15 +143,15 @@ else{
         message: 'What would you like to do ?',
         choices: [{
           name: 'CLONE APPC CLI NPM REPO',
-          value:'clone_clinpm',
+          value:'clone_clinpm'
         },
         {
           name: 'BUILD APPC CLI NPM',
-          value:'build_clinpm',
+          value:'build_clinpm'
         },
         {
           name: 'CLEANUP APPC CLI NPM',
-          value:'clean_clinpm',
+          value:'clean_clinpm'
         },{
           name: 'EXIT',
           value: 'exit'
@@ -168,15 +168,15 @@ else{
         message: 'What would you like to do ?',
         choices: [{
           name: 'CLONE APPC CLI CORE REPO',
-          value:'clone_clicore',
+          value:'clone_clicore'
         },
         {
           name: 'BUILD APPC CLI CORE',
-          value:'build_clicore',
+          value:'build_clicore'
         },
         {
           name: 'CLEANUP APPC CLI CORE',
-          value:'clean_clicore',
+          value:'clean_clicore'
         },{
           name: 'EXIT',
           value: 'exit'
@@ -193,11 +193,11 @@ else{
         message: 'What would you like to do ?',
         choices: [{
           name: 'RUN SETUP',
-          value:'run_setup',
+          value:'run_setup'
         },
         {
           name: 'CHECK STORED PATHS',
-          value:'stored_paths',
+          value:'stored_paths'
         },{
           name: 'EXIT',
           value: 'exit'

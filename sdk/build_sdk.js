@@ -10,8 +10,8 @@ packageSDK = require('../sdk/package_sdk'),
 installSDK = require('../sdk/install_sdk'),
 dirPath = require('path'),
 cyan = require('../misc/util').cyan,
-bold = require('../misc/util').cyan,
-underline = require('../misc/util').cyan,
+bold = require('../misc/util').bold,
+underline = require('../misc/util').underline,
 errorNExit = require('../misc/util').errorNExit,
 sdk_dir = require('../misc/util').sdk_dir,
 repo_check = require('../misc/util').repo_check,
@@ -25,26 +25,21 @@ module.exports = function() {
     if(flag){
       //Get the current PR number.
       process.chdir(dirPath.join(sdk_dir, '/titanium_mobile'));
-      var pr_no;
       getPR_No(function(PR) {
-        pr_no = PR;
-        if (pr_no !== '') {
+        if (PR !== '') {
           console.log('');
           //Ask question
           var questions = [{
             name: 'choice',
             type: 'confirm',
-            message: 'You are already on a PR branch' + cyan(pr_no) + 'Do you want to rebuild for the same PR ?'
+            message: 'You are already on a PR branch' + cyan(PR) + 'Do you want to rebuild for the same PR ?'
           }];
           inquirer.prompt(questions).then(function(answer) {
             if (!answer.choice) {
-              console.log('');
-              console.log("Please do a cleanup, FR TOOLS FOR SDK -> CLEANUP SDK first before you build again.");
-              console.log('');
+              console.log(cyan('\nPlease do a cleanup, first before you build again.'+bold(' FR TOOLS FOR SDK -> CLEANUP SDK.\n')));
             } else if (answer.choice) {
-              console.log('');
-              console.log(bold(underline('\u25B6 Rebuilding the SDK for' + pr_no)));
-              build(pr_no);
+              console.log(bold(underline('\n\u25B6 Rebuilding the SDK for' + PR)));
+              build(PR);
             }
           });
         } else {
@@ -53,7 +48,7 @@ module.exports = function() {
       });
     }
     else{
-      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set, SETUP --> STORED PATHS & then clone the repo.\n'));
+      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set,'+bold(' SETUP --> STORED PATHS')+' & then clone the repo.\n'));
     }
   });
 };
@@ -62,7 +57,6 @@ var build = function(prNumber) {
   var path = dirPath.join(sdk_dir, '/titanium_mobile');
   process.chdir(path);
   if (prNumber === undefined) {
-
     var task = [];
     task.push(function(callback) { gitPull(callback); });
     task.push(function(callback) { fetch_PR(callback); });
