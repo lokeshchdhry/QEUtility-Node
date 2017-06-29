@@ -89,14 +89,14 @@ module.exports = {
       var util = require('../misc/util');
       switch(repoName){
         case 'timob':
-          if(!fs.existsSync(util.sdk_dir)){
+          if(!fs.existsSync(path.join(util.sdk_dir, 'titanium_mobile'))){
             callback(false);
             break;
           }
           callback(true);
           break;
         case 'clinpm':
-          if(!fs.existsSync(util.npm_dir)){
+          if(!fs.existsSync(path.join(util.npm_dir, 'appc-install'))){
             callback(false);
             break;
           }

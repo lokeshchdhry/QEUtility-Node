@@ -11,48 +11,56 @@ bold = require('../misc/util').bold,
 underline = require('../misc/util').underline,
 spinner_start = require('../misc/util').spinner_start,
 spinner_stop = require('../misc/util').spinner_stop,
+repo_check = require('../misc/util').repo_check,
 execute = require('../misc/util').execute;
 
 module.exports = function() {
-    console.log('');
-    //Initialize node persist.
-    storage.initSync();
-    var path = dirPath.join(sdk_dir, '/titanium_mobile');
-    //CD in to TIMOB repo dir.
-    process.chdir(path);
+  var name = 'timob';
+  //Checking if repo exists
+  repo_check(name, function(flag){
+    if(flag){
+      console.log('');
+      //Initialize node persist.
+      storage.initSync();
+      var path = dirPath.join(sdk_dir, '/titanium_mobile');
+      //CD in to TIMOB repo dir.
+      process.chdir(path);
 
-    getPR_No(function(PR){
-      if(PR !== ''){
-        question(PR, function(flag){
-          if(flag){
-            var tasks = [];
-            tasks.push(function(callback) {checkoutMaster(callback);});
-            tasks.push(function(callback) {deleteBranch(PR, callback);});
-            tasks.push(function(callback) {fetchOrigin(callback);});
+      getPR_No(function(PR){
+        if(PR !== ''){
+          question(PR, function(flag){
+            if(flag){
+              var tasks = [];
+              tasks.push(function(callback) {checkoutMaster(callback);});
+              tasks.push(function(callback) {deleteBranch(PR, callback);});
+              tasks.push(function(callback) {fetchOrigin(callback);});
 
-            Async.series(tasks, function(err, data){
-              if(err){
-                errorNExit(err);
-              }
-            });
-          }
-          else{
-            //exit process if answer to question is NO
-            process.exit();
-          }
-        });
-      }
-      else{
-        console.log(bold('\u2717 No branch exists. Please proceed to build for a PR'));
-        console.log('');
-      }
-    });
-
+              Async.series(tasks, function(err, data){
+                if(err){
+                  errorNExit(err);
+                }
+              });
+            }
+            else{
+              //exit process if answer to question is NO
+              process.exit();
+            }
+          });
+        }
+        else{
+          console.log(bold('\u2717 No branch exists. Please proceed to build for a PR.\n'));
+        }
+      });
+    }
+    else{
+      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set, SETUP --> STORED PATHS & then clone the repo.\n'));
+    }
+  });
 };
 
 //Function definitions start here:
 var checkoutMaster = function(callback){
-  console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER. PLEASE WAIT.')));
+  console.log(underline(bold('\n\u25B6 CHECKING OUT TO MASTER.')));
   spinner_start();
   execute('git checkout master', function(err, data) {
       if (err) {
@@ -80,7 +88,7 @@ var deleteBranch = function(pr_no, callback){
 
 var fetchOrigin = function(callback){
   //Doing git fetch origin
-  console.log(underline(bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN. PLEASE WAIT.')));
+  console.log(underline(bold('\n\u25B6 FETCHING AGAIN FROM ORIGIN.')));
   spinner_start();
   execute('git fetch origin', function(err, data) {
       if (err) {

@@ -3,7 +3,8 @@ cyan = require('../misc/util').cyan,
 bold = require('../misc/util').bold,
 underline = require('../misc/util').underline,
 sdk_dir = require('../misc/util').sdk_dir,
-path = require('path');
+path = require('path'),
+errorNExit = require('../misc/util').errorNExit;
 
 module.exports = {
   npmInstallSDK: function(callback) {

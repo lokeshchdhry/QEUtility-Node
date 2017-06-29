@@ -235,14 +235,13 @@ var getPlatformTools = function(callback){
 };
 
 var getBuildTools = function(callback){
-  var folders;
-  var filter_arr = [];
   var android_sdkPath = process.env.ANDROID_SDK;
   var buildtools_path = path.join(android_sdkPath, 'build-tools');
   //Checking if build-tools folder exists
   if(fs.existsSync(buildtools_path)){
     //Reading the directory for child directories synchronously
-    folders = fs.readdirSync(buildtools_path);
+    var folders = fs.readdirSync(buildtools_path);
+    var filter_arr = [];
       //filtering out DS.store file from the array of folders
       folders.filter(function(folder){
         if(folder !== '.DS_Store'){
@@ -258,191 +257,81 @@ var getBuildTools = function(callback){
 };
 
 var getAndroidModules = function(callback){
-    var modules={}, folders, filterArr=[];
+    var modules={}, folders;
     var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'facebook');
     var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'hyperloop');
     var cloudpushModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.cloudpush');
     var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.map');
     var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.touchid');
-
-    if(fs.existsSync(facebookModPath)){
-      folders = fs.readdirSync(facebookModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.facebook = filterArr;
+    //Calling filterFn
+    filterFn(facebookModPath, 'facebook');
+    filterFn(hyperloopModPath, 'hyperloop');
+    filterFn(cloudpushModPath, 'cloudpush');
+    filterFn(mapModPath, 'map');
+    filterFn(touchidModPath, 'touchid');
+    //Function to filter .DS_Store
+    function filterFn(path, modulename){
+      if(fs.existsSync(path)){
+        filterArr=[];
+        folders = fs.readdirSync(path);
+        if(folders){
+          folders.filter(function(folder){
+            if(folder !== '.DS_Store'){
+             filterArr.push(folder);
+           }
+         });
+         modules[modulename] = filterArr;
+        }
+      }
+      else{
+        modules.modulename = 'No '+modulename+ ' modules';
       }
     }
-    else{
-      modules.facebook = 'No Facebook modules';
-    }
-
-    if(fs.existsSync(hyperloopModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(hyperloopModPath);
-      if(folders){
-      folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.hyperloop = filterArr;
-      }
-    }
-    else{
-      modules.hyperloop = 'No Hyperloop modules';
-    }
-
-    if(fs.existsSync(cloudpushModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(cloudpushModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.cloudpush = filterArr;
-      }
-    }
-    else{
-      modules.cloudpush = 'No Cloudpush modules';
-    }
-
-    if(fs.existsSync(mapModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(mapModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.map = filterArr;
-      }
-    }
-    else{
-      modules.map = 'No Map modules';
-    }
-
-    if(fs.existsSync(touchidModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(touchidModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.touchid= filterArr;
-      }
-    }
-    else{
-      modules.touchid = 'No TouchID modules';
-    }
-
     var androidModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Cloudpush: '+modules.cloudpush+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
     return callback(null, androidModules);
 };
 
 var getIOSModules = function(callback){
-    var modules={}, folders, filterArr=[];
+    var modules={}, folders;
     var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'facebook');
     var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'hyperloop');
     var coremotionModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.coremotion');
     var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.map');
     var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.touchid');
-
-    if(fs.existsSync(facebookModPath)){
-      folders = fs.readdirSync(facebookModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.facebook = filterArr;
+    //Calling filterFn
+    filterFn(facebookModPath, 'facebook');
+    filterFn(hyperloopModPath, 'hyperloop');
+    filterFn(coremotionModPath, 'coremotion');
+    filterFn(mapModPath, 'map');
+    filterFn(touchidModPath, 'touchid');
+    //Function to filter .DS_Store
+    function filterFn(path, modulename){
+      if(fs.existsSync(path)){
+        filterArr=[];
+        folders = fs.readdirSync(path);
+        if(folders){
+          folders.filter(function(folder){
+            if(folder !== '.DS_Store'){
+             filterArr.push(folder);
+           }
+         });
+         modules[modulename] = filterArr;
+        }
       }
-    }
-    else{
-      modules.facebook = 'No Facebook modules';
-    }
-
-    if(fs.existsSync(hyperloopModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(hyperloopModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.hyperloop = filterArr;
+      else{
+        modules.modulename = 'No '+modulename+ ' modules';
       }
-    }
-    else{
-      modules.hyperloop = 'No Hyperloop modules';
-    }
-
-    if(fs.existsSync(coremotionModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(coremotionModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.coremotion = filterArr;
-      }
-    }
-    else{
-      modules.coremotion = 'No Coremotion modules';
-    }
-
-    if(fs.existsSync(mapModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(mapModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.map = filterArr;
-      }
-    }
-    else{
-      modules.map = 'No Map modules';
-    }
-
-    if(fs.existsSync(touchidModPath)){
-      filterArr=[];
-      folders = fs.readdirSync(touchidModPath);
-      if(folders){
-        folders.filter(function(folder){
-          if(folder !== '.DS_Store'){
-           filterArr.push(folder);
-         }
-       });
-       modules.touchid= filterArr;
-      }
-    }
-    else{
-      modules.touchid = 'No TouchID modules';
     }
     var iosModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Coremotion:'+modules.coremotion+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
     callback(null, iosModules);
 };
 
 var getCommonjsModules = function(callback){
-  var modules={}, folders, filterArr=[];
+  var modules={}, folders;
   var cloudModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'commonjs', 'ti.cloud');
 
   if(fs.existsSync(cloudModPath)){
+    filterArr=[];
     folders = fs.readdirSync(cloudModPath);
     if(folders){
       folders.filter(function(folder){

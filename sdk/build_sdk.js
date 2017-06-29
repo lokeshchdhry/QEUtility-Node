@@ -20,7 +20,7 @@ getPR_No = require('../misc/util').getPR_No;
 
 module.exports = function() {
   var name = 'timob';
-  //Checking if repo path is set
+  //Checking if repo exists
   repo_check(name, function(flag){
     if(flag){
       //Get the current PR number.
@@ -53,9 +53,7 @@ module.exports = function() {
       });
     }
     else{
-      console.log('');
-      console.log(cyan('\u2717 Repo for SDK does not exist. Please first check if repo links are set, SETUP --> STORED PATHS & then clone the repo.'));
-      console.log('');
+      console.log(cyan('\n\u2717 Repo for SDK does not exist. Please first check if repo links are set, SETUP --> STORED PATHS & then clone the repo.\n'));
     }
   });
 };
