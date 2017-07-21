@@ -253,19 +253,19 @@ var setupRepoLinksNPaths = function(callback){
 ];
 inquirer.prompt(questions).then(function(answers) {
   //Storing the repo link & repo dir using node persist.
-  setSyncValue('repo_link_sdk', answers.repo_link_sdk);
-  setSyncValue('dir_sdk', answers.dir_sdk);
-  setSyncValue('repo_link_npm', answers.repo_link_npm);
-  setSyncValue('dir_npm', answers.dir_npm);
-  setSyncValue('repo_link_cli_core', answers.repo_link_cli_core);
-  setSyncValue('username', answers.username);
-  setSyncValue('password', answers.password);
-  setSyncValue('prod_org_id', answers.prod_org_id);
-  setSyncValue('preprod_org_id', answers.preprod_org_id);
+  setSyncValue('repo_link_sdk', answers.repo_link_sdk.trim());
+  setSyncValue('dir_sdk', answers.dir_sdk.trim());
+  setSyncValue('repo_link_npm', answers.repo_link_npm.trim());
+  setSyncValue('dir_npm', answers.dir_npm.trim());
+  setSyncValue('repo_link_cli_core', answers.repo_link_cli_core.trim());
+  setSyncValue('username', answers.username.trim());
+  setSyncValue('password', answers.password.trim());
+  setSyncValue('prod_org_id', answers.prod_org_id.trim());
+  setSyncValue('preprod_org_id', answers.preprod_org_id.trim());
 
   //Getting the stored info & printing the details to console
   console.log('');
-  console.log(underline(bold('\u25B6 Stored information: (Please Double Check)')));
+  console.log(underline(bold('\u25B6 STORED INFORMATION: (PLEASE DOUBLE CHECK)')));
   console.log('TIMOB repo link :    ' + cyan(util.repolink_sdk));
   console.log('TIMOB SDK clone dir: ' + cyan(util.sdk_dir));
   console.log('Appc NPM repo link : ' + cyan(util.repolink_clinpm));
