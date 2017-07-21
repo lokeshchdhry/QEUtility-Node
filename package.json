@@ -1,6 +1,6 @@
 {
   "name": "QEUtility-Node",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "QE Utility for Appc",
   "main": "qeutility.js",
   "bin": {
