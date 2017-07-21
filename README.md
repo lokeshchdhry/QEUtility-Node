@@ -12,5 +12,59 @@ QE Utility for Appc
 
 Setup command will check if `ANDROID_SDK` & `ANDROID_NDK` paths are set in your your bash profile, if not it will help set it for you.
 
-## Main Options:
+### Main Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/main.png)
+The above image is pretty self explanatory.
+
+### QE Utility Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/qeutilities.png)
+
+**1. CHECK INSTALLED COMPONENTS** 
+
+Will check for installed components on your system like:
+* Studio Version
+* SDK Version
+* Xcode Version
+* Appc Npm
+* Appc CLI
+* Ti CLI
+* Alloy
+* Node
+* Java Version
+* Attached android devices
+* Environment
+* SDK Tools
+* Platform Tools
+* Build Tools
+* Android & IOS modules installed (Not all but fixed ones)
+
+**2. INSTALL APPC CORE:**
+* Will install the specified version of appc core.
+
+**3. INSTALL APPC NPM:**
+* Will install the specified version of appc NPM.
+
+**4. INSTALL TITANIUM SDK:**
+* Will install the specified Ti SDK.
+
+**5. SELECT SPECIFIC TITANIUM SDK:**
+* Will select the specified Ti SDK in the CLI.
+
+**6. CHANGE ENVIRONMENT:**
+* Will change enviroment between production & preproduction.
+
+**7. UNINSTALL APPS FROM DEVICE:**
+* Will uninstall apps from the attached android device/s.
+
+### SDK FR Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/SDK_fr.png)
+
+### Appc NPM FR Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/AppcNPM_fr.png)
+
+### CLI Core FR Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/AppcCLICore_fr.png)
+
+### Setup Options:
+![alt text](https://github.com/lokeshchdhry/QEUtility-Node/blob/master/docs/images/setup.png)
 
