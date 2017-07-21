@@ -1,10 +1,10 @@
 var execute = require('../misc/util').execute,
-  cyan = require('../misc/util').cyan,
-  spinner_start = require('../misc/util').spinner_start,
-  spinner_stop = require('../misc/util').spinner_stop,
-  error = require('../misc/util').error,
-  errorNExit = require('../misc/util').errorNExit;
-  fs = require('fs');
+    cyan = require('../misc/util').cyan,
+    spinner_start = require('../misc/util').spinner_start,
+    spinner_stop = require('../misc/util').spinner_stop,
+    error = require('../misc/util').error,
+    errorNExit = require('../misc/util').errorNExit,
+    fs = require('fs');
 
 module.exports = function(repo_link, repo_dir, repo_name) {
     process.chdir(repo_dir);

@@ -1,9 +1,9 @@
-var exec = require('child_process').exec;
-var storage = require('node-persist');
-var inquirer = require('inquirer');
-var chalk = require('chalk');
-var util = require('../misc/util');
-var path = require('path');
+var exec = require('child_process').exec,
+    storage = require('node-persist'),
+    inquirer = require('inquirer'),
+    chalk = require('chalk'),
+    util = require('../misc/util'),
+    path = require('path');
 
 module.exports = function() {
     console.log('');

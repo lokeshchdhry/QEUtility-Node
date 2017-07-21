@@ -1,7 +1,7 @@
 var inquirer = require('inquirer'),
-  storage = require('node-persist'),
-  error = require('../misc/util').error,
-  cyan = require('../misc/util').cyan;
+    storage = require('node-persist'),
+    error = require('../misc/util').error,
+    cyan = require('../misc/util').cyan;
 
 module.exports = function() {
     //Initialize storage sync (node persist)

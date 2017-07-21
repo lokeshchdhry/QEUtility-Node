@@ -1,15 +1,15 @@
-var inquirer = require('inquirer');
-_ = require('underscore');
-var fs = require('fs');
-var path = require('path');
-var Async = require('async');
-var cyan = require('../misc/util').cyan;
-var errorNExit = require('../misc/util').errorNExit;
-var execute = require('../misc/util').execute;
-var underline = require('../misc/util').underline;
-var spinner_stop = require('../misc/util').spinner_stop;
-var spinner_start = require('../misc/util').spinner_start;
-var ProgressBar = require('ascii-progress');
+var inquirer = require('inquirer'),
+    _ = require('underscore'),
+    fs = require('fs'),
+    path = require('path'),
+    Async = require('async'),
+    cyan = require('../misc/util').cyan,
+    errorNExit = require('../misc/util').errorNExit,
+    execute = require('../misc/util').execute,
+    underline = require('../misc/util').underline,
+    spinner_stop = require('../misc/util').spinner_stop,
+    spinner_start = require('../misc/util').spinner_start,
+    ProgressBar = require('ascii-progress');
 
 module.exports = function(){
   task = [];

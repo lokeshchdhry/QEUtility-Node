@@ -1,21 +1,21 @@
 var inquirer = require('inquirer'),
-Async = require('async'),
-gitPull = require('../misc/util').gitPull,
-fetch_PR = require('../misc/util').fetch_PR,
-questionPR = require('../misc/util').questionPR,
-checkoutPR = require('../misc/util').checkoutPR,
-npmInstallSDK = require('../sdk/util_sdk').npmInstallSDK,
-buildSDKFunc = require('../sdk/util_sdk').buildSDKFunc,
-packageSDK = require('../sdk/package_sdk'),
-installSDK = require('../sdk/install_sdk'),
-dirPath = require('path'),
-cyan = require('../misc/util').cyan,
-bold = require('../misc/util').bold,
-underline = require('../misc/util').underline,
-errorNExit = require('../misc/util').errorNExit,
-sdk_dir = require('../misc/util').sdk_dir,
-repo_check = require('../misc/util').repo_check,
-getPR_No = require('../misc/util').getPR_No;
+    Async = require('async'),
+    gitPull = require('../misc/util').gitPull,
+    fetch_PR = require('../misc/util').fetch_PR,
+    questionPR = require('../misc/util').questionPR,
+    checkoutPR = require('../misc/util').checkoutPR,
+    npmInstallSDK = require('../sdk/util_sdk').npmInstallSDK,
+    buildSDKFunc = require('../sdk/util_sdk').buildSDKFunc,
+    packageSDK = require('../sdk/package_sdk'),
+    installSDK = require('../sdk/install_sdk'),
+    dirPath = require('path'),
+    cyan = require('../misc/util').cyan,
+    bold = require('../misc/util').bold,
+    underline = require('../misc/util').underline,
+    errorNExit = require('../misc/util').errorNExit,
+    sdk_dir = require('../misc/util').sdk_dir,
+    repo_check = require('../misc/util').repo_check,
+    getPR_No = require('../misc/util').getPR_No;
 
 
 module.exports = function() {
@@ -38,7 +38,7 @@ module.exports = function() {
             if (!answer.choice) {
               console.log(cyan('\nPlease do a cleanup, first before you build again.'+bold(' FR TOOLS FOR SDK -> CLEANUP SDK.\n')));
             } else if (answer.choice) {
-              console.log(bold(underline('\n\u25B6 Rebuilding the SDK for' + PR)));
+              console.log(bold(underline('\n\u25B6 REBUIDING THE SDK FOR' + PR)));
               build(PR);
             }
           });
@@ -60,14 +60,15 @@ var build = function(prNumber) {
     var task = [];
     task.push(function(callback) { gitPull(callback); });
     task.push(function(callback) { fetch_PR(callback); });
+    task.push(function(callback) { npmInstallSDK(callback); });
     task.push(function(callback) { questionPR(callback); });
     //Using async series to execute in series
     Async.series(task, function(err, results) {
       if (err) {
         errorNExit(err);
       }
-      //results is an array & we need array element 3 so we do results[2]
-      var PR_NO = results[2].pr_no;
+      //results is an array & we need array element 4 so we do results[3]
+      var PR_NO = results[3].pr_no;
       build_pr(PR_NO);
     });
   } else {

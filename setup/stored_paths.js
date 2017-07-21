@@ -1,7 +1,7 @@
 var cyan = require('../misc/util').cyan,
-underline = require('../misc/util').underline,
-bold = require('../misc/util').bold,
-util = require('../misc/util');
+    underline = require('../misc/util').underline,
+    bold = require('../misc/util').bold,
+    util = require('../misc/util');
 
 module.exports = function(){
   console.log('');

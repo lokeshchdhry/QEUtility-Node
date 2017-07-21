@@ -1,10 +1,10 @@
 var storage = require('node-persist'),
-inquirer = require('inquirer'),
-clone = require('../misc/clone_repo'),
-repolink_clinpm = require('../misc/util').repolink_clinpm,
-npm_dir = require('../misc/util').npm_dir,
-cyan = require('../misc/util').cyan,
-bold = require('../misc/util').bold;
+    inquirer = require('inquirer'),
+    clone = require('../misc/clone_repo'),
+    repolink_clinpm = require('../misc/util').repolink_clinpm,
+    npm_dir = require('../misc/util').npm_dir,
+    cyan = require('../misc/util').cyan,
+    bold = require('../misc/util').bold;
 
 module.exports = function() {
   //Initialize storage sync (node persist)

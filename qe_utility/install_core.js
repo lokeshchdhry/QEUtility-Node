@@ -1,10 +1,10 @@
-var inquirer = require('inquirer');
-var Async = require('async');
-var cyan = require('../misc/util').cyan;
-var errorNExit = require('../misc/util').errorNExit;
-var execute = require('../misc/util').execute;
-var spinner_start = require('../misc/util').spinner_start;
-var spinner_stop = require('../misc/util').spinner_stop;
+var inquirer = require('inquirer'),
+    Async = require('async'),
+    cyan = require('../misc/util').cyan,
+    errorNExit = require('../misc/util').errorNExit,
+    execute = require('../misc/util').execute,
+    spinner_start = require('../misc/util').spinner_start,
+    spinner_stop = require('../misc/util').spinner_stop;
 
 module.exports = function(){
 

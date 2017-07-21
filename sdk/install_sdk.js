@@ -1,9 +1,11 @@
 var exec = require('child_process').exec,
-cyan = require('../misc/util').cyan,
-errorNExit = require('../misc/util').errorNExit;
+    cyan = require('../misc/util').cyan,
+    errorNExit = require('../misc/util').errorNExit,
+    underline = require('../misc/util').underline;
 
 
 module.exports = function install_sdk(callback) {
+  console.log(underline(bold('\n\u25B6 INSTALLING THE SDK:')));
   //Install the SDK
   exec('node scons.js install', {
     maxBuffer: 1024 * 500

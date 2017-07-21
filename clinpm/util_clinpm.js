@@ -1,5 +1,5 @@
 var exec = require('child_process').exec,
-util = require('../misc/util');
+    util = require('../misc/util');
 
 module.exports = {
   npm_install_prod: function npm_install_prod(callback) {

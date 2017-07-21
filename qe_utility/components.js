@@ -1,12 +1,11 @@
-var spawn = require('child_process').spawn;
-var fs = require('fs');
-var Async = require('async');
-var path = require('path');
-var execute = require('../misc/util').execute;
-var cyan = require('../misc/util').cyan;
-var error = require('../misc/util').error;
-var errorNExit = require('../misc/util').errorNExit;
-var user = require('../misc/util').user;
+var fs = require('fs'),
+    Async = require('async'),
+    path = require('path'),
+    execute = require('../misc/util').execute,
+    cyan = require('../misc/util').cyan,
+    error = require('../misc/util').error,
+    errorNExit = require('../misc/util').errorNExit,
+    user = require('../misc/util').user;
 
 module.exports = function(){
 

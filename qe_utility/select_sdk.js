@@ -1,7 +1,7 @@
-var inquirer = require('inquirer');
-var cyan = require('../misc/util').cyan;
-var errorNExit = require('../misc/util').errorNExit;
-var execute = require('../misc/util').execute;
+var inquirer = require('inquirer'),
+    cyan = require('../misc/util').cyan,
+    errorNExit = require('../misc/util').errorNExit,
+    execute = require('../misc/util').execute;
 
 module.exports = function(){
   selectSDK();

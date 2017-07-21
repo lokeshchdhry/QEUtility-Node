@@ -1,8 +1,8 @@
-var execute = require('../misc/util').execute;
-var cyan = require('../misc/util').cyan;
-var error = require('../misc/util').error;
-var errorNExit = require('../misc/util').errorNExit;
-var inquirer = require('inquirer');
+var execute = require('../misc/util').execute,
+    cyan = require('../misc/util').cyan,
+    error = require('../misc/util').error,
+    errorNExit = require('../misc/util').errorNExit,
+    inquirer = require('inquirer');
 
 module.exports = function(){
   var questions = [{

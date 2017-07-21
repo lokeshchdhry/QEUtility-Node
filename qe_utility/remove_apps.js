@@ -14,7 +14,7 @@ module.exports = function(){
         if(err){
           errorNExit(err);
         }
-        // //reading nuber of devices connected
+        // //reading number of devices connected
         var count = JSON.parse(result).android.devices.length;
         if(count === 0){
           //Sending callback as error

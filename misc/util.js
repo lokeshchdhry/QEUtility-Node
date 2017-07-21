@@ -1,10 +1,10 @@
-var chalk = require('chalk');
-var Spinner = require('cli-spinner').Spinner;
-var fs = require('fs');
-var exec = require('child_process').exec;
-var storage = require('node-persist');
-var inquirer = require('inquirer');
-var path = require('path');
+var chalk = require('chalk'),
+    Spinner = require('cli-spinner').Spinner,
+    fs = require('fs'),
+    exec = require('child_process').exec,
+    storage = require('node-persist'),
+    inquirer = require('inquirer'),
+    path = require('path');
 
 //Initialize storage sync (node persist)
 storage.initSync();
@@ -172,7 +172,7 @@ module.exports = {
         //Stop spinner
         util.spinner_stop(true);
         console.log(util.cyan(data));
-        console.log(util.cyan('DONE\n'));
+        console.log(util.cyan('DONE'));
         return callback(null, null);
       });
     },
