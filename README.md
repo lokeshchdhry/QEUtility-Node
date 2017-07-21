@@ -12,3 +12,5 @@ QE Utility for Appc
 
 Setup command will check if `ANDROID_SDK` & `ANDROID_NDK` paths are set in your your bash profile, if not it will help set it for you.
 
+## Main Options:
+
