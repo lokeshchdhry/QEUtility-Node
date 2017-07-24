@@ -12,7 +12,8 @@ var storage = require('node-persist'),
     spinner_start = require('../misc/util').spinner_start,
     spinner_stop = require('../misc/util').spinner_stop,
     repo_check = require('../misc/util').repo_check,
-    execute = require('../misc/util').execute;
+    execute = require('../misc/util').execute,
+    npmInstallSDK = require('../sdk/util_sdk').npmInstallSDK;
 
 module.exports = function() {
   var name = 'timob';
@@ -32,6 +33,7 @@ module.exports = function() {
             if(flag){
               var tasks = [];
               tasks.push(function(callback) {checkoutMaster(callback);});
+              tasks.push(function(callback) {npmInstallSDK(callback);});
               tasks.push(function(callback) {deleteBranch(PR, callback);});
               tasks.push(function(callback) {fetchOrigin(callback);});
 
