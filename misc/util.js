@@ -36,6 +36,11 @@ module.exports = {
       storage.setItemSync(name, value);
     },
 
+    //Remove sync value
+    removeSyncValue : function(name){
+      storage.removeItemSync(name);
+    },
+
     //Start spinner
     spinner_start: function(text) {
         spinner = new Spinner(text);

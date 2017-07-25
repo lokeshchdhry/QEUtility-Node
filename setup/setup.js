@@ -12,6 +12,7 @@ var fs = require('fs'),
     errorNExit = require('../misc/util').errorNExit,
     user = require('../misc/util').user,
     setSyncValue = require('../misc/util').setSyncValue,
+    removeSyncValue = require('../misc/util').removeSyncValue,
     underline = require('../misc/util').underline,
     execute = require('../misc/util').execute,
     spinner_stop = require('../misc/util').spinner_stop,
@@ -26,15 +27,13 @@ module.exports = function() {
       android_sdk = process.env.ANDROID_SDK;
       android_ndk = process.env.ANDROID_NDK;
 
-      //Hardcoding the cli core clone path/dir
-      var clicore_install_path = path.join('/Users', user, '.appcelerator','install', '1.0.0');
-      setSyncValue('dir_cli_core', clicore_install_path);
-
       var task = [];
       task.push(function(callback) {checkAppcCLI(callback);});
       task.push(function(callback) {checkAndroidSDKEnvVar(callback, android_sdk);});
       task.push(function(callback) {checkAndroidNDKEnvVar(callback, android_ndk);});
+      task.push(function(callback) {removeSyncedData(callback);});
       task.push(function(callback) {setupRepoLinksNPaths(callback);});
+      task.push(function(callback) {displayData(callback);});
       Async.series(task, function(err, results){
         if(err){
           errorNExit(err);
@@ -50,7 +49,7 @@ module.exports = function() {
 };
 //Function definitions start here:
 var checkAppcCLI = function(callback){
-  console.log(underline(bold('\n\u25B6 Checking if APPC CLI is installed:')));
+  console.log(underline(bold('\n\u25B6 CHECKING IF APPC CLI IS INSTALLED:')));
   execute('appc -v', function(err, data){
     if(err){
       console.log('\u2717 It seems APPC CLI is not installed & is needed by this tool. Please run '+cyan('\"sudo npm install -g appcelerator\"')+' from the terminal & re-run SETUP.\n');
@@ -70,7 +69,7 @@ var checkAppcCLI = function(callback){
 };
 
 var checkAndroidSDKEnvVar = function(callback, andSDKEnvVar){
-  console.log(underline(bold('\n\u25B6 Checking if ANDROID_SDK env variable is set.')));
+  console.log(underline(bold('\n\u25B6 CHECKING IF ANDROID_SDK ENV VARIABLE IS SET.')));
   if (andSDKEnvVar === undefined) {
     console.log(cyan('\n\u2717 ANDROID_SDK env variable is not set. Let\'s set it up.'));
 
@@ -106,7 +105,7 @@ var checkAndroidSDKEnvVar = function(callback, andSDKEnvVar){
 };
 
 var checkAndroidNDKEnvVar = function(callback, andNDKEnvVar){
-  console.log(underline(bold('\n\u25B6 Checking if ANDROID_NDK env variable is set.')));
+  console.log(underline(bold('\n\u25B6 CHECKING IF ANDROID_NDK ENV VARIABLE IS SET.')));
   if (andNDKEnvVar === undefined) {
     console.log(bold(cyan('\n\u2717 ANDROID_SNK env variable is not set. Let\'s set it up.')));
 
@@ -139,8 +138,27 @@ var checkAndroidNDKEnvVar = function(callback, andNDKEnvVar){
   }
 };
 
+var removeSyncedData = function(callback){
+  removeSyncValue('repo_link_sdk');
+  removeSyncValue('dir_sdk');
+  removeSyncValue('repo_link_npm');
+  removeSyncValue('dir_npm');
+  removeSyncValue('repo_link_cli_core');
+  removeSyncValue('dir_cli_core');
+  removeSyncValue('username');
+  removeSyncValue('password');
+  removeSyncValue('prod_org_id');
+  removeSyncValue('preprod_org_id');
+
+  return callback(null, null);
+};
+
 var setupRepoLinksNPaths = function(callback){
-  console.log(underline(bold('\n\u25B6 Setting repo links & repo paths:')));
+  //Hardcoding the cli core clone path/dir
+  var clicore_install_path = path.join('/Users', user, '.appcelerator','install', '1.0.0');
+  setSyncValue('dir_cli_core', clicore_install_path);
+
+  console.log(underline(bold('\n\u25B6 SETTING REPO LINKS & REPO PATHS:')));
   //questions object array
   var questions = [{
     name: 'repo_link_sdk',
@@ -253,36 +271,42 @@ var setupRepoLinksNPaths = function(callback){
 ];
 inquirer.prompt(questions).then(function(answers) {
   //Storing the repo link & repo dir using node persist.
-  setSyncValue('repo_link_sdk', answers.repo_link_sdk.trim());
-  setSyncValue('dir_sdk', answers.dir_sdk.trim());
-  setSyncValue('repo_link_npm', answers.repo_link_npm.trim());
-  setSyncValue('dir_npm', answers.dir_npm.trim());
-  setSyncValue('repo_link_cli_core', answers.repo_link_cli_core.trim());
-  setSyncValue('username', answers.username.trim());
-  setSyncValue('password', answers.password.trim());
-  setSyncValue('prod_org_id', answers.prod_org_id.trim());
-  setSyncValue('preprod_org_id', answers.preprod_org_id.trim());
-
-  //Getting the stored info & printing the details to console
-  console.log('');
-  console.log(underline(bold('\u25B6 STORED INFORMATION: (PLEASE DOUBLE CHECK)')));
-  console.log('TIMOB repo link :    ' + cyan(util.repolink_sdk));
-  console.log('TIMOB SDK clone dir: ' + cyan(util.sdk_dir));
-  console.log('Appc NPM repo link : ' + cyan(util.repolink_clinpm));
-  console.log('Appc NPM clone dir : ' + cyan(util.npm_dir));
-  console.log('CLI core repo link : ' + cyan(util.repolink_clicore));
-  console.log('CLI core dir :       ' + cyan(util.clicore_dir));
-  console.log('CLI username :       ' + cyan(util.username));
-  console.log('CLI password :       ' + cyan(storage.getItemSync('password')));
-  console.log('Prod Org id :        ' + cyan(util.prod_org_id));
-  console.log('Preprod Org id :     ' + cyan(util.preprod_org_id));
-  console.log('');
-  console.log('\u2714 Setup Complete.');
-  console.log('');
+  setSyncValue('repo_link_sdk', (answers.repo_link_sdk).trim());
+  setSyncValue('dir_sdk', (answers.dir_sdk).trim());
+  setSyncValue('repo_link_npm', (answers.repo_link_npm).trim());
+  setSyncValue('dir_npm', (answers.dir_npm).trim());
+  setSyncValue('repo_link_cli_core', (answers.repo_link_cli_core).trim());
+  setSyncValue('username', (answers.username).trim());
+  setSyncValue('password', (answers.password).trim());
+  setSyncValue('prod_org_id', (answers.prod_org_id).trim());
+  setSyncValue('preprod_org_id', (answers.preprod_org_id).trim());
 
   //Set the count to 1 in the storage when setup is run. This count is used to track if setup is run atleast once.
   setSyncValue('runcount', 1);
 
   return callback(null, null);
 });
+};
+
+var displayData = function(callback){
+  //Getting the stored info & printing the details to console
+  /* Have to use node-persist directly to get the stored values as accessing from util.js returns 'undefined' for
+    the first run as displayData is called before tthe values are set in node-persist */
+  console.log('');
+  console.log(underline(bold('\u25B6 STORED INFORMATION: (PLEASE DOUBLE CHECK)')));
+  console.log('TIMOB repo link :    ' + cyan(storage.getItemSync('repo_link_sdk')));
+  console.log('TIMOB SDK clone dir: ' + cyan(storage.getItemSync('dir_sdk')));
+  console.log('Appc NPM repo link : ' + cyan(storage.getItemSync('repo_link_npm')));
+  console.log('Appc NPM clone dir : ' + cyan(storage.getItemSync('dir_npm')));
+  console.log('CLI core repo link : ' + cyan(storage.getItemSync('repo_link_cli_core')));
+  console.log('CLI core dir :       ' + cyan(storage.getItemSync('dir_cli_core')));
+  console.log('CLI username :       ' + cyan(storage.getItemSync('username')));
+  console.log('CLI password :       ' + cyan(storage.getItemSync('password')));
+  console.log('Prod Org id :        ' + cyan(storage.getItemSync('prod_org_id')));
+  console.log('Preprod Org id :     ' + cyan(storage.getItemSync('preprod_org_id')));
+  console.log('');
+  console.log('\u2714 Setup Complete.');
+  console.log('');
+
+  return callback(null, null);
 };
