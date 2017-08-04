@@ -60,15 +60,15 @@ var build = function(prNumber) {
     var task = [];
     task.push(function(callback) { gitPull(callback); });
     task.push(function(callback) { fetch_PR(callback); });
-    task.push(function(callback) { npmInstallSDK(callback); });
+    // task.push(function(callback) { npmInstallSDK(callback); });
     task.push(function(callback) { questionPR(callback); });
     //Using async series to execute in series
     Async.series(task, function(err, results) {
       if (err) {
         errorNExit(err);
       }
-      //results is an array & we need array element 4 so we do results[3]
-      var PR_NO = results[3].pr_no;
+      //results is an array & we need array element 4 so we do results[2]
+      var PR_NO = results[2].pr_no;
       build_pr(PR_NO);
     });
   } else {
