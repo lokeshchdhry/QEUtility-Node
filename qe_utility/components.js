@@ -283,7 +283,7 @@ var getAndroidModules = function(callback){
         }
       }
       else{
-        modules.modulename = 'No '+modulename+ ' modules';
+        modules[modulename] = 'No '+modulename+ ' modules';
       }
     }
     var androidModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Cloudpush: '+modules.cloudpush+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
@@ -318,7 +318,7 @@ var getIOSModules = function(callback){
         }
       }
       else{
-        modules.modulename = 'No '+modulename+ ' modules';
+        modules[modulename] = 'No '+modulename+ ' modules';
       }
     }
     var iosModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Coremotion:'+modules.coremotion+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
