@@ -16,6 +16,7 @@ module.exports = function(){
   task.push(function(callback){getXcodeVer(callback);});
   task.push(function(callback){getAppcNPMVer(callback);});
   task.push(function(callback){getAppcCliCoreVer(callback);});
+  task.push(function(callback){getDaemonVer(callback);});
   task.push(function(callback){getTiCliVer(callback);});
   task.push(function(callback){getAlloyVer(callback);});
   task.push(function(callback){getNodeVer(callback);});
@@ -42,18 +43,19 @@ module.exports = function(){
     console.log('Xcode Ver:      '+cyan(results[3].trim()));
     console.log('Appc NPM:       '+cyan(results[4]));
     console.log('Appc CLI:       '+cyan(results[5]));
-    console.log('Ti CLI Ver:     '+cyan(results[6].trim()));
-    console.log('Alloy Ver:      '+cyan(results[7].trim()));
-    console.log('Node Ver:       '+cyan(results[8]));
-    console.log('Java Ver:       '+cyan(results[9]));
-    console.log('Devices:        '+cyan(results[11].trim()));
-    console.log('Environment:    '+cyan(results[10].trim()));
-    console.log('\nSDK Tools:      '+cyan(results[12]));
-    console.log('Platform Tools: '+cyan(results[13]));
-    console.log('Build Tools:    '+cyan(results[14]));
-    console.log('\nAndroid Modules:'+cyan(results[15]));
-    console.log('\nIOS Modules:    '+cyan(results[16]));
-    console.log('\nCommjs Modules: '+cyan(results[17])+'\n');
+    console.log('Daemon Ver:     '+cyan(results[6].trim()));
+    console.log('Ti CLI Ver:     '+cyan(results[7].trim()));
+    console.log('Alloy Ver:      '+cyan(results[8].trim()));
+    console.log('Node Ver:       '+cyan(results[9]));
+    console.log('Java Ver:       '+cyan(results[10]));
+    console.log('Devices:        '+cyan(results[12].trim()));
+    console.log('Environment:    '+cyan(results[11].trim()));
+    console.log('\nSDK Tools:      '+cyan(results[13]));
+    console.log('Platform Tools: '+cyan(results[14]));
+    console.log('Build Tools:    '+cyan(results[15]));
+    console.log('\nAndroid Modules:'+cyan(results[16]));
+    console.log('\nIOS Modules:    '+cyan(results[17]));
+    console.log('\nCommjs Modules: '+cyan(results[18])+'\n');
   });
 };
 //Function Definations start here:
@@ -96,6 +98,16 @@ var getAppcCliCoreVer = function(callback){
       errorNExit(err);
     }
     return callback(null, JSON.parse(result).CLI);
+  });
+};
+
+var getDaemonVer = function(callback){
+  execute('appc appcd --version', function(err, result){
+    if(err){
+      errorNExit(err);
+    }
+    var daemon_ver = result;
+    return callback(null, daemon_ver);
   });
 };
 
@@ -262,12 +274,16 @@ var getAndroidModules = function(callback){
     var cloudpushModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.cloudpush');
     var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.map');
     var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.touchid');
+    var identityModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.identity');
+    var playservicesModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.playservices');
     //Calling filterFn
     filterFn(facebookModPath, 'facebook');
     filterFn(hyperloopModPath, 'hyperloop');
     filterFn(cloudpushModPath, 'cloudpush');
     filterFn(mapModPath, 'map');
     filterFn(touchidModPath, 'touchid');
+    filterFn(identityModPath, 'identity');
+    filterFn(playservicesModPath, 'playservices');
     //Function to filter .DS_Store
     function filterFn(path, modulename){
       if(fs.existsSync(path)){
@@ -283,10 +299,10 @@ var getAndroidModules = function(callback){
         }
       }
       else{
-        modules[modulename] = 'No '+modulename+ ' modules';
+        modules[modulename] = 'None';
       }
     }
-    var androidModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Cloudpush: '+modules.cloudpush+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
+    var androidModules = 'Facebook:     '+modules.facebook+'\n '+'               Hyperloop:    '+modules.hyperloop+'\n '+'               Cloudpush:    '+modules.cloudpush+'\n '+'               Map:          '+modules.map+'\n '+'               TouchID:      '+modules.touchid+'\n '+'               Identity:     '+modules.identity+'\n '+'               Playservices: '+modules.playservices;
     return callback(null, androidModules);
 };
 
@@ -297,12 +313,14 @@ var getIOSModules = function(callback){
     var coremotionModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.coremotion');
     var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.map');
     var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.touchid');
+    var identityModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.identity');
     //Calling filterFn
     filterFn(facebookModPath, 'facebook');
     filterFn(hyperloopModPath, 'hyperloop');
     filterFn(coremotionModPath, 'coremotion');
     filterFn(mapModPath, 'map');
     filterFn(touchidModPath, 'touchid');
+    filterFn(touchidModPath, 'identity');
     //Function to filter .DS_Store
     function filterFn(path, modulename){
       if(fs.existsSync(path)){
@@ -318,10 +336,10 @@ var getIOSModules = function(callback){
         }
       }
       else{
-        modules[modulename] = 'No '+modulename+ ' modules';
+        modules[modulename] = 'None';
       }
     }
-    var iosModules = 'Facebook:  '+modules.facebook+'\n '+'               Hyperloop: '+modules.hyperloop+'\n '+'               Coremotion:'+modules.coremotion+'\n '+'               Map:       '+modules.map+'\n '+'               TouchID:   '+modules.touchid;
+    var iosModules = 'Facebook:   '+modules.facebook+'\n '+'               Hyperloop:  '+modules.hyperloop+'\n '+'               Coremotion: '+modules.coremotion+'\n '+'               Map:        '+modules.map+'\n '+'               TouchID:    '+modules.touchid+'\n '+'               Identity:   '+modules.identity;
     callback(null, iosModules);
 };
 
@@ -342,7 +360,7 @@ var getCommonjsModules = function(callback){
     }
   }
   else{
-    modules.cloud = 'No Facebook modules';
+    modules.cloud = 'None';
   }
 
   var commonjsModules = 'Cloud:     '+modules.cloud;

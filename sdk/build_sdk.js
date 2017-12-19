@@ -15,7 +15,8 @@ var inquirer = require('inquirer'),
     errorNExit = require('../misc/util').errorNExit,
     sdk_dir = require('../misc/util').sdk_dir,
     repo_check = require('../misc/util').repo_check,
-    getPR_No = require('../misc/util').getPR_No;
+    getPR_No = require('../misc/util').getPR_No,
+    cleanup = require('../sdk/cleanup_sdk');
 
 
 module.exports = function() {
@@ -36,9 +37,10 @@ module.exports = function() {
           }];
           inquirer.prompt(questions).then(function(answer) {
             if (!answer.choice) {
-              console.log(cyan('\nPlease do a cleanup, first before you build again.'+bold(' FR TOOLS FOR SDK -> CLEANUP SDK.\n')));
+              // Do a cleanup to build for different PR
+              cleanup();
             } else if (answer.choice) {
-              console.log(bold(underline('\n\u25B6 REBUIDING THE SDK FOR' + PR)));
+              console.log(bold(underline('\n\u25B6 RE-BUILDING THE SDK FOR' + PR)));
               build(PR);
             }
           });
@@ -75,6 +77,8 @@ var build = function(prNumber) {
     build_pr(prNumber.slice(4));
   }
 };
+
+exports.build = build;
 
 var build_pr = function(prNo) {
   var tasks1 = [];

@@ -13,7 +13,8 @@ var storage = require('node-persist'),
     spinner_stop = require('../misc/util').spinner_stop,
     repo_check = require('../misc/util').repo_check,
     execute = require('../misc/util').execute,
-    npmInstallSDK = require('../sdk/util_sdk').npmInstallSDK;
+    npmInstallSDK = require('../sdk/util_sdk').npmInstallSDK,
+    buildSDK = require('../sdk/build_sdk');
 
 module.exports = function() {
   var name = 'timob';
@@ -33,13 +34,17 @@ module.exports = function() {
             if(flag){
               var tasks = [];
               tasks.push(function(callback) {checkoutMaster(callback);});
-              tasks.push(function(callback) {npmInstallSDK(callback);});
+              // tasks.push(function(callback) {npmInstallSDK(callback);});
               tasks.push(function(callback) {deleteBranch(PR, callback);});
               tasks.push(function(callback) {fetchOrigin(callback);});
 
               Async.series(tasks, function(err, data){
                 if(err){
                   errorNExit(err);
+                }
+                else{
+                  //Run build SDK to avoid to run build again. This does it sequentially.
+                  buildSDK.build();
                 }
               });
             }
@@ -107,7 +112,7 @@ var question = function(pr_no, callback){
   var questions = [{
     name: 'pr_number',
     type: 'confirm',
-    message: 'Are you sure you want to delete branch for' + cyan(pr_no)
+    message: 'Ok lets build SDK for another PR. But, first let\'s do a cleanup for' + cyan(pr_no)+'Do you want to continue?'
   }];
   inquirer.prompt(questions).then(function(answers) {
     if(answers.pr_number){

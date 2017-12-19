@@ -15,6 +15,7 @@ module.exports = {
     underline: chalk.underline,
     cyan: chalk.cyan,
     bold: chalk.bold,
+    
     //Getting user info
     user: process.env.USER,
 
@@ -186,7 +187,7 @@ module.exports = {
       var questions = [{
         name: 'pr_no',
         type: 'input',
-        message: 'Enter the PR number to build for :',
+        message: 'ENTER THE PR TO BUILD FOR :',
         validate: function(value) {
           if (value.length) {
             return true;
