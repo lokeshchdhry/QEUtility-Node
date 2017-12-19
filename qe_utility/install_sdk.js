@@ -9,7 +9,8 @@ var inquirer = require('inquirer'),
     underline = require('../misc/util').underline,
     spinner_stop = require('../misc/util').spinner_stop,
     spinner_start = require('../misc/util').spinner_start,
-    ProgressBar = require('ascii-progress');
+    ProgressBar = require('ascii-progress'),
+    os = require('os');
 
 module.exports = function(){
   task = [];
@@ -56,48 +57,35 @@ var filter = function(version, callback){
 };
 
 var download = function(flag, version){
-  //Initialize progressBar
-  var bar = new ProgressBar({
-    schema: '[:bar.cyan] :percent.cyan',
-    filled: '=',
-    blank: '-',
-    total : 1000
-  });
   //regex patterns to check
   var patt1 = /You\'re up-to-date/g;
   var patt2 = /Available Branches:/g;
   var patt3 = /successfully installed/g;
   if(flag === 'branch'){
     console.log('\n\u25B6 Downloading & extracting the latest SDK from branch : '+cyan(version));
-    console.log('');
-    //Start the progressBar ticking
-    var a = setInterval(function () {
-      bar.tick();
-    }, 300);
+    //Start spinner
+    spinner_start();
     execute('appc ti sdk install -b '+version+' --default', function(err, data) {
       if (err) {
         errorNExit(err);
       }
       if(patt1.test(data)){
-        //Clear the progressBar
-        clearInterval(a);
-        bar.clear();
-        console.log(cyan('\u2714 You already have the latest SDK from the '+underline(version)+' branch.\n'));
+        //Stop spinner
+        spinner_stop(true);
+        console.log(cyan('\u2714 You already have the latest SDK from the '+version+' branch.\n'));
       }
       else if(patt2.test(data)){
-        //Clear the progressBar
-        clearInterval(a);
-        bar.clear();
+        //Stop spinner
+        spinner_stop(true);
         console.log(cyan('\u2717 Provided branch '+underline(version)+' does not exit. Please enter the correct branch.\n'));
       }
       else if(patt3.test(data)){
-        //Complete the progressBar
-        bar.update(1);
-        bar.completed = true;
-        clearInterval(a);
+        //Stop spinner
+        spinner_stop(true);
         console.log(cyan('\n\u2714 Done, please find the latest SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
+        //Stop spinner
         spinner_stop(true);
         console.log('Something went wrong. Please re run the command.');
       }
@@ -132,7 +120,7 @@ var download = function(flag, version){
 };
 
 var getLatestSDKVer = function(){
-  var dir = path.join('/Users', 'lchoudhary', 'Library', 'Application Support', 'Titanium', 'mobilesdk', 'osx');
+  var dir = path.join(os.homedir(), 'Library', 'Application Support', 'Titanium', 'mobilesdk', 'osx');
   var folders = fs.readdirSync(dir);
   var filter_arr = [];
   //filtering out DS.store file from the array of folders

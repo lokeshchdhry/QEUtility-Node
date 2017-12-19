@@ -22,7 +22,7 @@ module.exports = function(repo_link, repo_dir, repo_name) {
               //Stop spinner
               spinner_stop(true);
               console.log(cyan(data));
-              console.log(cyan('\n\n\u2714 Cloning done successfully.'));
+              console.log(cyan('\n\u2714 Cloning done successfully.'));
               process.chdir(repo_dir + '/'+ repo_name +'/.git');
               //Call modify_config from below with callback function
               modifyConfig(function(err, done){
