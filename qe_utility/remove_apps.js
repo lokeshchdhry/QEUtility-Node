@@ -8,14 +8,41 @@ var errorNExit = require('../misc/util').errorNExit;
 
 module.exports = function(){
   Async.waterfall([
+    // function getProperties(callback){
+    //   //executing appc ti info command to get connected device info
+    //   execute('appc ti info -t android -o json', function(err, result){
+    //     if(err){
+    //       errorNExit(err);
+    //     }
+    //     // //reading number of devices connected
+    //     var count = JSON.parse(result).android.devices.length;
+    //     if(count === 0){
+    //       //Sending callback as error
+    //        return callback('\n\u2717 No device connected.\n', null);
+    //     }
+    //     else{
+    //       var devices = [];
+    //       for(var i=0; i<count; i++){
+    //         //Creating an array of device objects
+    //         var device = {};
+    //         device.name = JSON.parse(result).android.devices[i].model;
+    //         device.id = JSON.parse(result).android.devices[i].id;
+    //         devices.push(device);
+    //       }
+    //       //Pass on the array of device objects
+    //       return callback(null, devices);
+    //     }
+    //   });
+    // },
+
     function getProperties(callback){
       //executing appc ti info command to get connected device info
-      execute('appc ti info -t android -o json', function(err, result){
+      execute('appc appcd exec /android/latest/info/devices', function(err, result){
         if(err){
           errorNExit(err);
         }
         // //reading number of devices connected
-        var count = JSON.parse(result).android.devices.length;
+        var count = JSON.parse(result).length;
         if(count === 0){
           //Sending callback as error
            return callback('\n\u2717 No device connected.\n', null);
@@ -25,12 +52,40 @@ module.exports = function(){
           for(var i=0; i<count; i++){
             //Creating an array of device objects
             var device = {};
-            device.name = JSON.parse(result).android.devices[i].model;
-            device.id = JSON.parse(result).android.devices[i].id;
+            device.name = JSON.parse(result)[i].model;
+            device.id = JSON.parse(result)[i].id;
             devices.push(device);
           }
           //Pass on the array of device objects
           return callback(null, devices);
+        }
+      });
+    },
+
+    function getEmuProperties(deviceNameArr, callback){
+      //Checking if an emulator is running, below command throws an error, emulator is not running
+      execute('adb -s emulator-5554 shell getprop', function(err, result){
+        if(!err){
+          var emuName = [{name:'emulator-5554', id:'emulator-5554'}];
+          var deviceArr = deviceNameArr.concat(emuName);
+          callback(null, deviceArr);
+        }
+        else{
+          callback(err, deviceNameArr);
+        }
+      });
+    },
+
+    function getGenyProperties(deviceNameArr, callback){
+      //Checking if an geny emulator is running, below command throws an error, emulator is not running
+      execute('adb -s 192.168.56.101:5555 shell getprop', function(err, result){
+        if(!err){
+          var emuName = [{name:'192.168.56.101:5555', id:'192.168.56.101:5555'}];
+          var deviceArr = deviceNameArr.concat(emuName);
+          callback(null, deviceArr);
+        }
+        else{
+          callback(err, deviceNameArr);
         }
       });
     },

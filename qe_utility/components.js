@@ -1,36 +1,37 @@
-var fs = require('fs'),
-    Async = require('async'),
-    path = require('path'),
-    execute = require('../misc/util').execute,
-    cyan = require('../misc/util').cyan,
-    error = require('../misc/util').error,
-    errorNExit = require('../misc/util').errorNExit,
-    user = require('../misc/util').user;
+const fs = require('fs'),
+      Async = require('async'),
+      path = require('path'),
+      execute = require('../misc/util').execute,
+      cyan = require('../misc/util').cyan,
+      error = require('../misc/util').error,
+      errorNExit = require('../misc/util').errorNExit,
+      user = require('../misc/util').user;
 
 module.exports = function(){
 
-  var task = [];
-  task.push(function(callback){getStudioVer(callback);});
-  task.push(function(callback){getSDKVer(callback);});
-  task.push(function(callback){getOSVer(callback);});
-  task.push(function(callback){getXcodeVer(callback);});
-  task.push(function(callback){getAppcNPMVer(callback);});
-  task.push(function(callback){getAppcCliCoreVer(callback);});
-  task.push(function(callback){getDaemonVer(callback);});
-  task.push(function(callback){getTiCliVer(callback);});
-  task.push(function(callback){getAlloyVer(callback);});
-  task.push(function(callback){getNodeVer(callback);});
-  task.push(function(callback){getJavaVer(callback);});
-  task.push(function(callback){getENV(callback);});
-  task.push(function(callback){getConnectedDevices(callback);});
-  task.push(function(callback){getAndroidSDKTools(callback);});
-  task.push(function(callback){getPlatformTools(callback);});
-  task.push(function(callback){getBuildTools(callback);});
-  task.push(function(callback){getAndroidModules(callback);});
-  task.push(function(callback){getIOSModules(callback);});
-  task.push(function(callback){getCommonjsModules(callback);});
+  const task = [];
+  task.push(callback => getStudioVer(callback));
+  task.push(callback => getSDKVer(callback));
+  task.push(callback => getOSVer(callback));
+  task.push(callback => getXcodeVer(callback));
+  task.push(callback => getAppcNPMVer(callback));
+  task.push(callback => getAppcCliCoreVer(callback));
+  task.push(callback => getDaemonVer(callback));
+  task.push(callback => getTiCliVer(callback));
+  task.push(callback => getAlloyVer(callback));
+  task.push(callback => getNodeVer(callback));
+  task.push(callback => getNPMVer(callback));
+  task.push(callback => getJavaVer(callback));
+  task.push(callback => getENV(callback));
+  task.push(callback => getConnectedDevices(callback));
+  task.push(callback => getAndroidSDKTools(callback));
+  task.push(callback => getPlatformTools(callback));
+  task.push(callback => getBuildTools(callback));
+  task.push(callback => getAndroidModules(callback));
+  task.push(callback => getIOSModules(callback));
+  task.push(callback => getCommonjsModules(callback));
 
-  Async.parallel(task, function(err, results){
+  Async.parallel(task, (err, results) => {
     if(err){
       console.log(error(err));
       //exit process in case of error
@@ -47,15 +48,16 @@ module.exports = function(){
     console.log('Ti CLI Ver:     '+cyan(results[7].trim()));
     console.log('Alloy Ver:      '+cyan(results[8].trim()));
     console.log('Node Ver:       '+cyan(results[9]));
-    console.log('Java Ver:       '+cyan(results[10]));
-    console.log('Devices:        '+cyan(results[12].trim()));
-    console.log('Environment:    '+cyan(results[11].trim()));
-    console.log('\nSDK Tools:      '+cyan(results[13]));
-    console.log('Platform Tools: '+cyan(results[14]));
-    console.log('Build Tools:    '+cyan(results[15]));
-    console.log('\nAndroid Modules:'+cyan(results[16]));
-    console.log('\nIOS Modules:    '+cyan(results[17]));
-    console.log('\nCommjs Modules: '+cyan(results[18])+'\n');
+    console.log('NPM Ver:        '+cyan(results[10].trim()));
+    console.log('Java Ver:       '+cyan(results[11]));
+    console.log('Devices:        '+cyan(results[13].trim()));
+    console.log('Environment:    '+cyan(results[12].trim()));
+    console.log('\nSDK Tools:      '+cyan(results[14]));
+    console.log('Platform Tools: '+cyan(results[15]));
+    console.log('Build Tools:    '+cyan(results[16]));
+    console.log('\nAndroid Modules:'+cyan(results[17]));
+    console.log('\nIOS Modules:    '+cyan(results[18]));
+    console.log('\nCommjs Modules: '+cyan(results[19])+'\n');
   });
 };
 //Function Definations start here:
@@ -73,7 +75,7 @@ var getStudioVer = function(callback){
 };
 
 var getSDKVer = function(callback){
-  execute('appc ti config -o json', function(err, data){
+  execute('appc ti config -o json', (err, data) => {
     //Converting the json text to javascript object using JSON.parse & getting the "sdk.selected" value
     if (err) {
       errorNExit(err);
@@ -162,6 +164,16 @@ var getNodeVer = function(callback){
   return callback(null, node_ver);
 };
 
+var getNPMVer = function(callback){
+  execute('npm -v', function(err, result){
+    if(err){
+      errorNExit(err);
+    }
+    var npm_ver = result;
+    return callback(null, npm_ver);
+  });
+};
+
 var getJavaVer = function(callback) {
   var spawn = require('child_process').spawn('java', ['-version']);
   spawn.on('error', function(err){
@@ -186,13 +198,40 @@ var getENV = function(callback){
   });
 };
 
+// var getConnectedDevices  = function(callback){
+//   execute('appc ti info -t android -o json', function(err, result){
+//     if (err) {
+//       errorNExit(err);
+//     }
+//     //reading nuber of devices connected
+//     var count = JSON.parse(result).android.devices.length;
+//     if(count === 0){
+//       return callback(null, 'No device attached');
+//     }
+//     else{
+//       //creating a device object
+//       var device = {};
+//       var devices = '';
+//       for(var i=0; i<count; i++){
+//         //putting device details in object
+//         device['brand'+i] = JSON.parse(result).android.devices[i].brand;
+//         device['model'+i] = JSON.parse(result).android.devices[i].model;
+//         device['os_ver'+i] = JSON.parse(result).android.devices[i].release;
+
+//         devices += '\u21E8 '+device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n'+'                ';
+//       }
+//       return callback(null, devices);
+//     }
+//   });
+// };
+
 var getConnectedDevices  = function(callback){
-  execute('appc ti info -t android -o json', function(err, result){
+  execute('appc appcd exec /android/latest/info/devices', function(err, result){
     if (err) {
       errorNExit(err);
     }
     //reading nuber of devices connected
-    var count = JSON.parse(result).android.devices.length;
+    var count = JSON.parse(result).length;
     if(count === 0){
       return callback(null, 'No device attached');
     }
@@ -202,9 +241,9 @@ var getConnectedDevices  = function(callback){
       var devices = '';
       for(var i=0; i<count; i++){
         //putting device details in object
-        device['brand'+i] = JSON.parse(result).android.devices[i].brand;
-        device['model'+i] = JSON.parse(result).android.devices[i].model;
-        device['os_ver'+i] = JSON.parse(result).android.devices[i].release;
+        device['brand'+i] = JSON.parse(result)[i].brand;
+        device['model'+i] = JSON.parse(result)[i].model;
+        device['os_ver'+i] = JSON.parse(result)[i].release;
 
         devices += '\u21E8 '+device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n'+'                ';
       }
