@@ -91,6 +91,36 @@ module.exports = {
       }
     },
 
+    // run_spawn: function(args, callback){
+    //   const installFolderPath = path.join('/Users', process.env.USER, '.appcelerator', 'install'),
+    //         verFile = path.join(installFolderPath, '.version'),
+    //         options = {encoding: 'utf8'};
+    //         appc_ver = fs.readFileSync(verFile, options);
+    //         appcExe = path.join(installFolderPath, appc_ver, 'package', 'bin', 'appc'),
+    //         spawn = require('child_process').spawn,
+    //         proc = spawn(appcExe, args); 
+    
+    //   let output = '',
+    //       isErr;
+
+    //   proc.stdout.on('data', function(data){
+    //     console.log('hello');
+    //     output += data.toString();
+    //     callback(null, output);
+    //   });
+    //   proc.on('error', function(err){
+    //     isErr = true;
+    //     callback(err, null);
+    //   });
+    //   proc.on('exit', function(){
+    //     if(isErr){
+    //       return;
+    //     }
+    //   });
+      
+    //   callback(null, output);
+    // },
+
     repo_check: function(repoName, callback){
       var util = require('../misc/util');
       switch(repoName){
