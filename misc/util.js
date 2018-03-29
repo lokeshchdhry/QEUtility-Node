@@ -234,7 +234,7 @@ module.exports = {
     checkoutPR: function(prNo, component ,callback) {
       var util = require('../misc/util');
       exec('git checkout pr/' + prNo, {
-        maxBuffer: 1024 * 500
+        maxBuffer: 1024 * 1000
       }, function(err, data) {
         if (err) {
           console.log(util.error(err));

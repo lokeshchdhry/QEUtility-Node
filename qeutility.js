@@ -99,7 +99,7 @@ else{
           value:'change_env'
         },
         {
-          name: 'UNINSTALL APPS FROM DEVICE',
+          name: 'UNINSTALL APPS',
           value:'remove_apps'
         },
         {
