@@ -69,6 +69,7 @@ var download = function(flag, version){
       if (err) {
         errorNExit(err);
       }
+      
       if(patt1.test(data)){
         //Stop spinner
         spinner_stop(true);

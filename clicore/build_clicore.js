@@ -55,9 +55,12 @@ module.exports = function(){
         }
       });
     }
-    console.log('');
-    console.log(cyan('\u2717 Repo for CLI Core does not exist. Please use "appcfr clone -c clicore" to clone.'));
-    console.log('');
+    else{
+      console.log('');
+      console.log(cyan('\u2717 Repo for CLI Core does not exist. Please use "appcfr clone -c clicore" to clone.'));
+      console.log('');
+    }
+
   });
   // //Get appc cli core install path from storage
   // var install_path = util.clicore_dir;
@@ -101,7 +104,7 @@ var build = function(path, prNumber){
     var task = [];
     task.push(function(callback){change_dir(dir_path.join(path, '/appc-cli'), callback);});
     task.push(function(callback){fetch_PR(callback);});
-    task.push(function(callback){question_PR(callback);});
+    task.push(function(callback){questionPR(callback);});
 
     Async.series(task, function(err, results){
       if(err){
@@ -114,22 +117,23 @@ var build = function(path, prNumber){
   else{
     build_pr(path, prNumber.slice(4));
   }
-
-  var build_pr = function(path, prNo){
-    var task1 = [];
-    task1.push(function(callback){change_dir(dir_path.join(path, '/appc-cli'), callback);});
-    task1.push(function(callback){checkout_PR(prNo, 'clicore', callback);});
-    task1.push(function(callback){install_core(callback);});
-    task1.push(function(callback){appc_use('1.0.0', callback);});
-
-    Async.series(task1, function(err, results){
-      if(err){
-        errorNExit(err);
-      }
-      console.log(util.cyan('\nDONE'));
-    });
-  };
 };
+
+var build_pr = function(path, prNo){
+  var task1 = [];
+  task1.push(function(callback){change_dir(dir_path.join(path, '/appc-cli'), callback);});
+  task1.push(function(callback){checkoutPR(prNo, 'clicore', callback);});
+  task1.push(function(callback){install_core(callback);});
+  task1.push(function(callback){appc_use('1.0.0', callback);});
+
+  Async.series(task1, function(err, results){
+    if(err){
+      errorNExit(err);
+    }
+    console.log(util.cyan('\nDONE'));
+  });
+};
+
 //Function definitions start here:
 function change_dir(path, callback){
   try{
@@ -142,7 +146,7 @@ function change_dir(path, callback){
 }
 
 function install_core(callback){
-  execute('sudo npm install --production', function(err) {
+  execute('npm install --production', function(err, data) {
     if (err) {
       errorNExit(err);
     }

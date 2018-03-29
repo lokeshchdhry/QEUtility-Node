@@ -71,7 +71,7 @@ module.exports = function(){
           callback(null, deviceArr);
         }
         else{
-          callback(err, deviceNameArr);
+          callback(null, deviceNameArr);
         }
       });
     },
@@ -85,7 +85,7 @@ module.exports = function(){
           callback(null, deviceArr);
         }
         else{
-          callback(err, deviceNameArr);
+          callback(null, deviceNameArr);
         }
       });
     },

@@ -34,11 +34,11 @@ module.exports = function(){
       process.exit();
     }
     var task = [];
-    task.push(function(callback){logout(callback);});
-    task.push(function(callback){setDefaultEnv(callback, answers.env_opt);});
-    task.push(function(callback){login(callback, username, password, answers.env_opt);});
+    task.push((callback)=>{logout(callback);});
+    task.push((callback)=>{setDefaultEnv(callback, answers.env_opt);});
+    task.push((callback)=>{login(callback, username, password, answers.env_opt);});
 
-    Async.series(task, function(err, results){
+    Async.series(task, (err, results)=>{
       if(err){
         errorNExit(err);
       }
@@ -46,7 +46,7 @@ module.exports = function(){
   });
 };
 
-var logout = function(callback){
+var logout = (callback)=>{
   console.log(bold(underline('\n\u25B6 LOGGING YOU OUT:')));
   execute('appc logout', function(err, data){
     if (err) {
@@ -57,7 +57,7 @@ var logout = function(callback){
   });
 };
 
-var setDefaultEnv = function(callback, environment){
+var setDefaultEnv = (callback, environment)=>{
   console.log(bold(underline('\u25B6 SETTING DEFAULT ENVIRONMENT TO '+environment.toUpperCase())));
   execute('appc config set defaultEnvironment '+environment, function(err, data){
     if (err) {
@@ -68,7 +68,7 @@ var setDefaultEnv = function(callback, environment){
   });
 };
 
-var login = function(callback, username, password, env){
+var login = (callback, username, password, env)=>{
   //Determining which org ID to use
   var orgID = (env === 'production')? prodOrgId : preProdOrgId;
     console.log(bold(underline('\n\u25B6 LOGGING YOU IN:')));
