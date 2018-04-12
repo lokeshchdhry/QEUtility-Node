@@ -18,8 +18,8 @@ module.exports = function(){
   fs.exists(pkg_path, function(exists){
     if(!exists){
       fs.mkdirSync(install_path);
-      fs.mkdirSync(dir_path.join(install_path, '/package'));
-      var pkgPath = dir_path.join(install_path, '/package');
+      // fs.mkdirSync(dir_path.join(install_path, '/package'));
+      var pkgPath = fs.mkdirSync(dir_path.join(install_path, '/package'));
       //change dir to package dir
       process.chdir(pkg_path);
     }

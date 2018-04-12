@@ -9,7 +9,7 @@ var inquirer = require('inquirer'),
     underline = require('../misc/util').underline,
     spinner_stop = require('../misc/util').spinner_stop,
     spinner_start = require('../misc/util').spinner_start,
-    ProgressBar = require('ascii-progress'),
+    // ProgressBar = require('ascii-progress'),
     os = require('os');
 
 module.exports = function(){
@@ -34,7 +34,7 @@ var getSDKVer = function(callback) {
       if (value.length) {
         return true;
       } else {
-        return 'Please enter SDK or the branch would you like to download the SDK from';
+        return 'Please enter SDK or the branch would you like to download the SDK(e.g: 6_0_X or SDK version) :';
       }
     }
   }];
@@ -47,7 +47,7 @@ var filter = function(version, callback){
   //regex patterns to check
   var patt_1 = /_/g;
   var patt_2 = /^[A-z]/g;
-  //checking if branch is entered or master
+  //checking if branch is entered or SDK version
   if(patt_1.test(version)||patt_2.test(version)){
     return callback(null, 'branch', version);
   }
@@ -83,12 +83,12 @@ var download = function(flag, version){
       else if(patt3.test(data)){
         //Stop spinner
         spinner_stop(true);
-        console.log(cyan('\n\u2714 Done, please find the latest SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
+        console.log(cyan('\n\u2714 Done, please find the latest SDK '+getLatestInstalledSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
         //Stop spinner
         spinner_stop(true);
-        console.log('Something went wrong. Please re run the command.');
+        console.log('Something went wrong. Please rerun the command.');
       }
     });
   }
@@ -110,7 +110,7 @@ var download = function(flag, version){
       }
       else if(patt3.test(data)){
         spinner_stop(true);
-        console.log(cyan('\n\u2714 Done, please find the SDK '+getLatestSDKVer()+' installed in your titanium folder.\n'));
+        console.log(cyan('\n\u2714 Done, please find the SDK '+getLatestInstalledSDKVer()+' installed in your titanium folder.\n'));
       }
       else{
         spinner_stop(true);
@@ -120,7 +120,7 @@ var download = function(flag, version){
   }
 };
 
-var getLatestSDKVer = function(){
+var getLatestInstalledSDKVer = function(){
   var dir = path.join(os.homedir(), 'Library', 'Application Support', 'Titanium', 'mobilesdk', 'osx');
   var folders = fs.readdirSync(dir);
   var filter_arr = [];

@@ -8,41 +8,15 @@ var errorNExit = require('../misc/util').errorNExit;
 
 module.exports = function(){
   Async.waterfall([
-    // function getProperties(callback){
-    //   //executing appc ti info command to get connected device info
-    //   execute('appc ti info -t android -o json', function(err, result){
-    //     if(err){
-    //       errorNExit(err);
-    //     }
-    //     // //reading number of devices connected
-    //     var count = JSON.parse(result).android.devices.length;
-    //     if(count === 0){
-    //       //Sending callback as error
-    //        return callback('\n\u2717 No device connected.\n', null);
-    //     }
-    //     else{
-    //       var devices = [];
-    //       for(var i=0; i<count; i++){
-    //         //Creating an array of device objects
-    //         var device = {};
-    //         device.name = JSON.parse(result).android.devices[i].model;
-    //         device.id = JSON.parse(result).android.devices[i].id;
-    //         devices.push(device);
-    //       }
-    //       //Pass on the array of device objects
-    //       return callback(null, devices);
-    //     }
-    //   });
-    // },
-
     function getProperties(callback){
       //executing appc ti info command to get connected device info
-      execute('appc appcd exec /android/latest/info/devices', function(err, result){
+      execute('appc appcd exec /android/latest/info/devices', function(err, data){
         if(err){
           errorNExit(err);
         }
+        var result = JSON.parse(data)["message"];
         // //reading number of devices connected
-        var count = JSON.parse(result).length;
+        var count = result.length;
         if(count === 0){
           //Sending callback as error
            return callback('\n\u2717 No device connected.\n', null);
@@ -52,8 +26,8 @@ module.exports = function(){
           for(var i=0; i<count; i++){
             //Creating an array of device objects
             var device = {};
-            device.name = JSON.parse(result)[i].model;
-            device.id = JSON.parse(result)[i].id;
+            device.name = result[i].model;
+            device.id = result[i].id;
             devices.push(device);
           }
           //Pass on the array of device objects
