@@ -74,18 +74,18 @@ var getStudioVer = (callback)=>{
   }
   else{
     var text = fs.readFileSync(finalPath, 'utf8').split('\n');
-    var ver = text[0].split(' ')[2];
+    var ver = text[0].split(' ')[2]+'.'+text[1].split(' ')[2];
     return callback(null, ver);
   }
 };
 
 var getSDKVer = (callback)=>{
-  execute('appc ti config -o json', (err, data) => {
+  execute('appc ti config sdk.selected -o json ', (err, data) => {
     //Converting the json text to javascript object using JSON.parse & getting the "sdk.selected" value
     if (err) {
       errorNExit(err);
     }
-    var ver = JSON.parse(data)["sdk.selected"];
+    var ver = JSON.parse(data);
     return callback(null, ver);
   });
 };
@@ -203,51 +203,22 @@ var getENV = (callback)=>{
   });
 };
 
-// var getConnectedDevices  = function(callback){
-//   execute('appc ti info -t android -o json', function(err, result){
-//     if (err) {
-//       errorNExit(err);
-//     }
-//     //reading nuber of devices connected
-//     var count = JSON.parse(result).android.devices.length;
-//     if(count === 0){
-//       return callback(null, 'No device attached');
-//     }
-//     else{
-//       //creating a device object
-//       var device = {};
-//       var devices = '';
-//       for(var i=0; i<count; i++){
-//         //putting device details in object
-//         device['brand'+i] = JSON.parse(result).android.devices[i].brand;
-//         device['model'+i] = JSON.parse(result).android.devices[i].model;
-//         device['os_ver'+i] = JSON.parse(result).android.devices[i].release;
-
-//         devices += '\u21E8 '+device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n'+'                ';
-//       }
-//       return callback(null, devices);
-//     }
-//   });
-// };
-
 var getConnectedDevices = (callback)=>{
-  execute('appc appcd exec /android/latest/info/devices', function(err, result){
+  execute('appc appcd exec /android/latest/info/devices', function(err, data){
     if (err) {
-      // let errStr = err.toString();
-      // console.log(errStr);
-      // if(errStr.includes('Command failed')){
-      //   console.log('Reached here');
-      //   console.log(bold('\nLooks like Appc Daemon is not started.\nRestarting Deamon .....'));
-      //   execute('appc appcd start', function(err, result){
-      //     if(err){
-      //       errorNExit(err);
-      //     }
-      //   });
-      // } 
-      errorNExit(err); 
+      let errStr = err.toString();
+      if(errStr.includes('Command failed')){
+        console.log(bold('\nLooks like Appc Daemon is not started.\nPlease run '+cyan('appc appcd start')+' to start appc daemon.'));
+        console.log('');
+        process.exit();
+      }
+      else{
+        errorNExit(err);
+      }    
     }
-    //reading nuber of devices connected
-    var count = JSON.parse(result).length;
+    var result = JSON.parse(data)["message"];
+    //reading number of devices connected
+    var count = result.length;
     if(count === 0){
       return callback(null, 'No device attached');
     }
@@ -257,9 +228,9 @@ var getConnectedDevices = (callback)=>{
       var devices = '';
       for(var i=0; i<count; i++){
         //putting device details in object
-        device['brand'+i] = JSON.parse(result)[i].brand;
-        device['model'+i] = JSON.parse(result)[i].model;
-        device['os_ver'+i] = JSON.parse(result)[i].release;
+        device['brand'+i] = result[i].brand;
+        device['model'+i] = result[i].model;
+        device['os_ver'+i] = result[i].release;
 
         devices += '\u21E8 '+device['brand'+i]+' '+device['model'+i]+' --- Android '+device['os_ver'+i]+'\n'+'                ';
       }
@@ -323,14 +294,15 @@ var getBuildTools = (callback)=>{
 };
 
 var getAndroidModules = (callback)=>{
-    var modules={}, folders;
-    var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'facebook');
-    var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'hyperloop');
-    var cloudpushModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.cloudpush');
-    var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.map');
-    var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.touchid');
-    var identityModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.identity');
-    var playservicesModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android', 'ti.playservices');
+    var modules={}, folders, cmnpath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'android'),
+        facebookModPath = path.join(cmnpath, 'facebook'),
+        hyperloopModPath = path.join(cmnpath, 'hyperloop'),
+        cloudpushModPath = path.join(cmnpath, 'ti.cloudpush'),
+        mapModPath = path.join(cmnpath, 'ti.map'),
+        touchidModPath = path.join(cmnpath, 'ti.touchid'),
+        identityModPath = path.join(cmnpath, 'ti.identity'),
+        playservicesModPath = path.join(cmnpath, 'ti.playservices'),
+        apmModPath = path.join(cmnpath, 'com.appcelerator.apm');
     //Calling filterFn
     filterFn(facebookModPath, 'facebook');
     filterFn(hyperloopModPath, 'hyperloop');
@@ -339,6 +311,7 @@ var getAndroidModules = (callback)=>{
     filterFn(touchidModPath, 'touchid');
     filterFn(identityModPath, 'identity');
     filterFn(playservicesModPath, 'playservices');
+    filterFn(apmModPath, 'apm');
     //Function to filter .DS_Store
     function filterFn(path, modulename){
       if(fs.existsSync(path)){
@@ -357,18 +330,19 @@ var getAndroidModules = (callback)=>{
         modules[modulename] = 'None';
       }
     }
-    var androidModules = 'Facebook:     '+modules.facebook+'\n '+'               Hyperloop:    '+modules.hyperloop+'\n '+'               Cloudpush:    '+modules.cloudpush+'\n '+'               Map:          '+modules.map+'\n '+'               TouchID:      '+modules.touchid+'\n '+'               Identity:     '+modules.identity+'\n '+'               Playservices: '+modules.playservices;
+    var androidModules = 'Facebook:     '+modules.facebook+'\n '+'               Hyperloop:    '+modules.hyperloop+'\n '+'               Cloudpush:    '+modules.cloudpush+'\n '+'               Map:          '+modules.map+'\n '+'               TouchID:      '+modules.touchid+'\n '+'               Identity:     '+modules.identity+'\n '+'               Playservices: '+modules.playservices+'\n '+'               APM:          '+modules.apm;
     return callback(null, androidModules);
 };
 
 var getIOSModules = (callback)=>{
-    var modules={}, folders;
-    var facebookModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'facebook');
-    var hyperloopModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'hyperloop');
-    var coremotionModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.coremotion');
-    var mapModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.map');
-    var touchidModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.touchid');
-    var identityModPath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone', 'ti.identity');
+    var modules={}, folders, cmnpath = path.join('/Users', user, 'Library', 'Application Support', 'Titanium', 'modules', 'iphone'),
+        facebookModPath = path.join(cmnpath, 'facebook'),
+        hyperloopModPath = path.join(cmnpath, 'hyperloop'),
+        coremotionModPath = path.join(cmnpath, 'ti.coremotion'),
+        mapModPath = path.join(cmnpath, 'ti.map'),
+        touchidModPath = path.join(cmnpath, 'ti.touchid'),
+        identityModPath = path.join(cmnpath, 'ti.identity');
+        apmModPath = path.join(cmnpath, 'com.appcelerator.apm');
     //Calling filterFn
     filterFn(facebookModPath, 'facebook');
     filterFn(hyperloopModPath, 'hyperloop');
@@ -376,6 +350,7 @@ var getIOSModules = (callback)=>{
     filterFn(mapModPath, 'map');
     filterFn(touchidModPath, 'touchid');
     filterFn(touchidModPath, 'identity');
+    filterFn(apmModPath, 'apm');
     //Function to filter .DS_Store
     function filterFn(path, modulename){
       if(fs.existsSync(path)){
@@ -394,7 +369,7 @@ var getIOSModules = (callback)=>{
         modules[modulename] = 'None';
       }
     }
-    var iosModules = 'Facebook:   '+modules.facebook+'\n '+'               Hyperloop:  '+modules.hyperloop+'\n '+'               Coremotion: '+modules.coremotion+'\n '+'               Map:        '+modules.map+'\n '+'               TouchID:    '+modules.touchid+'\n '+'               Identity:   '+modules.identity;
+    var iosModules = 'Facebook:   '+modules.facebook+'\n '+'               Hyperloop:  '+modules.hyperloop+'\n '+'               Coremotion: '+modules.coremotion+'\n '+'               Map:        '+modules.map+'\n '+'               TouchID:    '+modules.touchid+'\n '+'               Identity:   '+modules.identity+'\n '+'               APM:        '+modules.apm;;
     callback(null, iosModules);
 };
 
