@@ -24,6 +24,7 @@ module.exports = function(){
   task.push(callback => getJavaVer(callback));
   task.push(callback => getENV(callback));
   task.push(callback => getConnectedDevices(callback));
+  task.push(callback => getConnectedEmulator(callback));
   task.push(callback => getAndroidSDKTools(callback));
   task.push(callback => getPlatformTools(callback));
   task.push(callback => getBuildTools(callback));
@@ -51,13 +52,14 @@ module.exports = function(){
     console.log('NPM Ver:        '+cyan(results[10].trim()));
     console.log('Java Ver:       '+cyan(results[11]));
     console.log('Devices:        '+cyan(results[13].trim()));
+    console.log('Emulator:       '+cyan(results[14].trim()));
     console.log('Environment:    '+cyan(results[12].trim()));
-    console.log('\nSDK Tools:      '+cyan(results[14]));
-    console.log('Platform Tools: '+cyan(results[15]));
-    console.log('Build Tools:    '+cyan(results[16]));
-    console.log('\nAndroid Modules:'+cyan(results[17]));
-    console.log('\nIOS Modules:    '+cyan(results[18]));
-    console.log('\nCommjs Modules: '+cyan(results[19])+'\n');
+    console.log('\nSDK Tools:      '+cyan(results[15]));
+    console.log('Platform Tools: '+cyan(results[16]));
+    console.log('Build Tools:    '+cyan(results[17]));
+    console.log('\nAndroid Modules:'+cyan(results[18]));
+    console.log('\nIOS Modules:    '+cyan(results[19]));
+    console.log('\nCommjs Modules: '+cyan(results[20])+'\n');
   });
 };
 //Function Definitions start here:
@@ -69,14 +71,17 @@ var getStudioVer = (callback)=>{
   //Checking if path1 exists if yes return path1 or check if path2 exists if yes return path2 else return false
   var finalPath = fs.existsSync(path1) ? path1 : fs.existsSync(path2) ? path2 : false;
   //Check if finalPath is false
-  if(!finalPath){
-    return callback(null, 'Appc Studio not installed.');
+  if(finalPath == path1 ){
+    var text = fs.readFileSync(finalPath, 'utf8').split('\n');
+    var ver = text[0].split(' ')[2];
+    return callback(null, ver);  
   }
-  else{
+  else if(finalPath == path2){
     var text = fs.readFileSync(finalPath, 'utf8').split('\n');
     var ver = text[0].split(' ')[2]+'.'+text[1].split(' ')[2];
     return callback(null, ver);
   }
+  return callback(null, 'Appc Studio not installed.');
 };
 
 var getSDKVer = (callback)=>{
@@ -91,7 +96,7 @@ var getSDKVer = (callback)=>{
 };
 
 var getAppcNPMVer = (callback)=>{
-  execute('appc -v -o json', function(err, result){
+  execute('appc -v -o json', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -100,7 +105,7 @@ var getAppcNPMVer = (callback)=>{
 };
 
 var getAppcCliCoreVer = (callback)=>{
-  execute('appc -v -o json', function(err, result){
+  execute('appc -v -o json', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -109,7 +114,7 @@ var getAppcCliCoreVer = (callback)=>{
 };
 
 var getDaemonVer = (callback)=>{
-  execute('appc appcd --version', function(err, result){
+  execute('appc appcd --version', (err, result)=>{
     if(err){
       errorNExit(err);
     }
@@ -119,7 +124,7 @@ var getDaemonVer = (callback)=>{
 };
 
 var getOSVer = (callback)=>{
-  execute('sw_vers -productVersion', function(err, result){
+  execute('sw_vers -productVersion', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -130,7 +135,7 @@ var getOSVer = (callback)=>{
 
 var getXcodeVer = (callback)=>{
   if(fs.existsSync(path.join('/usr', 'bin', 'xcodebuild'))){
-    execute('/usr/bin/xcodebuild -version', function(err, result){
+    execute('/usr/bin/xcodebuild -version', (err, result)=>{
       if (err) {
         errorNExit(err);
       }
@@ -145,7 +150,7 @@ var getXcodeVer = (callback)=>{
 };
 
 var getTiCliVer = (callback)=>{
-  execute('appc ti -v', function(err, result){
+  execute('appc ti -v', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -155,7 +160,7 @@ var getTiCliVer = (callback)=>{
 };
 
 var getAlloyVer = (callback)=>{
-  execute('appc alloy -v', function(err, result){
+  execute('appc alloy -v', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -170,7 +175,7 @@ var getNodeVer = (callback)=>{
 };
 
 var getNPMVer = function(callback){
-  execute('npm -v', function(err, result){
+  execute('npm -v', (err, result)=>{
     if(err){
       errorNExit(err);
     }
@@ -181,10 +186,10 @@ var getNPMVer = function(callback){
 
 var getJavaVer = (callback)=>{
   var spawn = require('child_process').spawn('java', ['-version']);
-  spawn.on('error', function(err){
+  spawn.on('error', (err)=>{
     errorNExit(err);
   });
-  spawn.stderr.on('data', function(data) {
+  spawn.stderr.on('data', (data)=>{
     data = data.toString().split('\n')[0];
     var javaVersion = new RegExp('java version').test(data) ? data.split(' ')[2].replace(/"/g, '') : false;
     if (javaVersion !== false) {
@@ -194,7 +199,7 @@ var getJavaVer = (callback)=>{
 };
 
 var getENV = (callback)=>{
-  execute('appc whoami', function(err, result){
+  execute('appc whoami', (err, result)=>{
     if (err) {
       errorNExit(err);
     }
@@ -204,7 +209,7 @@ var getENV = (callback)=>{
 };
 
 var getConnectedDevices = (callback)=>{
-  execute('appc appcd exec /android/latest/info/devices', function(err, data){
+  execute('appc appcd exec /android/latest/info/devices', (err, data)=>{
     if (err) {
       let errStr = err.toString();
       if(errStr.includes('Command failed')){
@@ -239,12 +244,29 @@ var getConnectedDevices = (callback)=>{
   });
 };
 
+var getConnectedEmulator = (callback)=>{
+  execute(' adb -s emulator-5554 shell getprop ro.build.version.release', (err, data)=>{
+    if(err){
+      let errStr = err.toString();
+      if(errStr.includes('not found')){
+        callback(null, 'No emulator running');
+      }
+      else{
+        errorNExit(err);
+      }
+    }
+    else{
+      return callback(null, '\u21E8 Android '+data.trim());
+    }  
+  });
+};
+
 var getAndroidSDKTools = (callback)=>{
   var android_sdkPath = process.env.ANDROID_SDK;
   var sdktools_path = path.join(android_sdkPath,'tools');
   //Checking if source.properties file exists
   if(fs.existsSync(path.join(sdktools_path,'source.properties'))){
-    fs.readFile(path.join(sdktools_path, 'source.properties'), function(err, result){
+    fs.readFile(path.join(sdktools_path, 'source.properties'), (err, result)=>{
       if(err){
         errorNExit(err);
       }
@@ -280,7 +302,7 @@ var getBuildTools = (callback)=>{
     var folders = fs.readdirSync(buildtools_path);
     var filter_arr = [];
       //filtering out DS.store file from the array of folders
-      folders.filter(function(folder){
+      folders.filter((folder)=>{
         if(folder !== '.DS_Store'){
           filter_arr.push(folder);
         }
@@ -318,7 +340,7 @@ var getAndroidModules = (callback)=>{
         filterArr=[];
         folders = fs.readdirSync(path);
         if(folders){
-          folders.filter(function(folder){
+          folders.filter((folder)=>{
             if(folder !== '.DS_Store'){
              filterArr.push(folder);
            }
@@ -357,7 +379,7 @@ var getIOSModules = (callback)=>{
         filterArr=[];
         folders = fs.readdirSync(path);
         if(folders){
-          folders.filter(function(folder){
+          folders.filter((folder)=>{
             if(folder !== '.DS_Store'){
              filterArr.push(folder);
            }
@@ -381,7 +403,7 @@ var getCommonjsModules = (callback)=>{
     filterArr=[];
     folders = fs.readdirSync(cloudModPath);
     if(folders){
-      folders.filter(function(folder){
+      folders.filter((folder)=>{
         if(folder !== '.DS_Store'){
          filterArr.push(folder);
        }
