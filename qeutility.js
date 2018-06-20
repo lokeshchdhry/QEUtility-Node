@@ -13,16 +13,11 @@ var cloneRepo_SDK = require('./sdk/clone_sdk'),
     stored_paths = require('./setup/stored_paths'),
     util = require('./misc/util'),
     components = require('./qe_utility/components'),
-    install_core = require('./qe_utility/install_core'),
-    install_appc_npm = require('./qe_utility/install_appc_npm'),
-    install_sdk = require('./qe_utility/install_sdk'),
-    select_sdk = require('./qe_utility/select_sdk'),
-    changeEnv = require('./qe_utility/change_env'),
-    removeApps = require('./qe_utility/remove_apps.js'),
     inquirer = require('inquirer'),
+    qeutility_util = require('./qe_utility/qeutility_util')
     setup_runcount = require('./misc/util').runcount;
 
-//Getting the value of runCount from storage
+//Getting the value of runCount from storages
 //Checking if SETUP has beed run before, if not run setup or else show the menu
 if( setup_runcount === undefined){
   console.log('');
@@ -101,6 +96,10 @@ else{
         {
           name: 'UNINSTALL APPS',
           value:'remove_apps'
+        },
+        {
+          name: 'IMPORT APPS',
+          value:'import_apps'
         },
         {
           name: 'EXIT',
@@ -216,31 +215,35 @@ else{
   var exec_qe_utility = function(task){
     switch(task){
       case 'compo':
-      components();
+      components.getcomponents();
       break;
 
       case 'install_core':
-      install_core();
+      qeutility_util.installCore();
       break;
 
       case 'install_appc_npm':
-      install_appc_npm();
+      qeutility_util.appcnpm();
       break;
 
       case 'install_sdk':
-      install_sdk();
+      qeutility_util.installsdk();
       break;
 
       case 'select_sdk':
-      select_sdk();
+      qeutility_util.selectsdk();
       break;
 
       case 'change_env':
-      changeEnv();
+      qeutility_util.change_env();
       break;
 
       case 'remove_apps':
-      removeApps();
+      qeutility_util.uninstallapps();
+      break;
+
+      case 'import_apps':
+      qeutility_util.importapps();
       break;
 
       case 'exit':

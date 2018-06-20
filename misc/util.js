@@ -1,10 +1,10 @@
-var chalk = require('chalk'),
-    Spinner = require('cli-spinner').Spinner,
-    fs = require('fs'),
-    exec = require('child_process').exec,
-    storage = require('node-persist'),
-    inquirer = require('inquirer'),
-    path = require('path');
+const chalk = require('chalk'),
+      Spinner = require('cli-spinner').Spinner,
+      fs = require('fs'),
+      exec = require('child_process').exec,
+      storage = require('node-persist'),
+      inquirer = require('inquirer'),
+      path = require('path');
 
 //Initialize storage sync (node persist)
 storage.initSync();
@@ -31,6 +31,7 @@ module.exports = {
     prod_org_id : storage.getItemSync('prod_org_id'),
     preprod_org_id : storage.getItemSync('preprod_org_id'),
     runcount : storage.getItemSync('runcount'),
+    workspace : storage.getItemSync('workspace'),
 
     //Function to set sync for links & dir paths
     setSyncValue : function(name, value){
