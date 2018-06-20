@@ -16,8 +16,7 @@ var fs = require('fs'),
     underline = require('../misc/util').underline,
     execute = require('../misc/util').execute,
     spinner_stop = require('../misc/util').spinner_stop,
-    spinner_start = require('../misc/util').spinner_start,
-    installAppcCLI = require('../qe_utility/install_core');
+    spinner_start = require('../misc/util').spinner_start;
 
 module.exports = function() {
   var android_sdk, android_ndk;
@@ -149,6 +148,7 @@ var removeSyncedData = function(callback){
   removeSyncValue('password');
   removeSyncValue('prod_org_id');
   removeSyncValue('preprod_org_id');
+  removeSyncValue('workspace');
 
   return callback(null, null);
 };
@@ -267,6 +267,18 @@ var setupRepoLinksNPaths = function(callback){
         return 'Please enter the pre-production org id :';
       }
     }
+  },
+  {
+    name: 'workspace',
+    type: 'input',
+    message: 'Enter the path for your studio workspace:',
+    validate: function(value) {
+      if (value.length) {
+        return true;
+      } else {
+        return 'Please enter path for your studio workspace :';
+      }
+    }
   }
 ];
 inquirer.prompt(questions).then(function(answers) {
@@ -280,6 +292,7 @@ inquirer.prompt(questions).then(function(answers) {
   setSyncValue('password', (answers.password).trim());
   setSyncValue('prod_org_id', (answers.prod_org_id).trim());
   setSyncValue('preprod_org_id', (answers.preprod_org_id).trim());
+  setSyncValue('workspace', (answers.workspace).trim());
 
   //Set the count to 1 in the storage when setup is run. This count is used to track if setup is run atleast once.
   setSyncValue('runcount', 1);
@@ -304,6 +317,7 @@ var displayData = function(callback){
   console.log('CLI password :       ' + cyan(storage.getItemSync('password')));
   console.log('Prod Org id :        ' + cyan(storage.getItemSync('prod_org_id')));
   console.log('Preprod Org id :     ' + cyan(storage.getItemSync('preprod_org_id')));
+  console.log('Workspace :          ' + cyan(storage.getItemSync('workspace')));
   console.log('');
   console.log('\u2714 Setup Complete.');
   console.log('');
