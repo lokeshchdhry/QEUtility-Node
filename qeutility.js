@@ -1,20 +1,17 @@
 #!/usr/bin/env node
-var cloneRepo_SDK = require('./sdk/clone_sdk'),
-    cloneRepo_NPM = require('./clinpm/clone_clinpm'),
+var cloneRepo_NPM = require('./clinpm/clone_clinpm'),
     cloneRepo_CLICore = require('./clicore/clone_clicore'),
-    build_sdk = require('./sdk/build_sdk'),
+    buildsdk = require('./sdk/buildsdk'),
     build_clinpm = require('./clinpm/build_clinpm'),
     build_clicore = require('./clicore/build_clicore'),
-    cleanup_sdk = require('./sdk/cleanup_sdk'),
     cleanup_clinpm = require('./clinpm/cleanup_clinpm'),
     cleanup_clicore = require('./clicore/cleanup_clicore'),
-    clearMem = require('./misc/clear_mem'),
     setup = require('./setup/setup'),
-    stored_paths = require('./setup/stored_paths'),
+    sdkutil = require('./sdk/sdkutil'),
     util = require('./misc/util'),
     components = require('./qe_utility/components'),
     inquirer = require('inquirer'),
-    qeutility_util = require('./qe_utility/qeutility_util')
+    qeutility_util = require('./qe_utility/qeutility_util'),
     setup_runcount = require('./misc/util').runcount;
 
 //Getting the value of runCount from storages
@@ -29,7 +26,7 @@ if( setup_runcount === undefined){
   inquirer.prompt(questions).then(function(answers) {
     if(answers.run_check){
       //Run setup
-      setup();
+      setup.run();
     }
     else{
       //Exiting the process
@@ -68,6 +65,7 @@ else{
       inquirer.prompt({
         type: 'list',
         name: 'qe_util_opt',
+        pageSize: 10,
         message: 'What would you like to do in QE Utility ?',
         choices: [{
           name: 'CHECK INSTALLED COMPONENTS',
@@ -102,6 +100,10 @@ else{
           value:'import_apps'
         },
         {
+          name: 'LAUNCH AVD',
+          value:'launch_avd'
+        },
+        {
           name: 'EXIT',
           value: 'exit'
         }]
@@ -124,9 +126,6 @@ else{
           value:'build_sdk'
         },
         {
-          name: 'CLEANUP SDK',
-          value:'clean_sdk'
-        },{
           name: 'EXIT',
           value: 'exit'
         }]
@@ -246,6 +245,10 @@ else{
       qeutility_util.importapps();
       break;
 
+      case 'launch_avd':
+      qeutility_util.launchavd();
+      break;
+
       case 'exit':
       exit_func();
       break;
@@ -258,15 +261,11 @@ else{
   var exec_sdk_fr = function(task){
     switch(task){
       case 'clone_sdk':
-      cloneRepo_SDK();
+      sdkutil.cloneSDKrepo();
       break;
 
       case 'build_sdk':
-      build_sdk();
-      break;
-
-      case 'clean_sdk':
-      cleanup_sdk();
+      buildsdk.run();
       break;
 
       case 'exit':
@@ -327,11 +326,11 @@ else{
   var setup_opt = function(task){
     switch(task){
       case 'run_setup':
-      setup();
+      setup.run();
       break;
 
       case 'stored_paths':
-      stored_paths();
+      setup.displayData(true);
       break;
 
       case 'exit':

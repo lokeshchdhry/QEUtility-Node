@@ -1,6 +1,6 @@
 var storage = require('node-persist'),
     inquirer = require('inquirer'),
-    clone = require('../misc/clone_repo'),
+    clone = require('../misc/clone_repoutil'),
     repolink_clinpm = require('../misc/util').repolink_clinpm,
     npm_dir = require('../misc/util').npm_dir,
     cyan = require('../misc/util').cyan,
@@ -43,12 +43,12 @@ module.exports = function() {
     storage.setItemSync('repo_link_npm', answers.repo_link);
     storage.setItemSync('dir_npm', answers.dir);
     //Calling clone
-    clone(answers.repo_link, answers.dir, 'appc-install');
+    clone.clonerepo(answers.repo_link, answers.dir, 'appc-install');
   });
 } else {
   console.log(cyan('\n\u25B6 Clone link: ' + repolink_clinpm));
   console.log(cyan('\u25B6 Clone dir: ' + npm_dir));
   //Calling clone
-  clone(repolink_clinpm, npm_dir, 'appc-install');
+  clone.clonerepo(repolink_clinpm, npm_dir, 'appc-install');
 }
 };
