@@ -20,36 +20,202 @@ const inquirer = require('inquirer'),
 class qeutility_util{
 
   /*****************************************************************************
-  * Downloads & installs specified Appc CLI core.
+  * Downloads & installs specified Appc CLI core from prod or preprod
   ****************************************************************************/
   static installCore(){
     return new Promise((resolve, reject) => {
-      const questions = [{
-        name: 'cli_ver',
-        type: 'input',
-        message: 'Enter the CLI core version which you would like to download(e.g: 6.2.0) :',
-        validate: function(value) {
-          if (value.length) {
-            return true;
-          } else {
-            return 'Please enter the CLI core version which you would like to download.';
-          }
-        }
-      }];
-      inquirer.prompt(questions).then(function(answer) {
-        return answer.cli_ver;
+      inquirer.prompt({
+        name: 'cli_ver_type',
+        type: 'list',
+        message: 'Please select which CLI Core to download:',
+        choices: [{
+          name: 'RELEASED',
+          value: 'released'
+        },
+        {
+          name: 'PRE-RELEASE',
+          value: 'prerelease'
+        },
+        {
+          name: 'EXIT',
+          value: 'exit'
+        }]
       })
-      .then(cliver => {
-        output.info('solidarrow', `Downloading & instal ling CLI Core version : ${cliver}`);
-        spinner_start();
-        exec(`appc use ${cliver}`, (err, data) => {
-          if(!err){
-            spinner_stop(true);
-            output.cyan('tick', data);
-            resolve();
-          }
-          else(reject(err));
-        });
+      .then(answers => {
+        //Exit if EXIT
+        if(answers.cli_ver_type === 'exit'){
+          //Quit the process
+          process.exit();
+        }
+        else{return answers.cli_ver_type;}
+      })
+      .then(clivertype => {
+        if(clivertype === 'released'){
+          inquirer.prompt({
+            name: 'cli_ver',
+            type: 'input',
+            message: 'Enter the CLI core version which you would like to download(e.g: 6.2.0) :',
+            validate: function(value) {
+              if (value.length) {
+                return true;
+              } else {
+                return 'Please enter the CLI core version which you would like to download.';
+              }
+            }
+          })
+          .then(answers => {
+            output.info('solidarrow', `Downloading & installing release CLI Core version : ${answers.cli_ver}`);
+            spinner_start();
+            exec(`appc use ${answers.cli_ver}`, (err, data) => {
+              if(!err){
+                spinner_stop(true);
+                output.cyan('tick', data);
+                resolve();
+              }
+              else(reject(err));
+            });
+          })
+        }
+        else{
+          output.underline('solidarrow', 'GOING TO PREPROD TO GET LATEST PRE-RELEASE CLI CORE:');
+          spinner_start();
+          let p = Promise.resolve()
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              // output.info('solidarrow','logging you out:');
+              exec(`appc logout`, (err, result) => {
+                if(!err){
+                  resolve();
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              });
+            });
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              // output.info('solidarrow',`Setting default env to preprod:`);
+              exec('appc config set defaultEnvironment preproduction', (err, result) =>{
+                if(!err){
+                  resolve();
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              });
+            });
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              const orgIDPreProd = preProdOrgId;
+              // output.info('solidarrow', 'Logging you in:');
+              exec(`appc login --username ${username} --password ${password} --org-id ${orgIDPreProd}`, (err, result)=> {
+                if(!err){
+                  spinner_stop(true);
+                  output.cyan(null, result);
+                  resolve();
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              });
+            }); 
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              output.underline('solidarrow', 'GETTING LATEST PRE-RELEASE VERSIONS:');
+              spinner_start();
+              exec('appc use -o json --prerelease', (err, result) => {
+                if(!err){
+                  const ver_arr = JSON.parse(result)['versions'].slice(0,20);
+                  spinner_stop(true);
+                  resolve(ver_arr);
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              })
+            })
+          })
+          .then(ver_arr => {
+            ver_arr = ver_arr.sort().reverse().push('EXIT');
+            return new Promise((resolve, reject) => {
+              inquirer.prompt({
+                name: 'pre_core_ver',
+                type: 'rawlist',
+                pageSize: ver_arr.length,
+                message: 'Please select which pre-release CLI Core to download(Showing top 20 choices):',
+                choices: ver_arr              
+              })
+              .then(answers => {
+                output.info('solidarrow', `Downloading & installing pre-release CLI Core version : ${answers.pre_core_ver}`);
+                spinner_start();
+                if(answers.pre_core_ver === 'EXIT'){
+                  process.exit();
+                }
+                else{
+                  exec(`appc use ${answers.pre_core_ver}`, (err, data) => {
+                    if(!err){
+                      spinner_stop(true);
+                      output.cyan('tick', data);
+                      resolve();
+                    }
+                    else(reject(err));
+                  });
+                }
+              })
+            })
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              output.underline('solidarrow', 'GOING BACK TO PROD.');
+              spinner_start();
+              exec(`appc logout`, (err, result) => {
+                if(!err){
+                  resolve();
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              });
+            });
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              // output.info('solidarrow',`Setting default env to prod:`);
+              exec('appc config set defaultEnvironment production', (err, result) =>{
+                if(!err){
+                  resolve();
+                }
+                else{
+                  reject(err);
+                  spinner_stop(true);
+                }
+              });
+            });
+          })
+          .then(() => {
+            return new Promise((resolve, reject) => {
+              const orgIDProd = prodOrgId;
+              // output.info('solidarrow', 'Logging you in:');
+              exec(`appc login --username ${username} --password ${password} --org-id ${orgIDProd}`, (err, result)=> {
+                if(!err){
+                  spinner_stop(true);
+                  output.cyan(null, result);
+                  resolve();
+                }
+                else{reject(err);}
+              });
+            }); 
+          })
+          .catch(err => {output.error(err);});
+        }
       });
     })
     .catch(err => output.error(err));
@@ -428,7 +594,7 @@ class qeutility_util{
         else{
           output.cyan('tick', `Launching android emulator: ${answers.avdname}.\n\nDONE\n`);
           let emucmd = execSync('appc ti config android.sdkPath --no-banner').toString().trim()+'/emulator',
-          prc = spawn('emulator', ['-avd',`${answers.avdname}`], {          //Spawn child process passing cwd & detached option so that it can run independent of parent process
+          prc = spawn('emulator', ['-avd',`${answers.avdname}`], {  //Spawn child process passing cwd & detached option so that it can run independent of parent process
             cwd: emucmd,
             detached: true,
             stdio: 'ignore'

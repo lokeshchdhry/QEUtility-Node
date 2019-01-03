@@ -28,6 +28,7 @@ class buildsdk{
 				let p = Promise.resolve()
 				.then(() => {return sdkutil.gitpull()})
 				.then(() => {return sdkutil.fetchpr()})
+				.then(() => {return sdkutil.gitstash()})
 				.then(() => {return sdkutil.getinputprno()})
 				.then(pr => {return sdkutil.checkoutpr(pr)})
 				.then(() => {return sdkutil.npminstallsdk()})
@@ -42,6 +43,7 @@ class buildsdk{
 				.then(pr => {        //If user wants to build for a new PR
 					if(pr.newpr){
 						let p = Promise.resolve()
+						.then(() => {return sdkutil.gitstash()})
 						.then(() => {return sdkutil.checkoutmaster()})
 						.then(() => {return sdkutil.deletebranch(prno)})
 						.then(() => {return sdkutil.fetchorigin()})
@@ -55,7 +57,7 @@ class buildsdk{
 						.then(() => {return sdkutil.installsdk()})
 						.catch(err => {output.error(err)});
 					}
-					else{             //If user wants to rebild for the same PR
+					else{             //If user wants to rebuild for the same PR
 						let p = Promise.resolve()
 						.then(() => {return sdkutil.checkoutpr(pr.prno)})
 						.then(() => {return sdkutil.npminstallsdk()})

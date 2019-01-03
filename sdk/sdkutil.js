@@ -100,6 +100,35 @@ class sdkutil{
 
 
 /*****************************************************************************
+ * Git Stash.
+ ****************************************************************************/
+ 	static gitstash(){
+ 		return new Promise(resolve => {
+ 			output.underline('solidarrow', 'STASHING ANY CHANGES.');
+ 			const prc = spawn('git', ['stash']);
+ 			prc.stdout.on('data', data => {
+ 				output.cyan(null, data);
+ 			});
+ 			prc.stderr.on('data', data => {
+ 				output.cyan(null, data);
+ 			})
+ 			prc.on('error', err => {throw(err)});
+ 			prc.on('close', code => {
+ 				if(code !== 0){
+ 					output.error(`Something went wrong. Please check console output. Exited with exit code ${code}.`)
+					process.exit();
+ 				}
+ 				else{
+ 					output.cyan('null', '\nDONE\n');
+					resolve();
+ 				}
+ 			})
+ 		})
+ 		.catch(err => {output.error(err)});
+ 	}
+
+
+/*****************************************************************************
  * Delete the PR branch.
  ****************************************************************************/
 	static deletebranch(prno){
@@ -180,10 +209,6 @@ class sdkutil{
 				spinner.stop(true);
 				output.cyan(null, data);
 			});
-			// prc.stderr.on('data', data => {
-			// 	spinner.stop(true);
-			// 	output.cyan(null, data)
-			// });
 			prc.on('error', err => {throw(err)});
 			prc.on('close', code => {
 				output.cyan('null', '\nDONE\n\n');
