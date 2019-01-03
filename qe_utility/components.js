@@ -5,7 +5,9 @@ const fs = require('fs'),
       user = require('../misc/util').user,
       exec = require('child_process').exec,
       spawn = require('child_process').spawn,
-      output = require('../misc/output');
+      output = require('../misc/output'),
+      chalk = require('chalk'),
+      cyan = chalk.cyan;
 
 let arr = [];
 
