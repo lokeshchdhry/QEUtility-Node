@@ -242,7 +242,7 @@ class componentsUtil{
 
 
     /*****************************************************************************
-    * Run appc daemon command to get devices.
+    * Run appc daemon command to get android devices.
     ****************************************************************************/
     static rundaemoncmd(){
       return new Promise((resolve, reject) => {
@@ -286,11 +286,12 @@ class componentsUtil{
       let data = '', done = false;
       return new Promise(resolve => {
         output.cyan(null, '\nLooks like appc daemon is not running. Starting appc daemon to get device info ....\n');
-        const prc = spawn('appc',['appcd', 'restart']);
+        const prc = spawn('appc',['appcd', 'start']);
         prc.stdout.on('data', output => {
           data = output.toString().trim('');
         });
         prc.on('close', code =>{
+          console.log(code);
           if(code !== 0){
             output.error(`Something went wrong while restarting appc deamon. Please check console output. Exited with exit code ${code}.`);
             process.exit();
@@ -307,7 +308,7 @@ class componentsUtil{
 
 
     /*****************************************************************************
-    * Get connected emulators.
+    * Get connected android emulators.
     ****************************************************************************/
     static getConnectedEmulator(){
       return new Promise((resolve, reject) => {
@@ -321,6 +322,66 @@ class componentsUtil{
               resolve(arr.push('No emulator running'));
             }
             reject(err);
+          }
+        });
+      });
+    }
+
+
+    /*****************************************************************************
+    * Get connected IOS simulators.
+    ****************************************************************************/
+    static getIOSSimulator(){
+      return new Promise((resolve, reject) => {
+        exec('xcrun simctl list -j devices', (err, data) => {
+          if(!err){
+            const devices = JSON.parse(data).devices;
+            Object.keys(devices).forEach(v => {
+              devices[v].find(sim => {
+                if(sim.state === 'Booted'){
+                  resolve(arr.push('\u21E8 '+sim.name+' ('+v+')'));
+                }
+              });
+            });
+            resolve(arr.push('No simulator running'));
+          }
+          else{
+            reject(err);
+          }
+        });
+      });
+    }
+
+    /*****************************************************************************
+    * Get connected IOS device.
+    ****************************************************************************/
+    static getIOSDevices(){
+      return new Promise((resolve, reject) => {
+        exec('appc appcd exec /ios/latest/info/devices', (err, data) => {
+          if (err) {
+            if(err.toString().includes('Command failed')){
+              reject(err);
+            }
+          }
+          else{
+            const result = JSON.parse(data).message;
+            //reading number of devices connected
+            const count = result.length;
+            if(count === 0){
+              resolve(arr.push('No device connected'));
+            }
+            else{
+              //creating a device object
+              var device = {};
+              var devices = '';
+              for(var i=0; i<count; i++){
+                //putting device details in object
+                device['devicename'+i] = result[i].deviceClass;
+                device['iosver'+i] = result[i].productVersion;
+                devices += '\u21E8 '+device['devicename'+i]+' '+device['iosver'+i];
+              }
+              resolve(arr.push(devices));
+            }
           }
         });
       });
@@ -377,6 +438,23 @@ class componentsUtil{
     }
 
 
+  /*****************************************************************************
+    * Get android NDK version in use.
+    ****************************************************************************/
+    static getNDKVer(){
+      return new Promise((resolve, reject) => {
+        exec('appc ti config android.ndkPath --no-banner', (err, data) => {
+          if(!err){
+            const ndkver = data.trim().split('ndk-')[1];
+            resolve(arr.push(ndkver));
+          }
+          else{
+            reject(err);
+          }
+        });
+      });
+    }
+
     /*****************************************************************************
     * Get installed Appc android modules.
     ****************************************************************************/
@@ -391,7 +469,8 @@ class componentsUtil{
         touchidMod = path.join(androidModPath, 'ti.touchid'),
         identityMod = path.join(androidModPath, 'ti.identity'),
         playservicesMod = path.join(androidModPath, 'ti.playservices'),
-        apmMod = path.join(androidModPath, 'com.appcelerator.apm');
+        apmMod = path.join(androidModPath, 'com.appcelerator.apm'),
+        acaMod = path.join(androidModPath, 'com.appcelerator.aca');
 
         filterFn(facebookMod, 'facebook');
         filterFn(hyperloopMod, 'hyperloop');
@@ -401,6 +480,7 @@ class componentsUtil{
         filterFn(identityMod, 'identity');
         filterFn(playservicesMod, 'playservices');
         filterFn(apmMod, 'apm');
+        filterFn(acaMod, 'aca');
 
         function filterFn(path, modulename){
           if(fs.existsSync(path)){
@@ -421,7 +501,7 @@ class componentsUtil{
           }
         }
 
-        const androidModules = 'Facebook:     '+modules.facebook+'\n '+'               Hyperloop:    '+modules.hyperloop+'\n '+'               Cloudpush:    '+modules.cloudpush+'\n '+'               Map:          '+modules.map+'\n '+'               TouchID:      '+modules.touchid+'\n '+'               Identity:     '+modules.identity+'\n '+'               Playservices: '+modules.playservices+'\n '+'               APM:          '+modules.apm;
+        const androidModules = ' Facebook:     '+modules.facebook+'\n '+'                Hyperloop:    '+modules.hyperloop+'\n '+'                Cloudpush:    '+modules.cloudpush+'\n '+'                Map:          '+modules.map+'\n '+'                TouchID:      '+modules.touchid+'\n '+'                Identity:     '+modules.identity+'\n '+'                Playservices: '+modules.playservices+'\n '+'                APM:          '+modules.apm+'\n '+'                ACA:          '+modules.aca;
         resolve(arr.push(androidModules));
       });
     }
@@ -440,7 +520,8 @@ class componentsUtil{
         mapMod = path.join(iosModPath, 'ti.map'),
         touchidMod = path.join(iosModPath, 'ti.touchid'),
         identityMod = path.join(iosModPath, 'ti.identity'),
-        apmMod = path.join(iosModPath, 'com.appcelerator.apm');
+        apmMod = path.join(iosModPath, 'com.appcelerator.apm'),
+        acaMod = path.join(iosModPath, 'com.appcelerator.aca');
 
         filterFn(facebookMod, 'facebook');
         filterFn(hyperloopMod, 'hyperloop');
@@ -448,7 +529,8 @@ class componentsUtil{
         filterFn(mapMod, 'map');
         filterFn(touchidMod, 'touchid');
         filterFn(touchidMod, 'identity');
-        filterFn(apmMod, 'apm');
+        filterFn(apmMod, 'apm'),
+        filterFn(acaMod, 'aca');
 
         function filterFn(path, modulename){
           if(fs.existsSync(path)){
@@ -469,7 +551,7 @@ class componentsUtil{
           }
         }
 
-        const iosModules = 'Facebook:     '+modules.facebook+'\n '+'               Hyperloop:    '+modules.hyperloop+'\n '+'               Coremotion:   '+modules.coremotion+'\n '+'               Map:          '+modules.map+'\n '+'               TouchID:      '+modules.touchid+'\n '+'               Identity:     '+modules.identity+'\n '+'               APM:          '+modules.apm;
+        const iosModules = ' Facebook:     '+modules.facebook+'\n '+'                Hyperloop:    '+modules.hyperloop+'\n '+'                Coremotion:   '+modules.coremotion+'\n '+'                Map:          '+modules.map+'\n '+'                TouchID:      '+modules.touchid+'\n '+'                Identity:     '+modules.identity+'\n '+'                APM:          '+modules.apm+'\n '+'                ACA:          '+modules.aca;
         resolve(arr.push(iosModules));
       });
     }
@@ -500,7 +582,7 @@ class componentsUtil{
           modules.cloud = 'None';
         }
 
-        var commonjsModules = 'Cloud:         '+modules.cloud;
+        var commonjsModules = ' Cloud:         '+modules.cloud;
         resolve(arr.push(commonjsModules));
       });
     }
@@ -526,36 +608,42 @@ class componentsUtil{
 			.then(() => {return componentsUtil.getENV();})
 			.then(() => {return componentsUtil.getConnectedDevices();})
 			.then(() => {return componentsUtil.getConnectedEmulator();})
+      .then(() => {return componentsUtil.getIOSSimulator();})
+      .then(() => {return componentsUtil.getIOSDevices();})
 			.then(() => {return componentsUtil.getAndroidSDKTools();})
 			.then(() => {return componentsUtil.getPlatformTools();})
 			.then(() => {return componentsUtil.getBuildTools();})
+      .then(() => {return componentsUtil.getNDKVer();})
 			.then(() => {return componentsUtil.getAndroidModules();})
 			.then(() => {return componentsUtil.getIOSModules();})
 			.then(() => {return componentsUtil.getCommonjsModules();})
 			.then(() => {
 			const chalk = require('chalk'),
-				  cyan = chalk.cyan;
-			console.log('\nStudio Ver:     '+cyan(arr[0]));
-		    console.log('SDK Ver:        '+cyan(arr[1]));
-		    console.log('OS Ver:         '+cyan(arr[2].trim()));
-		    console.log('Xcode Ver:      '+cyan(arr[3].trim()));
-		    console.log('Appc NPM:       '+cyan(arr[4]));
-		    console.log('Appc CLI:       '+cyan(arr[5]));
-		    console.log('Daemon Ver:     '+cyan(arr[6].trim()));
-		    console.log('Ti CLI Ver:     '+cyan(arr[7].trim()));
-		    console.log('Alloy Ver:      '+cyan(arr[8].trim()));
-		    console.log('Node Ver:       '+cyan(arr[9]));
-		    console.log('NPM Ver:        '+cyan(arr[10].trim()));
-		    console.log('Java Ver:       '+cyan(arr[11]));
-		    console.log('Devices:        '+cyan(arr[13].trim()));
-		    console.log('Emulator:       '+cyan(arr[14].trim()));
-		    console.log('Environment:    '+cyan(arr[12].trim()));
-		    console.log('\nSDK Tools:      '+cyan(arr[15]));
-		    console.log('Platform Tools: '+cyan(arr[16]));
-		    console.log('Build Tools:    '+cyan(arr[17]));
-		    console.log('\nAndroid Modules:'+cyan(arr[18]));
-		    console.log('\nIOS Modules:    '+cyan(arr[19]));
-		    console.log('\nCommjs Modules: '+cyan(arr[20])+'\n');
+				  cyan = chalk.cyan; 
+			console.log('\nStudio Ver:       '+cyan(arr[0]));
+		    console.log('SDK Ver:          '+cyan(arr[1]));
+		    console.log('OS Ver:           '+cyan(arr[2].trim()));
+		    console.log('Xcode Ver:        '+cyan(arr[3].trim()));
+		    console.log('Appc NPM:         '+cyan(arr[4]));
+		    console.log('Appc CLI:         '+cyan(arr[5]));
+		    console.log('Daemon Ver:       '+cyan(arr[6].trim()));
+		    console.log('Ti CLI Ver:       '+cyan(arr[7].trim()));
+		    console.log('Alloy Ver:        '+cyan(arr[8].trim()));
+		    console.log('Node Ver:         '+cyan(arr[9]));
+		    console.log('NPM Ver:          '+cyan(arr[10].trim()));
+		    console.log('Java Ver:         '+cyan(arr[11]));
+		    console.log('Android Devices:  '+cyan(arr[13].trim()));
+		    console.log('Android Emulator: '+cyan(arr[14].trim()));
+        console.log('\nIOS Simulator:    '+cyan(arr[15].trim()));
+        console.log('IOS Devices:      '+cyan(arr[16].trim()+'\n'));
+		    console.log('Environment:      '+cyan(arr[12].trim()));
+		    console.log('\nSDK Tools:       '+cyan(arr[17]));
+		    console.log('Platform Tools:  '+cyan(arr[18]));
+		    console.log('Build Tools:     '+cyan(arr[19]));
+        console.log('NDK Ver:         '+cyan(arr[20]));
+		    console.log('\nAndroid Modules:'+cyan(arr[21]));
+		    console.log('\nIOS Modules:    '+cyan(arr[22]));
+		    console.log('\nCommjs Modules: '+cyan(arr[23])+'\n');
 		})
 		.catch(err => output.error(err));
 	}

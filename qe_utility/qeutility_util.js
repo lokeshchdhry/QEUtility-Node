@@ -33,7 +33,7 @@ class qeutility_util{
           value: 'released'
         },
         {
-          name: 'PRE-RELEASE',
+          name: 'PRE-RELEASE(Preprod)',
           value: 'prerelease'
         },
         {
@@ -131,7 +131,7 @@ class qeutility_util{
               spinner_start();
               exec('appc use -o json --prerelease', (err, result) => {
                 if(!err){
-                  const ver_arr = JSON.parse(result)['versions'].slice(0,20);
+                  const ver_arr = JSON.parse(result)['versions'].slice(0,30);
                   spinner_stop(true);
                   resolve(ver_arr);
                 }
@@ -143,7 +143,8 @@ class qeutility_util{
             })
           })
           .then(ver_arr => {
-            ver_arr = ver_arr.sort().reverse().push('EXIT');
+            ver_arr = ver_arr.sort().reverse();
+            ver_arr.push('EXIT');
             return new Promise((resolve, reject) => {
               inquirer.prompt({
                 name: 'pre_core_ver',
@@ -152,13 +153,13 @@ class qeutility_util{
                 message: 'Please select which pre-release CLI Core to download(Showing top 20 choices):',
                 choices: ver_arr              
               })
-              .then(answers => {
-                output.info('solidarrow', `Downloading & installing pre-release CLI Core version : ${answers.pre_core_ver}`);
-                spinner_start();
+              .then(answers => {        
                 if(answers.pre_core_ver === 'EXIT'){
-                  process.exit();
+                  resolve();
                 }
                 else{
+                  spinner_start();
+                  output.info('solidarrow', `Downloading & installing pre-release CLI Core version : ${answers.pre_core_ver}`);
                   exec(`appc use ${answers.pre_core_ver}`, (err, data) => {
                     if(!err){
                       spinner_stop(true);
@@ -428,7 +429,7 @@ class qeutility_util{
     .then(data => {
       const result = JSON.parse(data).message;
       let count = result.length-1;              //Substracting 1 because we are accessing array to make objects later & array starts with 0
-      if(count > 0){
+      if(result.length > 0){                    //checking if we have atleast one device or emulator
         const deviceArr = [];
         while(count > -1){
           const deviceObj = {};
