@@ -244,14 +244,10 @@ class qeutility_util{
       const version = answers.appc_npm_ver;
       output.info('solidarrow',`Downloading & installing Appc NPM version : ${version}`);
       return new Promise((resolve, reject) => {
-        spinner_start();
-        exec(`sudo npm install -g appcelerator@${version}`, (err, data) => {
-          if(!err){
-            spinner_stop(true);
-            resolve(output.cyan(null ,data.trim()));
-          }
-          reject(err);
-        });
+        let prc = '';
+        prc = spawn('sudo',['npm', 'install', '-g', `appcelerator@${version}`], {stdio: 'inherit'});
+        prc.on('error', err => {reject(err)});
+        prc.on('close', code => {resolve(output.cyan(null, 'Done\n'));});
       })
       .catch(err => {output.error(err);});
     });
@@ -296,19 +292,13 @@ class qeutility_util{
       .then(arr => {
         if(arr[1]){      //if branch
           output.info('solidarrow', `Downloading & extracting the latest SDK from branch : ${arr[0]}`);
-          prc = spawn('appc', ['ti', 'sdk', 'install', '-b', arr[0], '--default', '--no-banner']);
+          prc = spawn('appc', ['ti', 'sdk', 'install', '-b', arr[0], '--default', '--no-banner'], { stdio: 'inherit' });
         }
         else{             //if SDK
           output.info('solidarrow', `Downloading & extracting the SDK : ${arr[0]}`);
-          prc = spawn('appc', ['ti', 'sdk', 'install', arr[0], '--default', '--no-banner']);
+          prc = spawn('appc', ['ti', 'sdk', 'install', arr[0], '--default', '--no-banner'], { stdio: 'inherit' });
         }
-        prc.stdout.on('data', data => {
-          output.cyan(null, data.toString());
-        });
-        prc.stderr.on('data', data => {
-          output.cyan(null, data.toString());
-        });
-        prc.on('error', err => {output.error(err);});
+        prc.on('error', err => {reject(err);});
         prc.on('close', code => {resolve(output.cyan(null, 'Done\n'));});
       });
     })
@@ -559,12 +549,10 @@ class qeutility_util{
       inquirer.prompt(questions).then(answers => {
         const projectPath = require('../misc/util').workspace+`/${answers.appname}`;
         if(fs.existsSync(projectPath)){
-          exec(`appc new --import -d ${projectPath} --no-services`, (err, result) => {
-            if(!err){
-              resolve(output.cyan(null, result));
-            }
-            else{throw(err);}
-          });
+          let prc = '';
+          prc = spawn('appc', ['new', '--import', '-d', `${projectPath}`, '-no--banner'], {stdio: 'inherit'});
+          prc.on('error', err => {reject(err)});
+          prc.on('close', code => {resolve(output.cyan(null, 'Done\n'));})
         }
         else{
           throw(`Project ${answers.appname} not found in the specified workspace. Please double check for typo.`);
