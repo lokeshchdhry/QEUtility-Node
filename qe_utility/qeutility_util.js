@@ -79,7 +79,7 @@ class qeutility_util{
         else{
           output.underline('solidarrow', 'GOING TO PREPROD TO GET LATEST PRE-RELEASE CLI CORE:');
           spinner_start();
-          let p = Promise.resolve()
+          Promise.resolve()
           .then(() => {
             return new Promise((resolve, reject) => {
               // output.info('solidarrow','logging you out:');
@@ -96,23 +96,9 @@ class qeutility_util{
           })
           .then(() => {
             return new Promise((resolve, reject) => {
-              // output.info('solidarrow',`Setting default env to preprod:`);
-              exec('appc config set defaultEnvironment preproduction', (err, result) =>{
-                if(!err){
-                  resolve();
-                }
-                else{
-                  reject(err);
-                  spinner_stop(true);
-                }
-              });
-            });
-          })
-          .then(() => {
-            return new Promise((resolve, reject) => {
               const orgIDPreProd = preProdOrgId;
               // output.info('solidarrow', 'Logging you in:');
-              exec(`appc login --username ${username} --password ${password} --org-id ${orgIDPreProd}`, (err, result)=> {
+              exec(`appc login --env preproduction --username ${username} --password ${password} --org-id ${orgIDPreProd}`, (err, result)=> {
                 if(!err){
                   spinner_stop(true);
                   output.cyan(null, result);
@@ -189,23 +175,9 @@ class qeutility_util{
           })
           .then(() => {
             return new Promise((resolve, reject) => {
-              // output.info('solidarrow',`Setting default env to prod:`);
-              exec('appc config set defaultEnvironment production', (err, result) =>{
-                if(!err){
-                  resolve();
-                }
-                else{
-                  reject(err);
-                  spinner_stop(true);
-                }
-              });
-            });
-          })
-          .then(() => {
-            return new Promise((resolve, reject) => {
               const orgIDProd = prodOrgId;
               // output.info('solidarrow', 'Logging you in:');
-              exec(`appc login --username ${username} --password ${password} --org-id ${orgIDProd}`, (err, result)=> {
+              exec(`appc login --env production --username ${username} --password ${password} --org-id ${orgIDProd}`, (err, result)=> {
                 if(!err){
                   spinner_stop(true);
                   output.cyan(null, result);
@@ -378,21 +350,9 @@ class qeutility_util{
     })
     .then(env => {
       return new Promise((resolve, reject) => {
-        output.underline('solidarrow',`SETTING DEFAULT ENVIRONMENT TO ${env.toUpperCase()}:`);
-        exec(`appc config set defaultEnvironment ${env}`, (err, result) =>{
-          if(!err){
-            output.cyan(null, result);
-            resolve(env);
-          }
-          else{reject(err);}
-        });
-      });
-    })
-    .then(env => {
-      return new Promise((resolve, reject) => {
         const orgID = (env === 'production')? prodOrgId : preProdOrgId;
         output.underline('solidarrow', 'LOGGING YOU IN:');
-        exec(`appc login --username ${username} --password ${password} --org-id ${orgID}`, (err, result)=> {
+        exec(`appc login --env ${env} --username ${username} --password ${password} --org-id ${orgID}`, (err, result)=> {
           if(!err){
             output.cyan(null, result);
             resolve();
@@ -550,7 +510,7 @@ class qeutility_util{
         const projectPath = require('../misc/util').workspace+`/${answers.appname}`;
         if(fs.existsSync(projectPath)){
           let prc = '';
-          prc = spawn('appc', ['new', '--import', '-d', `${projectPath}`, '-no--banner'], {stdio: 'inherit'});
+          prc = spawn('appc', ['new', '-d', `${projectPath}`, '--import', '--no-banner'], {stdio: 'inherit'});
           prc.on('error', err => {reject(err)});
           prc.on('close', code => {resolve(output.cyan(null, 'Done\n'));})
         }

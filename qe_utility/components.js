@@ -20,17 +20,19 @@ class componentsUtil{
       //Studio 5.0.0 path for version.txt
       const path1 = path.join('/Applications','Appcelerator Studio','version.txt'),
       //Studio 5.1.0 path for version.txt
-      path2 = path.join('/Applications','AppceleratorStudio.app','Contents','Eclipse','version.txt');
+      path2 = path.join('/Applications','AppceleratorStudio.app','Contents','info.plist');
       //Checking if path1 exists if yes return path1 or check if path2 exists if yes return path2 else return false
       const finalPath = fs.existsSync(path1) ? path1 : fs.existsSync(path2) ? path2 : false;
       //Check if finalPath is false
       if(finalPath == path1 ){
         const text = fs.readFileSync(finalPath, 'utf8').split('\n'),
-        ver = text[0].split(' ')[2];
-        resolve(arr.push(ver)); 		    }
+              ver = text[0].split(' ')[2];
+        resolve(arr.push(ver));
+      }
         else if(finalPath == path2){
           const text = fs.readFileSync(finalPath, 'utf8').split('\n'),
-          ver = text[0].split(' ')[2]+'.'+text[1].split(' ')[2];
+                // ver = text[0].split(' ')[2]+'.'+text[1].split(' ')[2];
+                ver = text[24].substring(9, 27)
           resolve(arr.push(ver));
         }
         else{resolve(arr.push('Appc Studio not installed.'));}
@@ -449,7 +451,8 @@ class componentsUtil{
             resolve(arr.push(ndkver));
           }
           else{
-            reject(err);
+            // reject(err);
+            resolve(arr.push('NDK is handled by Gradle'))
           }
         });
       });
@@ -640,7 +643,7 @@ class componentsUtil{
 		    console.log('\nSDK Tools:       '+cyan(arr[17]));
 		    console.log('Platform Tools:  '+cyan(arr[18]));
 		    console.log('Build Tools:     '+cyan(arr[19]));
-        console.log('NDK Ver:         '+cyan(arr[20]));
+        console.log('NDK Ver:         '+cyan(arr[20].trim()));
 		    console.log('\nAndroid Modules:'+cyan(arr[21]));
 		    console.log('\nIOS Modules:    '+cyan(arr[22]));
 		    console.log('\nCommjs Modules: '+cyan(arr[23])+'\n');
