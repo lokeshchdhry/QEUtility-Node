@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "adbkit": "^2.9.2",
-    "appcelerator": "^4.2.15-1",
+    "appcelerator": "^6.0.1",
     "ascii-progress": "^1.0.5",
     "async": "^2.1.5",
     "chalk": "^1.1.3",
